@@ -18,7 +18,7 @@ It is recommended that you use [Sublime Package Control](http://wbond.net/sublim
 
 ### Manual Installation
 
-In order to manually install CoffeeScript Autocomplete Plus, clone the repository into your Sublime Text 2 `Packages` directory, which can be located by navigating to Preferences -> Browse Packages.
+In order to manually install CoffeeScript Autocomplete Plus, clone the repository into your Sublime Text 2 `Packages` directory, which can be located by navigating to Preferences -> Browse Packages. Name the directory `CoffeeScript Autocomplete Plus`.
 
 ```
 git clone https://github.com/justinmahar/SublimeCSAutocompletePlus.git "CoffeeScript Autocomplete Plus"
