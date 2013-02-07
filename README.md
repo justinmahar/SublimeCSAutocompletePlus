@@ -37,9 +37,9 @@ Example usage: Inside a class, you type `this.` and would like a list of the ava
 
 Looking for where a class, function or variable was defined? Look no further.
 
-Place your cursor on any word and press `ctrl+alt+d` in Windows/Linux, or `cmd+alt+d` in OS X, to goto the definition of the selected class, function or variable.
+Place your cursor on any word and press `ctrl+alt+d` in Windows/Linux, and `ctrl+alt+d` in OS X, to goto the definition of the selected class, function or variable.
 
-Alternatively, use `ctrl+alt` + `left click`.
+Alternatively, use `ctrl+alt` + `left click` in Windows/Linux, and `ctrl+alt` + `left click` in OS X.
 
 Default Key Bindings
 --------------------
@@ -48,13 +48,13 @@ Default Key Bindings
 
 Autocomplete: `ctrl+space` (after a dot operator)
 
-Goto Definition: `ctrl+alt+d` or `ctrl+alt`+`left click`.
+Goto Definition: `ctrl+alt+d` or `ctrl+alt`+`left click`
 
 ### Mac OS X:
 
-Autocomplete: `cmd+space` (after a dot operator)
+Autocomplete: `ctrl+space` (after a dot operator)
 
-Goto Definition: `cmd+alt+d` or `cmd+alt`+`left click`.
+Goto Definition: `ctrl+alt+d` or `ctrl+alt`+`left click`
 
 Configuration
 -------------
