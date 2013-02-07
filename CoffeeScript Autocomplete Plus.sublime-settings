@@ -1,0 +1,22 @@
+{
+	"coffee_autocomplete_plus_excluded_dirs": 
+	[
+		".svn", 
+		".git", 
+		"CVS", 
+		"lib", 
+		"node_modules", 
+		"pub", 
+		"public", 
+		"vendor", 
+		"doc", 
+		"docs", 
+		"build", 
+		"builds", 
+		"bin"
+	],
+	"coffee_autocomplete_plus_this_aliases": 
+	[
+		"that", "self"
+	]
+}

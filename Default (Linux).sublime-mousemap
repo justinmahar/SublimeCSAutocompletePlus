@@ -1,0 +1,8 @@
+[
+    {
+        "button": "button1", "count": 1, "modifiers": ["ctrl", "alt"],
+        "press_command": "drag_select",
+        "command": "coffee_goto_definition",
+        "press_args": {"by": "words"}
+    }
+]
