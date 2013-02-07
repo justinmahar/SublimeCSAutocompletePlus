@@ -6,6 +6,7 @@ Can it be true? Autocompletions for CoffeeScript? I'm here to tell you: They're 
 CoffeeScript Autocomplete Plus scans your CoffeeScript files on demand and makes autocomplete suggestions for you.
 
 In addition, this plugin adds the "Coffee: Goto Definition" command, which will look up the class, function or variable definition of the selected token. 
+
 Do you miss having a control-click key combination to go to a definition? Well, that's here too, baby. Rearing and ready to go.
 
 Installation
@@ -42,11 +43,13 @@ Default Key Bindings
 ### Windows/Linux:
 
 Autocomplete: `ctrl+space` (after a dot operator)
+
 Goto Definition: `ctrl+alt+d` or `ctrl+alt`+`left click`.
 
 ### Mac OS X:
 
 Autocomplete: `cmd+space` (after a dot operator)
+
 Goto Definition: `cmd+alt+d` or `cmd+alt`+`left click`.
 
 Configuration
