@@ -57,9 +57,9 @@ Configuration
 git
 CoffeeScript Autocomplete Plus has the following configurable settings:
 
-* Excluded directories (`coffee_autocomplete_plus_excluded_dirs`): 
+* Excluded directories -- `coffee_autocomplete_plus_excluded_dirs`
   - Directories to exclude from searching for CoffeeScript classes, functions and variables.
-* Aliases for `this` keyword
+* Aliases for `this` keyword -- `coffee_autocomplete_plus_this_aliases`
   - Due to lexical scoping you sometimes need to assign an alias for `this`, such as `that` or `self`.
 
 To configure these settings, open Preferences -> Package Settings -> CoffeeScript Autocomplete Plus -> Settings.  It is not recommended that you change the Default settings as they will be overwritten by plugin updates. Instead, make your changes in User settings, which will override the Default settings.
