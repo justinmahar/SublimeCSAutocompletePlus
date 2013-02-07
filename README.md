@@ -69,7 +69,7 @@ Key bindings can be changed by navigating to Preferences -> Package Settings -> 
 Limitations
 -----------
 
-> Conceal a flaw, and the world will imagine the worst." — Marcus Aurelius, 16th Emperor of the Roman Empire
+> "Conceal a flaw, and the world will imagine the worst." — Marcus Aurelius, 16th Emperor of the Roman Empire
 
 Autocomplete is smart, but not Mensa smart. Under the hood, we're not building an index or anything. We're using regular expressions and lots of scanning. As I build out functionality, I will try to fix its limitations. For now, here is the list of TBDs:
 
