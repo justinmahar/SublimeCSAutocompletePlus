@@ -54,7 +54,7 @@ Goto Definition: `cmd+alt+d` or `cmd+alt`+`left click`.
 
 Configuration
 -------------
-git
+
 CoffeeScript Autocomplete Plus has the following configurable settings:
 
 * Excluded directories -- `coffee_autocomplete_plus_excluded_dirs`
