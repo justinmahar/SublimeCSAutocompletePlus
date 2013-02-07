@@ -7,7 +7,7 @@ CoffeeScript Autocomplete Plus scans your CoffeeScript files on demand and makes
 
 In addition, this plugin adds the "Coffee: Goto Definition" command, which will look up the class, function or variable definition of the selected token. 
 
-Do you miss having a control-click key combination to go to a definition? Well, that's here too, baby. Rearing and ready to go.
+Do you miss having a control-click key combination to go to a definition? Well, that's here too. Oh baby.
 
 Installation
 ------------
@@ -19,6 +19,8 @@ It is recommended that you use [Sublime Package Control](http://wbond.net/sublim
 ### Manual Installation
 
 In order to manually install CoffeeScript Autocomplete Plus, clone the repository into your Sublime Text 2 `Packages` directory, which can be located by navigating to Preferences -> Browse Packages. Name the directory `CoffeeScript Autocomplete Plus`.
+
+For your convenience:
 
 ```
 git clone https://github.com/justinmahar/SublimeCSAutocompletePlus.git "CoffeeScript Autocomplete Plus"
@@ -70,12 +72,14 @@ To configure these settings, open Preferences -> Package Settings -> CoffeeScrip
 
 Key bindings can be changed by navigating to Preferences -> Package Settings -> CoffeeScript Autocomplete Plus -> Key Bindings. Same spiel as before about where to put your settings.
 
-Limitations
------------
+Limitations and Plans
+---------------------
 
 > "Conceal a flaw, and the world will imagine the worst." — Marcus Aurelius, 16th Emperor of the Roman Empire
 
-Autocomplete is smart, but not Mensa smart. Under the hood, we're not building an index or anything. We're using regular expressions and lots of scanning. As I build out functionality, I will try to fix its limitations. For now, here is the list of TBDs:
+Autocomplete is smart, but not Mensa smart. Under the hood, we're not building an index or anything. We're using regular expressions and lots of scanning. As I build out functionality, I will try to fix its limitations. 
+
+For now, here is the list of TBDs:
 
 * Support for properties and methods of super classes
 * Check contents of currently open views besides the active one
