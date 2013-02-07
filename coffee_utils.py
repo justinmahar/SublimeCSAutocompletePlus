@@ -33,6 +33,12 @@ ASSIGNMENT_REGEX = r"(^|[^a-zA-Z0-9_$])%s\s*="
 STATIC_ASSIGNMENT_REGEX = r"^\s*([@]|(this\s*[.]))\s*([a-zA-Z0-9_$]+)\s*[:=]"
 # Static function regex
 STATIC_FUNCTION_REGEX = r"(^|[^a-zA-Z0-9_$])\s*([@]|(this\s*[.]))\s*([a-zA-Z0-9_$]+)\s*[:]\s*(\((.*?)\))?\s*\->"
+# Regex for finding a function parameter. Requires the same item 4 times in a tuple.
+PARAM_REGEX = r"\(\s*((%s)|(%s\s*[,].*?)|(.*?[,]\s*%s\s*[,].*?)|(.*?[,]\s*%s))\s*\)\s*\->"
+# Regex for finding a variable declared in a for loop.
+FOR_LOOP_REGEX = r"for\s*.*?[^a-zA-Z0-9_$]%s[^a-zA-Z0-9_$]"
+
+
 
 # Assignment with the value it's being assigned to. Matches:
 # blah = new Dinosaur()
@@ -291,19 +297,20 @@ def get_type_from_assignment_value(assignment_value_string):
 
 	return determined_type
 
-# Tuple returned: (matched_row, matched_column, match)
+# Tuple returned: (matched_row, matched_column, match, row_start_index)
 def search_backwards_for(file_lines, regex, start_region):
 	
 	matched_row = -1
 	matched_column = -1
 	match_found = None
+	row_start_index = -1
 
 	start_index = start_region.begin()
 	# debug("start: " + str(start_index))
 	characters_consumed = 0
 	start_line = -1
 	indentation_size = 0
-	current_line_index = 0
+	current_line_index = 0	
 	for next_line in file_lines:
 		# Find the line we're starting on...
 		offset = start_index - characters_consumed
@@ -314,14 +321,17 @@ def search_backwards_for(file_lines, regex, start_region):
 			start_line = current_line_index
 			break
 
-		characters_consumed = characters_consumed + len(next_line) # for the \n
+		characters_consumed = characters_consumed + len(next_line)
 		current_line_index = current_line_index + 1
+
+	row_start_index = characters_consumed
 
 	if start_line >= 0:
 		# debug("start line: " + str(start_line))
 		# Go backwards, searching for the class definition. 
 		for i in reversed(range(start_line+1)):
 			previous_line = file_lines[i]
+			row_start_index = row_start_index - len(previous_line)
 			# debug("Line " + str(i) + ": " + re.sub("\n", "", previous_line))
 			# Returns -1 for empty lines or lines with comments only.
 			next_line_indentation = get_indentation_size(previous_line)
@@ -338,7 +348,7 @@ def search_backwards_for(file_lines, regex, start_region):
 					break
 	match_tuple = None
 	if match_found:
-		match_tuple = (matched_row, matched_column, match_found)
+		match_tuple = (matched_row, matched_column, match_found, row_start_index)
 	return match_tuple
 
 def get_indentation_size(line_of_text):

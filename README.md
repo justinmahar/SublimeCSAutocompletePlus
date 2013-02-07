@@ -85,7 +85,6 @@ For now, here is the list of TBDs:
 * Check contents of currently open views besides the active one
 * Smarter assignment detection
 * Better token parsing
-* Goto Definition knows about function parameters
 * Add settings for where to look for .coffee files. Right now, it scans all directories in your project folder except for the ones excluded in the settings.
 
 License

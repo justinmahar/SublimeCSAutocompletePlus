@@ -21,7 +21,7 @@ STATUS_MESSAGE_COFFEE_GOTO_DEFINITION = "Coffee: Goto Definition of \"%s\""
 # TODO:
 # X Add config for "this" aliases (DONE)
 # - Codo docs searching for function parameter types
-# - Goto definition knows about function parameters
+# X Goto definition knows about function parameters and for loop variables
 # - Smarter operand parsing. E.g. Given: this.test = "test", when goto "test", look for "this.test = ", not "test ="
 # - Add "bad_coding_practices" config for checking for badly named classes and functions
 #      For Readme: Do you suck at naming classes and variables? Don't worry, I've got you covered (but seriously, stop it).
@@ -37,12 +37,14 @@ class CoffeeGotoDefinitionCommand(sublime_plugin.TextCommand):
 		project_folder_list = self.window.folders()
 		# The current view
 		view = self.view
-		# The current file name
-		current_file_name = view.file_name()
+		# Lines for currently viewed file
+		current_file_lines = coffee_utils.get_view_content_lines(view)
 		
 		# Get currently selected word
 		coffee_utils.select_current_word(view)
 		selected_word = coffee_utils.get_selected_word(view)
+
+		selected_region = self.view.sel()[0]
 
 		# Pull the excluded dirs from preferences
 		excluded_dirs = view.settings().get(coffee_utils.PREFERENCES_COFFEE_EXCLUDED_DIRS)
@@ -52,7 +54,7 @@ class CoffeeGotoDefinitionCommand(sublime_plugin.TextCommand):
 		# If there is a word selection and we're looking at a coffee file...
 		if len(selected_word) > 0 and coffee_utils.is_coffee_syntax(view):
 
-			thread = CoffeeGotoDefinitionThread(project_folder_list, current_file_name, selected_word, excluded_dirs)
+			thread = CoffeeGotoDefinitionThread(project_folder_list, current_file_lines, selected_word, excluded_dirs, selected_region)
 			thread.start()
 			self.check_operation(thread)
 
@@ -106,25 +108,26 @@ class CoffeeGotoDefinitionCommand(sublime_plugin.TextCommand):
 
 class CoffeeGotoDefinitionThread(threading.Thread):
 	
-	def __init__(self, project_folder_list, current_file_name, selected_word, excluded_dirs):
+	def __init__(self, project_folder_list, current_file_lines, selected_word, excluded_dirs, selected_region):
 		self.project_folder_list = project_folder_list
-		self.current_file_name = current_file_name
+		self.current_file_lines = current_file_lines
 		self.selected_word = selected_word
 		self.excluded_dirs = excluded_dirs
-		# None if no match was found, or a tuple containing the filename, row and column
+		self.selected_region = selected_region
+		# None if no match was found, or a tuple containing the filename, row, column and match
 		self.matched_location_tuple = None
 		threading.Thread.__init__(self)
 
 	def run(self):
 
 		project_folder_list = self.project_folder_list
-		current_file_name = self.current_file_name
+		current_file_lines = self.current_file_lines
 		selected_word = self.selected_word
 		excluded_dirs = self.excluded_dirs
+		selected_region = self.selected_region
 
 		# This will be assigned whem a match is made
 		matched_location_tuple = None
-
 
 		# The regular expression used to search for the selected class
 		class_regex = coffee_utils.CLASS_REGEX % re.escape(selected_word)
@@ -132,9 +135,10 @@ class CoffeeGotoDefinitionThread(threading.Thread):
 		function_regex = coffee_utils.FUNCTION_REGEX % re.escape(selected_word)
 		# The regex used to search for the selected variable assignment
 		assignment_regex = coffee_utils.ASSIGNMENT_REGEX % re.escape(selected_word)
-
-		# Lines for currently viewed file
-		current_file_lines = coffee_utils.get_lines_for_file(current_file_name)
+		# The regex used to search for the selected variable as a parameter in a method
+		param_regex = coffee_utils.PARAM_REGEX % (re.escape(selected_word), re.escape(selected_word), re.escape(selected_word), re.escape(selected_word))
+		# The regex used to search for the selected variable as a for loop var
+		for_loop_regex = coffee_utils.FOR_LOOP_REGEX % re.escape(selected_word)
 
 		debug(("Selected: \"%s\"" % selected_word))
 
@@ -189,9 +193,21 @@ class CoffeeGotoDefinitionThread(threading.Thread):
 				#	   Instead, check from the current position backwards. 
 				#	   Take scope into consideration using indentation.
 				debug("Checking for local assignment of %s..." % selected_word)
-				local_assignment_location_search_tuple = coffee_utils.find_location_of_regex_in_files(assignment_regex, current_file_lines)
-				if local_assignment_location_search_tuple:
-					matched_location_tuple = local_assignment_location_search_tuple		
+				backwards_match_tuple = coffee_utils.search_backwards_for(current_file_lines, assignment_regex, selected_region)
+				if backwards_match_tuple:
+					filename_tuple = tuple([None])
+					matched_location_tuple = filename_tuple + backwards_match_tuple
+				else:
+					# Nothing found. Now let's look backwards for a method parameter
+					param_match_tuple = coffee_utils.search_backwards_for(current_file_lines, param_regex, selected_region)
+					if param_match_tuple:
+						filename_tuple = tuple([None])
+						matched_location_tuple = filename_tuple + param_match_tuple	
+					else:
+						for_loop_match_tuple = coffee_utils.search_backwards_for(current_file_lines, for_loop_regex, selected_region)
+						if for_loop_match_tuple:
+							filename_tuple = tuple([None])
+							matched_location_tuple = filename_tuple + for_loop_match_tuple	
 
 			# ------ GLOBAL SEARCH: FUNCTION -------------------------
 
