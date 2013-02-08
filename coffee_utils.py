@@ -11,6 +11,7 @@ DEBUG = False
 
 SETTINGS_FILE_NAME = "CoffeeScript Autocomplete Plus.sublime-settings"
 PREFERENCES_COFFEE_EXCLUDED_DIRS = "coffee_autocomplete_plus_excluded_dirs"
+PREFERENCES_COFFEE_RESTRICTED_TO_PATHS = "coffee_autocomplete_plus_restricted_to_paths"
 PREFERENCES_THIS_ALIASES = "coffee_autocomplete_plus_this_aliases"
 
 COFFEESCRIPT_SYNTAX = "CoffeeScript"
@@ -22,6 +23,7 @@ PERIOD_OPERATOR = "."
 COFFEE_FILENAME_REGEX = r".+?" + re.escape(COFFEE_EXTENSION_WITH_DOT)
 CLASS_REGEX = r"class\s+%s((\s*$)|[^a-zA-Z0-9_$])"
 CLASS_REGEX_ANY = r"class\s+([a-zA-Z0-9_$]+)((\s*$)|[^a-zA-Z0-9_$])"
+CLASS_REGEX_WITH_EXTENDS = r"class\s+%s\s*($|(\s+extends\s+([a-zA-Z0-9_$.]+)))"
 SINGLE_LINE_COMMENT_REGEX = r"#.*?$"
 # Function regular expression. Matches:
 # methodName  =   (aas,bsa, casd )	->
@@ -111,21 +113,21 @@ def is_capitalized(word):
 def get_files_in(directory_list, filename_regex, excluded_dirs):
 	files = []
 	for next_directory in directory_list:
-		excluded = False
-		for next_excluded_dir in excluded_dirs:
-			if next_directory.endswith(next_excluded_dir):
-				excluded = True
-				break
-		if not excluded:
-			# http://docs.python.org/2/library/os.html?highlight=os.walk#os.walk
-			for path, dirs, filenames in os.walk(next_directory):
-				for next_file_name in filenames:
-					# http://docs.python.org/2/library/re.html
-					match = re.search(filename_regex, next_file_name)
-					if match:
-						# http://docs.python.org/2/library/os.path.html?highlight=os.path.join#os.path.join
-						next_full_path = os.path.join(path, next_file_name)
-						files.append(next_full_path)
+		# http://docs.python.org/2/library/os.html?highlight=os.walk#os.walk
+		for path, dirs, filenames in os.walk(next_directory):
+			# print str(path)
+			for next_excluded_dir in excluded_dirs:
+				try:
+					dirs.remove(next_excluded_dir)
+				except:
+					pass
+			for next_file_name in filenames:
+				# http://docs.python.org/2/library/re.html
+				match = re.search(filename_regex, next_file_name)
+				if match:
+					# http://docs.python.org/2/library/os.path.html?highlight=os.path.join#os.path.join
+					next_full_path = os.path.join(path, next_file_name)
+					files.append(next_full_path)
 	return files
 
 def get_lines_for_file(file_path):
@@ -366,46 +368,78 @@ def get_indentation_size(line_of_text):
 def get_completions_for_class(class_name, search_statically, local_file_lines, global_file_path_list=[]):
 	
 	completions = []
+	scanned_classes = []	
 	
 	# TODO: Implement built in types...
 	# TBD: First, determine if it is a built in type and return those completions...
 	#      Maybe these are passed as an optional arg? That way you can define your own...
 
-	if local_file_lines:
-		# Search in local file.
-		if search_statically:
-			completions = collect_static_completions_from_file(local_file_lines, class_name)
-		else:
-			completions = collect_instance_completions_from_file(local_file_lines, class_name)
-
-	# Search globally if nothing found and not local only...
-	if not completions and global_file_path_list:
-		class_regex = CLASS_REGEX % re.escape(class_name)
-		global_class_location_search_tuple = find_location_of_regex_in_files(class_regex, None, global_file_path_list)
-		if global_class_location_search_tuple:
-			# If found, perform Class method collection.
-			file_to_open = global_class_location_search_tuple[0]
-			class_file_lines = get_lines_for_file(file_to_open)
+	current_class_name = class_name
+	while current_class_name and current_class_name not in scanned_classes:
+		# print "Scanning " + current_class_name + "..."
+		completion_tuple = None
+		if local_file_lines:
+			# print "Searching locally..."
+			# Search in local file.
 			if search_statically:
-				completions = collect_static_completions_from_file(class_file_lines, class_name)
+				completion_tuple = collect_static_completions_from_file(local_file_lines, current_class_name)
 			else:
-				completions = collect_instance_completions_from_file(class_file_lines, class_name)
+				completion_tuple = collect_instance_completions_from_file(local_file_lines, current_class_name)
 
+		# Search globally if nothing found and not local only...
+		if global_file_path_list and (not completion_tuple or not completion_tuple[0]):
+			class_regex = CLASS_REGEX % re.escape(current_class_name)
+			global_class_location_search_tuple = find_location_of_regex_in_files(class_regex, None, global_file_path_list)
+			if global_class_location_search_tuple:
+				# If found, perform Class method collection.
+				file_to_open = global_class_location_search_tuple[0]
+				class_file_lines = get_lines_for_file(file_to_open)
+				if search_statically:
+					completion_tuple = collect_static_completions_from_file(class_file_lines, current_class_name)
+				else:
+					completion_tuple = collect_instance_completions_from_file(class_file_lines, current_class_name)
+		# print "Tuple: " + str(completion_tuple)
+		completions.extend(completion_tuple[1])
+		scanned_classes.append(current_class_name)
+		current_class_name = completion_tuple[2]
+
+	# Remove all duplicates
+	completions = list(set(completions))
+	# Sort
+	completions.sort()
 	return completions
 
 def collect_instance_completions_from_file(file_lines, class_name):
 
 	completions = []
+	extended_class = None
+	class_found = False
+
+	scanned_classes = []
 
 	property_completions = []
 	function_completions = []
 
-	class_regex = CLASS_REGEX % class_name
+	class_and_extends_regex = CLASS_REGEX_WITH_EXTENDS % class_name
 
 	# Find class in file lines
-	match_tuple = get_positions_of_regex_match_in_file(file_lines, class_regex)
+	match_tuple = get_positions_of_regex_match_in_file(file_lines, class_and_extends_regex)
 	if match_tuple:
+		class_found = True
 		row = match_tuple[0] - 1
+		match = match_tuple[2]
+
+		extended_class = match.group(3)
+		if extended_class:
+			# Clean it up.
+			next_period_index = extended_class.find(PERIOD_OPERATOR)
+			while next_period_index >= 0:
+				extended_class = extended_class[(next_period_index + 1):]
+				extended_class.strip()
+				next_period_index = extended_class.find(PERIOD_OPERATOR)
+			if len(extended_class) == 0:
+				extended_class = None
+
 		# If anything is equal to this after the first line, stop looking.
 		# At that point, the class definition has ended.
 		indentation_size = get_indentation_size(file_lines[row])
@@ -478,20 +512,38 @@ def collect_instance_completions_from_file(file_lines, class_name):
 						break
 
 	completions = property_completions + function_completions
-	return completions
+	completion_tuple = (class_found, completions, extended_class)
+	return completion_tuple
 
 def collect_static_completions_from_file(file_lines, class_name):
+	
 	completions = []
+	extended_class = None
+	class_found = False
 
 	property_completions = []
 	function_completions = []
 
-	class_regex = CLASS_REGEX % class_name
+	class_and_extends_regex = CLASS_REGEX_WITH_EXTENDS % class_name
 
 	# Find class in file lines
-	match_tuple = get_positions_of_regex_match_in_file(file_lines, class_regex)
+	match_tuple = get_positions_of_regex_match_in_file(file_lines, class_and_extends_regex)
 	if match_tuple:
+		class_found = True
 		row = match_tuple[0] - 1
+		match = match_tuple[2]
+
+		extended_class = match.group(3)
+		if extended_class:
+			# Clean it up.
+			next_period_index = extended_class.find(PERIOD_OPERATOR)
+			while next_period_index >= 0:
+				extended_class = extended_class[(next_period_index + 1):]
+				extended_class.strip()
+				next_period_index = extended_class.find(PERIOD_OPERATOR)
+			if len(extended_class) == 0:
+				extended_class = None
+
 		# If anything is equal to this after the first line, stop looking.
 		# At that point, the class definition has ended.
 		indentation_size = get_indentation_size(file_lines[row])
@@ -552,7 +604,8 @@ def collect_static_completions_from_file(file_lines, class_name):
 						break
 
 	completions = property_completions + function_completions
-	return completions
+	completion_tuple = (class_found, completions, extended_class)
+	return completion_tuple
 
 def get_property_completion_alias(property_name):
 	completion_string = PROPERTY_INDICATOR + " " + property_name

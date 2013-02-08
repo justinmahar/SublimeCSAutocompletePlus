@@ -1,5 +1,5 @@
-CoffeeScript Autocomplete Plus
-==============================
+CoffeeScript Autocomplete Plus (CAP)
+====================================
 
 Can it be true? Autocompletions for CoffeeScript? I'm here to tell you: They're real, and they're spectacular.
 
@@ -8,6 +8,59 @@ CoffeeScript Autocomplete Plus scans your CoffeeScript files on demand and makes
 In addition, this plugin adds the "Coffee: Goto Definition" command, which will look up the class, function or variable definition of the selected token. 
 
 Do you miss having a control-click key combination to go to a definition? Well, that's here too. Oh baby.
+
+Features
+--------
+
+### Autocomplete
+
+Autocomplete will make suggestions when you trigger autocomplete after a dot operator. It starts with the current view, then branches out to other coffee files. Because of this, most lookups are blazingly fast. You can configure CAP to exclude certain directories and to only look in others. This will further increase speed as less searching will be needed.
+
+Here are the main features: 
+* Suggests instance properties and methods when operating on an instance.
+	```
+		myLamp = new LavaLamp()
+		# Lists all instance properties and methods
+		myLamp.[autocomplete]
+	```
+* Suggests static properties and methods when operating on a class.
+	```
+		# Lists all static properties and methods
+		LavaLamp.[autocomplete]
+	```
+* Supports "this" keyword and any defined aliases.
+	```
+		class LavaLamp
+			heatUp: ->
+				console.log "Heating up!"
+			coolDown: ->
+				console.log "Cooling down!"
+			beAwesome: ->
+				# Lists heatUp() and coolDown()
+				this.[autocomplete]
+	```
+* Any variable assigned to `this` in the constructor will be considered an instance property.
+* After insertion suggestion, tab stops for parameters are provided.
+* Suggests super class properties and functions.
+* Expects that you don't suck at naming things. Will assume a class is UpperCamelCase and everything else is lowerCamelCase. It still works either way; it will just be faster if things are named properly.
+* For every 1 million autocompletions, a beautiful masseuse appears and give you a massage. You must be tired after all that coding.
+
+### Goto Definition
+
+Goto Definition is useful for finding where a class, function, or variable was defined or declared. Again, searching is performed from the current view and branches out to other files if nothing is found. You can quickly jump between classes and zoom to functions--even ones defined in other files--with ease.
+
+* Supports classes, functions and variable assignment.
+* Searches backwards from selected token for assignment.
+* Considers variables declared in for loops.
+* Considers method parameters.
+* Tries to find something rather than nothing.
+* Includes both mouse and keyboard shortcuts for convenience. Code your way.
+
+### General 
+
+* Generally fast lookups.
+* You can configure directories to be be excluded from global .coffee search (recommended)
+* You can configure the tool to only search in specific locations (recommended)
 
 Installation
 ------------
@@ -81,11 +134,10 @@ Autocomplete is smart, but not Mensa smart. Under the hood, we're not building a
 
 For now, here is the list of TBDs:
 
-* Support for properties and methods of super classes
 * Check contents of currently open views besides the active one
 * Smarter assignment detection
 * Better token parsing
-* Add settings for where to look for .coffee files. Right now, it scans all directories in your project folder except for the ones excluded in the settings.
+* Hinting
 
 License
 -------

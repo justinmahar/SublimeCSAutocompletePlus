@@ -15,6 +15,8 @@
 		"builds", 
 		"bin"
 	],
+	"coffee_autocomplete_plus_restricted_to_paths": 
+	[],
 	"coffee_autocomplete_plus_this_aliases": 
 	[
 		"that", "self"

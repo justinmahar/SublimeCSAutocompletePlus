@@ -181,7 +181,7 @@ class CoffeeGotoDefinitionThread(threading.Thread):
 						matched_location_tuple = global_class_location_search_tuple
 
 		# ------ NOT A CLASS -----------------------------------------
-		else:
+		if not matched_location_tuple:
 			# ------ CURRENT FILE: FUNCTION --------------------------
 			if not matched_location_tuple:
 				debug("Checking for local function %s..." % selected_word)

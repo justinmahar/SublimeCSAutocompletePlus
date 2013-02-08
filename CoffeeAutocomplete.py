@@ -16,7 +16,7 @@ status = {"working": False}
 # - Type hinting using comments containing square brackets [Type] on same line or previous line
 # - Codo docs searching for function parameter types
 # - Better symbol parsing. Assignment lookups should consider the entire set of operands.
-# - Consider all super classes (support extends)
+# X Consider all super classes (support extends)
 # - Consider another feature: Override/implement methods
 # - Full assignment traceback (that = this, a = b = c, knows what c is)
 # - Check contents of currently open views
@@ -38,9 +38,6 @@ class CoffeeAutocomplete(sublime_plugin.EventListener):
 			# Get the window
 			self.window = sublime.active_window()
 
-			# List of all project folders
-			project_folder_list = self.window.folders()
-
 			# http://www.sublimetext.com/forum/viewtopic.php?f=6&t=9076
 			settings = sublime.load_settings(coffee_utils.SETTINGS_FILE_NAME)
 
@@ -48,6 +45,21 @@ class CoffeeAutocomplete(sublime_plugin.EventListener):
 			excluded_dirs = settings.get(coffee_utils.PREFERENCES_COFFEE_EXCLUDED_DIRS)
 			if not excluded_dirs:
 				excluded_dirs = []
+
+			restricted_to_dirs = settings.get(coffee_utils.PREFERENCES_COFFEE_RESTRICTED_TO_PATHS)
+			if not restricted_to_dirs:
+				restricted_to_dirs = []
+
+			# List of all project folders
+			project_folder_list = self.window.folders()
+
+			if restricted_to_dirs:
+				specific_project_folders = []
+				for next_restricted_dir in restricted_to_dirs:
+					for next_project_folder in project_folder_list:
+						next_specific_folder = os.path.normpath(os.path.join(next_project_folder, next_restricted_dir))
+						specific_project_folders.append(next_specific_folder)
+				project_folder_list = specific_project_folders
 
 			this_aliases = settings.get(coffee_utils.PREFERENCES_THIS_ALIASES)
 			if not this_aliases:
@@ -138,12 +150,18 @@ class CoffeeAutocompleteThread(threading.Thread):
 
 		completions = []
 
+		# Prepare to search globally if we need to...
+		# Coffeescript filename regex
+		coffeescript_filename_regex = coffee_utils.COFFEE_FILENAME_REGEX
+		# All coffeescript file paths
+		all_coffee_file_paths = coffee_utils.get_files_in(project_folder_list, coffeescript_filename_regex, excluded_dirs)
+
 		# If @ typed, process as "this."
 		if preceding_symbol == coffee_utils.THIS_SUGAR_SYMBOL:
 			# Process as "this."
 			this_type = coffee_utils.get_this_type(current_file_lines, symbol_region)
 			if this_type:
-				completions = coffee_utils.get_completions_for_class(this_type, False, current_file_lines)
+				completions = coffee_utils.get_completions_for_class(this_type, False, current_file_lines, all_coffee_file_paths)
 			pass
 		elif preceding_symbol == coffee_utils.PERIOD_OPERATOR:
 			# If "this" or a substitute for it, process as "this."
@@ -151,15 +169,8 @@ class CoffeeAutocompleteThread(threading.Thread):
 				# Process as "this."
 				this_type = coffee_utils.get_this_type(current_file_lines, symbol_region)
 				if this_type:
-					completions = coffee_utils.get_completions_for_class(this_type, False, current_file_lines)
+					completions = coffee_utils.get_completions_for_class(this_type, False, current_file_lines, all_coffee_file_paths)
 			else:
-				
-				# Prepare to search globally if we need to...
-				# Coffeescript filename regex
-				coffeescript_filename_regex = coffee_utils.COFFEE_FILENAME_REGEX
-				# All coffeescript file paths
-				all_coffee_file_paths = coffee_utils.get_files_in(project_folder_list, coffeescript_filename_regex, excluded_dirs)
-
 				# If TitleCase, assume a class, and that we want static properties and functions.
 				if coffee_utils.is_capitalized(token):
 					# Assume it is either in the current view or in a file called token.coffee
