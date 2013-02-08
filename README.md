@@ -47,7 +47,7 @@ Here are the main features:
 
 ### Goto Definition
 
-Goto Definition is useful for finding where a class, function, or variable was defined or declared. Again, searching is performed from the current view and branches out to other files if nothing is found. You can quickly jump between classes and zoom to functions--even ones defined in other files--with ease.
+Goto Definition is useful for finding where a class, function, or variable was defined or declared. Again, searching is performed from the current view and branches out to other files if nothing is found. With this, you can quickly jump between classes and zoom to functions&mdash;even ones defined in other files&mdash;with ease.
 
 * Supports classes, functions and variable assignment.
 * Searches backwards from selected token for assignment.
