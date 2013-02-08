@@ -5,7 +5,11 @@ CoffeeScript Autocomplete Plus (CAP) is a Sublime Text 2 plugin that scans your 
 
 In addition, this plugin adds the "Coffee: Goto Definition" command, which will look up the class, function or variable definition of the selected token. 
 
-I know what you're thinking. You're either freaking out because of the potential awesomeness factor, or you're skeptical--or both. This just means that the next step is to jump in and give it a shot!
+Do you miss the old days? When, at the control-tap a spacebar, your IDE came running to you, menu in hand, asking, "what would you like, sir?" And that menu actually made sense? And suggested menu items you were interested in? I missed those days, so I decided to do something about it. I learned about Sublime Text 2. Best decision of my life. Then, I learned how to make plugins. My first order of business was to make this plugin&mdash;and now it's available for you to use.
+
+Autocompletions. Zooming to definitions.
+
+Let start coding again like the old days. With *style*.
 
 Installation
 ------------
