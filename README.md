@@ -36,13 +36,48 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 				console.log "Heating up!"
 			coolDown: ->
 				console.log "Cooling down!"
-			beAwesome: ->
+			moveBlobs: ->
 				# Lists heatUp() and coolDown()
 				this.[autocomplete]
 
 * Any variable assigned to `this` in the constructor will be considered an instance property.
+
+		class LavaLamp
+			constructor: (@color, size) ->
+				this.size = size
+			moveBlobs: ->
+				# Lists color, size and moveBlobs()
+				this.[autocomplete]
+
 * After autocompleting a method, tab stops for parameters are provided (if applicable).
 * Suggests super class properties and functions. This applies to both instance and static suggestions.
+
+	    class Appliance
+	      @WARRANTY_YEARS = 10
+	      @calculateWarrantyExpiration: (currentYear) ->
+	        console.log "Expires: ", currentYear + Appliance.WARRANTY_YEARS
+	      constructor: ->
+	        this.isSwitchedOn = False
+	      toggle: ->
+	        this.isSwitchedOn = !this.isSwitchedOn
+
+	    class LavaLamp extends Appliance
+	      @BEST_COLOR = "Red"
+	      @isLampAwesome: (lamp) ->
+	        if lamp.color == LavaLamp.BEST_COLOR
+	          console.log "Definitely"
+	        else:
+	          console.log "Maybe"
+	      constructor: (@color, size) ->
+	        this.size = size
+	      moveBlobs: ->
+	        # Lists color, isSwitchedOn, size, moveBlobs(), toggle()
+	        this.[autocomplete]
+	        # Lists WARRANTY_YEARS and calculateWarrantyExpiration()
+	        Appliance.[autocomplete]
+	        # Lists BEST_COLOR, WARRANTY_YEARS, calculateWarrantyExpiration(), and isLampAwesome()
+	        LavaLamp.[autocomplete]
+
 * Expects that you don't suck at naming things. Will assume a class is UpperCamelCase and everything else is lowerCamelCase. It still works either way; it will just be faster if things are named properly.
 * For every 1 million autocompletions, a beautiful masseuse appears and give you a massage. You must be tired after all that coding.
 
