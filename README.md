@@ -166,7 +166,7 @@ Limitations and Plans
 
 > "Conceal a flaw, and the world will imagine the worst." — Marcus Aurelius, 16th Emperor of the Roman Empire
 
-Autocomplete is smart, but not Mensa smart. Under the hood, we're not building an index or anything. We're using regular expressions and lots of scanning. As I build out functionality, I will try to fix its limitations. 
+Autocomplete is smart, but not Mensa smart. Under the hood, we're using regular expressions and lots of scanning. I coded this rather quickly, and it's my first plugin, so there may be (read: probably are) bugs. Please let me know if there are. As I build out functionality, I will try to fix its limitations.
 
 For now, here is the list of TBDs:
 
