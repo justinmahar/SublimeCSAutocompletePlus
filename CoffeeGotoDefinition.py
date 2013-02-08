@@ -46,8 +46,11 @@ class CoffeeGotoDefinitionCommand(sublime_plugin.TextCommand):
 
 		selected_region = self.view.sel()[0]
 
+		# http://www.sublimetext.com/forum/viewtopic.php?f=6&t=9076
+		settings = sublime.load_settings(coffee_utils.SETTINGS_FILE_NAME)
+
 		# Pull the excluded dirs from preferences
-		excluded_dirs = view.settings().get(coffee_utils.PREFERENCES_COFFEE_EXCLUDED_DIRS)
+		excluded_dirs = settings.get(coffee_utils.PREFERENCES_COFFEE_EXCLUDED_DIRS)
 		if not excluded_dirs:
 			excluded_dirs = []
 
@@ -189,9 +192,7 @@ class CoffeeGotoDefinitionThread(threading.Thread):
 			# ------ CURRENT FILE: ASSIGNMENT ------------------------
 
 			if not matched_location_tuple:
-				# TODO: While this indeed works, it's not good enough to find the first occurrence. 
-				#	   Instead, check from the current position backwards. 
-				#	   Take scope into consideration using indentation.
+				
 				debug("Checking for local assignment of %s..." % selected_word)
 				backwards_match_tuple = coffee_utils.search_backwards_for(current_file_lines, assignment_regex, selected_region)
 				if backwards_match_tuple:

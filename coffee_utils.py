@@ -9,6 +9,7 @@ import os
 # Set to true to enable debug output
 DEBUG = False
 
+SETTINGS_FILE_NAME = "CoffeeScript Autocomplete Plus.sublime-settings"
 PREFERENCES_COFFEE_EXCLUDED_DIRS = "coffee_autocomplete_plus_excluded_dirs"
 PREFERENCES_THIS_ALIASES = "coffee_autocomplete_plus_this_aliases"
 

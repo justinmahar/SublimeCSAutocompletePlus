@@ -41,12 +41,15 @@ class CoffeeAutocomplete(sublime_plugin.EventListener):
 			# List of all project folders
 			project_folder_list = self.window.folders()
 
+			# http://www.sublimetext.com/forum/viewtopic.php?f=6&t=9076
+			settings = sublime.load_settings(coffee_utils.SETTINGS_FILE_NAME)
+
 			# Pull the excluded dirs from preferences
-			excluded_dirs = view.settings().get(coffee_utils.PREFERENCES_COFFEE_EXCLUDED_DIRS)
+			excluded_dirs = settings.get(coffee_utils.PREFERENCES_COFFEE_EXCLUDED_DIRS)
 			if not excluded_dirs:
 				excluded_dirs = []
 
-			this_aliases = view.settings().get(coffee_utils.PREFERENCES_THIS_ALIASES)
+			this_aliases = settings.get(coffee_utils.PREFERENCES_THIS_ALIASES)
 			if not this_aliases:
 				this_aliases = []
 
