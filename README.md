@@ -1,9 +1,9 @@
-CoffeeScript Autocomplete Plus (CAP)
-====================================
+CoffeeScript Autocomplete Plus
+==============================
 
-Can it be true? Autocompletions for CoffeeScript? I'm here to tell you: They're real, and they're spectacular.
 
-CoffeeScript Autocomplete Plus scans your CoffeeScript files on demand and makes autocomplete suggestions for you.
+
+CoffeeScript Autocomplete Plus (CAP) scans your CoffeeScript files on demand and makes autocomplete suggestions for you.
 
 In addition, this plugin adds the "Coffee: Goto Definition" command, which will look up the class, function or variable definition of the selected token. 
 
@@ -21,12 +21,12 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 * Suggests instance properties and methods when operating on an instance.
 
 		myLamp = new LavaLamp()
-		# Lists all instance properties and methods.
+		# Suggests all instance properties and methods.
 		myLamp.[autocomplete]
 
 * Suggests static properties and methods when operating on a class.
 
-		# Lists all static properties and methods
+		# Suggests all static properties and methods
 		LavaLamp.[autocomplete]
 
 * Supports "this" keyword and any defined aliases.
@@ -37,7 +37,7 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 			coolDown: ->
 				console.log "Cooling down!"
 			moveBlobs: ->
-				# Lists heatUp() and coolDown()
+				# Suggests heatUp() and coolDown()
 				this.[autocomplete]
 
 * Any variable assigned to `this` in the constructor will be considered an instance property.
@@ -46,38 +46,48 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 			constructor: (@color, size) ->
 				this.size = size
 			moveBlobs: ->
-				# Lists color, size and moveBlobs()
+				# Suggests color, size and moveBlobs()
 				this.[autocomplete]
 
-* After autocompleting a method, tab stops for parameters are provided (if applicable).
 * Suggests super class properties and functions. This applies to both instance and static suggestions.
 
-	    class Appliance
-	      @WARRANTY_YEARS = 10
-	      @calculateWarrantyExpiration: (currentYear) ->
-	        console.log "Expires: ", currentYear + Appliance.WARRANTY_YEARS
-	      constructor: ->
-	        this.isSwitchedOn = False
-	      toggle: ->
-	        this.isSwitchedOn = !this.isSwitchedOn
+		# In the following example, we have a LavaLamp that extends Appliance.
+		# Each class has static and non-static properties and methods.
 
-	    class LavaLamp extends Appliance
-	      @BEST_COLOR = "Red"
-	      @isLampAwesome: (lamp) ->
-	        if lamp.color == LavaLamp.BEST_COLOR
-	          console.log "Definitely"
-	        else:
-	          console.log "Maybe"
-	      constructor: (@color, size) ->
-	        this.size = size
-	      moveBlobs: ->
-	        # Lists color, isSwitchedOn, size, moveBlobs(), toggle()
-	        this.[autocomplete]
-	        # Lists WARRANTY_YEARS and calculateWarrantyExpiration()
-	        Appliance.[autocomplete]
-	        # Lists BEST_COLOR, WARRANTY_YEARS, calculateWarrantyExpiration(), and isLampAwesome()
-	        LavaLamp.[autocomplete]
+		class Appliance
+			# Static
+			@WARRANTY_YEARS = 10
+			@calculateWarrantyExpiration: (currentYear) ->
+				console.log "Expires: ", currentYear + Appliance.WARRANTY_YEARS
+			# Non-static
+			constructor: ->
+				this.isSwitchedOn = False
+			toggle: ->
+				this.isSwitchedOn = !this.isSwitchedOn
 
+		class LavaLamp extends Appliance
+			# Static
+			@BEST_COLOR = "Red"
+			@isLampAwesome: (lamp) ->
+				if lamp.color == LavaLamp.BEST_COLOR
+					console.log "Definitely"
+				else:
+					console.log "Probably"
+			# Non-static
+			constructor: (@color, size) ->
+				this.size = size
+
+			moveBlobs: ->
+				# Suggests color, isSwitchedOn, size, moveBlobs(), toggle()
+				this.[autocomplete]
+
+				# Suggests WARRANTY_YEARS and calculateWarrantyExpiration()
+				Appliance.[autocomplete]
+
+				# Suggests BEST_COLOR, WARRANTY_YEARS, calculateWarrantyExpiration(), and isLampAwesome()
+				LavaLamp.[autocomplete]
+
+* After autocompleting a method, tab stops for parameters are provided (if applicable).
 * Expects that you don't suck at naming things. Will assume a class is UpperCamelCase and everything else is lowerCamelCase. It still works either way; it will just be faster if things are named properly.
 * For every 1 million autocompletions, a beautiful masseuse appears and give you a massage. You must be tired after all that coding.
 
@@ -95,8 +105,8 @@ Goto Definition is useful for finding where a class, function, or variable was d
 ### General 
 
 * Generally fast lookups.
-* You can configure directories to be be excluded from global .coffee search (recommended)
-* You can configure the tool to only search in specific locations (recommended)
+* You can configure directories to be be excluded from global .coffee search **(recommended)**
+* You can configure the tool to only search in specific locations **(recommended)**
 
 Installation
 ------------
