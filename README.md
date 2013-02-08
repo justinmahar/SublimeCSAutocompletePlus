@@ -35,7 +35,7 @@ Features
 
 Autocomplete will make suggestions when you trigger autocomplete after a dot operator. It starts with the current view, then branches out to other coffee files. Because of this, most lookups are blazingly fast. You can configure CAP to exclude certain directories and to only look in others. This will further increase speed as less searching will be needed.
 
-Autocomplete suggestions alphabetically show properties first, as indicated by a `&#x25CB;` symbol before each property name, followed by alphabetically sorted methods, as indicated by a `&#x25CF;` symbol before each method name.
+Autocomplete suggestions alphabetically show properties first, as indicated by a &#x25CB; symbol before each property name, followed by alphabetically sorted methods, as indicated by a &#x25CF; symbol before each method name.
 
 Here are the main features. In the examples, `[autocomplete]` represents the user action of triggering autocomplete, which is typically `ctrl+space`.
 
