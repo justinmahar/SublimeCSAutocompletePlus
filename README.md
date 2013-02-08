@@ -83,7 +83,8 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 
 		# In the following example, we have a LavaLamp that extends Appliance.
 		# Each class has static and non-static properties and methods.
-		# CA+ will know about these given the context of the operand.
+		# Given the context, CA+ will suggest either static or non-static,
+		# and will walk up the class hierarchy.
 
 		class Appliance
 			# Static
@@ -128,7 +129,7 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 Goto Definition is useful for finding where a class, function, or variable was defined or declared. Again, searching is performed from the current view and branches out to other files if nothing is found. With this, you can quickly jump between classes and zoom to functions&mdash;even ones defined in other files&mdash;with ease.
 
 * Supports classes, functions and variable assignment.
-* Searches backwards from selected token for assignment.
+* Searches backwards from selected token for assignment, then forwards.
 * Considers variables declared in for loops.
 * Considers method parameters.
 * Tries to find something rather than nothing.
