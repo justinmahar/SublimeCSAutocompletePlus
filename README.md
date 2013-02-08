@@ -1,13 +1,11 @@
 CoffeeScript Autocomplete Plus
 ==============================
 
-
-
-CoffeeScript Autocomplete Plus (CAP) scans your CoffeeScript files on demand and makes autocomplete suggestions for you.
+CoffeeScript Autocomplete Plus (CAP) is a Sublime Text 2 plugin that scans your CoffeeScript files on demand and makes autocomplete suggestions for you.
 
 In addition, this plugin adds the "Coffee: Goto Definition" command, which will look up the class, function or variable definition of the selected token. 
 
-Do you miss having a control-click key combination to go to a definition? Well, that's here too. Oh baby.
+I know what you're thinking. You're either freaking out because of the potential awesomeness factor, or you're skeptical--or both. This just means that the next step is to jump in and give it a shot!
 
 Installation
 ------------
@@ -185,6 +183,11 @@ For now, here is the list of TBDs:
 * Better token parsing
 * Hinting
 * Built-in types and custom types
+
+Far too many times I've installed a plugin only to be disappointed because it fell short of my expectations. If you feel this way, please let me know how I can make this plugin better for you and I will do my best.
+
+Happy coding,
+Justin
 
 License
 -------
