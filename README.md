@@ -39,12 +39,12 @@ Autocomplete suggestions alphabetically show properties first, as indicated by a
 
 For example:
 
-	&#x25CB; property1
-	&#x25CB; propertyTwo
-	&#x25CB; someOtherProperty
-	&#x25CF; methodOne()
-	&#x25CF; methodTwo(arg1, arg2)
-	&#x25CF; lastMethod(arg1, arg2, arg3)
+	○ property1
+	○ propertyTwo
+	○ someOtherProperty
+	● methodOne()
+	● methodTwo(arg1, arg2)
+	● lastMethod(arg1, arg2, arg3)
 
 Here are the main features. In the examples, `[autocomplete]` represents the user action of triggering autocomplete, which is typically `ctrl+space`.
 
