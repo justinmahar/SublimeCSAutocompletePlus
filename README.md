@@ -16,7 +16,7 @@ Features
 
 Autocomplete will make suggestions when you trigger autocomplete after a dot operator. It starts with the current view, then branches out to other coffee files. Because of this, most lookups are blazingly fast. You can configure CAP to exclude certain directories and to only look in others. This will further increase speed as less searching will be needed.
 
-Here are the main features. In the examples, [autocomplete] represents the user action of triggering autocomplete, which is typically `ctrl+space`.
+Here are the main features. In the examples, `[autocomplete]` represents the user action of triggering autocomplete, which is typically `ctrl+space`.
 
 * Suggests instance properties and methods when operating on an instance.
 
