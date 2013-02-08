@@ -29,6 +29,7 @@ Here are the main features:
 		LavaLamp.[autocomplete]
 
 * Supports "this" keyword and any defined aliases.
+
 		class LavaLamp
 			heatUp: ->
 				console.log "Heating up!"
