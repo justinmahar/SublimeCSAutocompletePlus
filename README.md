@@ -174,6 +174,7 @@ For now, here is the list of TBDs:
 * Smarter assignment detection
 * Better token parsing
 * Hinting
+* Built-in types and custom types
 
 License
 -------
