@@ -40,7 +40,7 @@ Here are the main features:
 				this.[autocomplete]
 
 * Any variable assigned to `this` in the constructor will be considered an instance property.
-* After insertion suggestion, tab stops for parameters are provided.
+* After autocompleting a method, tab stops for parameters are provided (if applicable).
 * Suggests super class properties and functions.
 * Expects that you don't suck at naming things. Will assume a class is UpperCamelCase and everything else is lowerCamelCase. It still works either way; it will just be faster if things are named properly.
 * For every 1 million autocompletions, a beautiful masseuse appears and give you a massage. You must be tired after all that coding.
