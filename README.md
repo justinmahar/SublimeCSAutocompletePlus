@@ -9,6 +9,23 @@ In addition, this plugin adds the "Coffee: Goto Definition" command, which will 
 
 Do you miss having a control-click key combination to go to a definition? Well, that's here too. Oh baby.
 
+Installation
+------------
+
+### Package Control
+
+It is recommended that you use [Sublime Package Control](http://wbond.net/sublime_packages/package_control) to install CoffeeScript Autocomplete Plus. If you have Package Control installed, use the Package Control: Install Package command and search for CoffeeScript Autocomplete Plus. Ouila. Start coding easier.
+
+### Manual Installation
+
+In order to manually install CoffeeScript Autocomplete Plus, clone the repository into your Sublime Text 2 `Packages` directory, which can be located by navigating to Preferences -> Browse Packages. Name the directory `CoffeeScript Autocomplete Plus`.
+
+For your convenience:
+
+```
+git clone https://github.com/justinmahar/SublimeCSAutocompletePlus.git "CoffeeScript Autocomplete Plus"
+```
+
 Features
 --------
 
@@ -107,23 +124,6 @@ Goto Definition is useful for finding where a class, function, or variable was d
 * Generally fast lookups.
 * You can configure directories to be be excluded from global .coffee search **(recommended)**
 * You can configure the tool to only search in specific locations **(recommended)**
-
-Installation
-------------
-
-### Package Control
-
-It is recommended that you use [Sublime Package Control](http://wbond.net/sublime_packages/package_control) to install CoffeeScript Autocomplete Plus. If you have Package Control installed, use the Package Control: Install Package command and search for CoffeeScript Autocomplete Plus. Ouila. Start coding easier.
-
-### Manual Installation
-
-In order to manually install CoffeeScript Autocomplete Plus, clone the repository into your Sublime Text 2 `Packages` directory, which can be located by navigating to Preferences -> Browse Packages. Name the directory `CoffeeScript Autocomplete Plus`.
-
-For your convenience:
-
-```
-git clone https://github.com/justinmahar/SublimeCSAutocompletePlus.git "CoffeeScript Autocomplete Plus"
-```
 
 Usage
 -----
