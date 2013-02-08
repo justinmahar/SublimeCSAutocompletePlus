@@ -33,8 +33,7 @@ class CoffeeGotoDefinitionCommand(sublime_plugin.TextCommand):
 
 		# Get the window
 		self.window = sublime.active_window()
-		# List of all project folders
-		project_folder_list = self.window.folders()
+
 		# The current view
 		view = self.view
 		# Lines for currently viewed file
@@ -53,6 +52,21 @@ class CoffeeGotoDefinitionCommand(sublime_plugin.TextCommand):
 		excluded_dirs = settings.get(coffee_utils.PREFERENCES_COFFEE_EXCLUDED_DIRS)
 		if not excluded_dirs:
 			excluded_dirs = []
+
+		restricted_to_dirs = settings.get(coffee_utils.PREFERENCES_COFFEE_RESTRICTED_TO_PATHS)
+		if not restricted_to_dirs:
+			restricted_to_dirs = []
+
+		# List of all project folders
+		project_folder_list = self.window.folders()
+
+		if restricted_to_dirs:
+			specific_project_folders = []
+			for next_restricted_dir in restricted_to_dirs:
+				for next_project_folder in project_folder_list:
+					next_specific_folder = os.path.normpath(os.path.join(next_project_folder, next_restricted_dir))
+					specific_project_folders.append(next_specific_folder)
+			project_folder_list = specific_project_folders
 
 		# If there is a word selection and we're looking at a coffee file...
 		if len(selected_word) > 0 and coffee_utils.is_coffee_syntax(view):
