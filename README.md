@@ -186,8 +186,9 @@ For now, here is the list of TBDs:
 
 Far too many times I've installed a plugin only to be disappointed because it fell short of my expectations. If you feel this way, please let me know how I can make this plugin better for you and I will do my best.
 
-Happy coding,
-Justin
+Happy coding!
+
+-Justin
 
 License
 -------
