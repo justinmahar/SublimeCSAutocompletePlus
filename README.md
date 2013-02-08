@@ -89,7 +89,7 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 
 * After autocompleting a method, tab stops for parameters are provided (if applicable).
 * Expects that you don't suck at naming things. Will assume a class is UpperCamelCase and everything else is lowerCamelCase. It still works either way; it will just be faster if things are named properly.
-* For every 1 million autocompletions, a beautiful masseuse appears and give you a massage. You must be tired after all that coding.
+* For every 1 million autocompletions, a beautiful masseuse appears and gives you a massage. You must be tired after all that coding.
 
 ### Goto Definition
 
