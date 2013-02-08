@@ -19,8 +19,8 @@ THIS_SUGAR_SYMBOL = "@"
 THIS_KEYWORD = "this"
 PERIOD_OPERATOR = "."
 COFFEE_FILENAME_REGEX = r".+?" + re.escape(COFFEE_EXTENSION_WITH_DOT)
-CLASS_REGEX = r"class\s+%s"
-CLASS_REGEX_ANY = r"class\s+([a-zA-Z0-9_$]+)"
+CLASS_REGEX = r"class\s+%s((\s*$)|[^a-zA-Z0-9_$])"
+CLASS_REGEX_ANY = r"class\s+([a-zA-Z0-9_$]+)((\s*$)|[^a-zA-Z0-9_$])"
 SINGLE_LINE_COMMENT_REGEX = r"#.*?$"
 # Function regular expression. Matches:
 # methodName  =   (aas,bsa, casd )	->
