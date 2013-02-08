@@ -18,18 +18,17 @@ Autocomplete will make suggestions when you trigger autocomplete after a dot ope
 
 Here are the main features: 
 * Suggests instance properties and methods when operating on an instance.
-```
+
 		myLamp = new LavaLamp()
 		# Lists all instance properties and methods
 		myLamp.[autocomplete]
-```
+
 * Suggests static properties and methods when operating on a class.
-	```
+
 		# Lists all static properties and methods
 		LavaLamp.[autocomplete]
-```
+
 * Supports "this" keyword and any defined aliases.
-```
 		class LavaLamp
 			heatUp: ->
 				console.log "Heating up!"
@@ -38,7 +37,7 @@ Here are the main features:
 			beAwesome: ->
 				# Lists heatUp() and coolDown()
 				this.[autocomplete]
-```
+
 * Any variable assigned to `this` in the constructor will be considered an instance property.
 * After insertion suggestion, tab stops for parameters are provided.
 * Suggests super class properties and functions.
