@@ -1,7 +1,7 @@
 CoffeeScript Autocomplete Plus
 ==============================
 
-CoffeeScript Autocomplete Plus (CAP) is a Sublime Text 2 plugin that scans your CoffeeScript files on demand and makes autocomplete suggestions for you.
+CoffeeScript Autocomplete Plus (CA+) is a Sublime Text 2 plugin that scans your CoffeeScript files on demand and makes autocomplete suggestions for you.
 
 In addition, this plugin adds the "Coffee: Goto Definition" command, which will look up the class, function or variable definition of the selected token. 
 
@@ -33,7 +33,7 @@ Features
 
 ### Autocomplete
 
-Autocomplete will make suggestions when you trigger autocomplete after a dot operator. It starts with the current view, then branches out to other coffee files. Because of this, most lookups are blazingly fast. You can configure CAP to exclude certain directories and to only look in others. This will further increase speed as less searching will be needed.
+Autocomplete will make suggestions when you trigger autocomplete after a dot operator. It starts with the current view, then branches out to other coffee files. Because of this, most lookups are blazingly fast. You can configure CA+ to exclude certain directories and to only look in others. This will further increase speed as less searching will be needed.
 
 Autocomplete suggestions alphabetically show properties first, as indicated by a &#x25CB; symbol before each property name, followed by alphabetically sorted methods, as indicated by a &#x25CF; symbol before each method name.
 
@@ -51,12 +51,12 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 * Suggests instance properties and methods when operating on an instance.
 
 		myLamp = new LavaLamp()
-		# Suggests all instance properties and methods.
+		# Suggests all instance properties and methods of LavaLamp.
 		myLamp.[autocomplete]
 
 * Suggests static properties and methods when operating on a class.
 
-		# Suggests all static properties and methods
+		# Suggests all static properties and methods of LavaLamp.
 		LavaLamp.[autocomplete]
 
 * Supports "this" keyword and any defined aliases.
@@ -67,7 +67,7 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 			coolDown: ->
 				console.log "Cooling down!"
 			moveBlobs: ->
-				# Suggests heatUp() and coolDown()
+				# Suggests heatUp() and coolDown() methods
 				this.[autocomplete]
 
 * Any variable assigned to `this` in the constructor will be considered an instance property.
@@ -83,6 +83,7 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 
 		# In the following example, we have a LavaLamp that extends Appliance.
 		# Each class has static and non-static properties and methods.
+		# CA+ will know about these given the context of the operand.
 
 		class Appliance
 			# Static
@@ -111,10 +112,11 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 				# Suggests color, isSwitchedOn, size, moveBlobs(), toggle()
 				this.[autocomplete]
 
-				# Suggests WARRANTY_YEARS and calculateWarrantyExpiration()
+				# Suggests WARRANTY_YEARS and calculateWarrantyExpiration(), which are static.
 				Appliance.[autocomplete]
 
 				# Suggests BEST_COLOR, WARRANTY_YEARS, calculateWarrantyExpiration(), and isLampAwesome()
+				# These are all static properties from the complete class heirarchy.
 				LavaLamp.[autocomplete]
 
 * After autocompleting a method, tab stops for parameters are provided (if applicable).
@@ -193,11 +195,12 @@ Autocomplete is smart, but not Mensa smart. Under the hood, we're using regular 
 
 For now, here is the list of TBDs:
 
-* Check contents of currently open views besides the active one
-* Smarter assignment detection
-* Better token parsing
 * Hinting
 * Built-in types and custom types
+* An indication that a property or method is being overridden
+* Smarter assignment detection
+* Better token parsing
+* Check contents of currently open views besides the active one
 
 Far too many times I've installed a plugin only to be disappointed because it fell short of my expectations. If you feel this way, please let me know how I can make this plugin better for you and I will do my best.
 

@@ -222,7 +222,12 @@ class CoffeeGotoDefinitionThread(threading.Thread):
 						for_loop_match_tuple = coffee_utils.search_backwards_for(current_file_lines, for_loop_regex, selected_region)
 						if for_loop_match_tuple:
 							filename_tuple = tuple([None])
-							matched_location_tuple = filename_tuple + for_loop_match_tuple	
+							matched_location_tuple = filename_tuple + for_loop_match_tuple
+						# Otherwise, forwards search for it. It could be defined in the constructor.
+						else:
+							forwards_match_tuple = coffee_utils.find_location_of_regex_in_files(assignment_regex, current_file_lines)
+							if forwards_match_tuple:
+								matched_location_tuple = forwards_match_tuple
 
 			# ------ GLOBAL SEARCH: FUNCTION -------------------------
 
