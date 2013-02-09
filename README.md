@@ -35,7 +35,7 @@ Features
 
 Autocomplete will make suggestions when you trigger autocomplete after a dot operator. It starts with the current view, then branches out to other coffee files. Because of this, most lookups are blazingly fast. You can configure CA+ to exclude certain directories and to only look in others. This will further increase speed as less searching will be needed.
 
-Autocomplete suggestions alphabetically show properties first, as indicated by a &#x25CB; symbol before each property name, followed by alphabetically sorted methods, as indicated by a &#x25CF; symbol before each method name. Inherited properties and methods will be preceded by a &#x2C75; symbol. This create a nice visual breakdown of what you can do at any given time, and where things are coming from. Badass.
+Autocomplete suggestions alphabetically show properties first, as indicated by a &#x25CB; symbol before each property name, followed by alphabetically sorted methods, as indicated by a &#x25CF; symbol before each method name. Inherited properties and methods will be preceded by a &#x2C75; symbol. This creates a nice visual breakdown of what you can do at any given time, and where things are coming from. Badass.
 
 For example:
 
