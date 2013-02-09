@@ -170,10 +170,9 @@ If you find yourself using a third-party library often and would like to have au
 
 ```
 	# [Animal] critter
-	# [Number] amount
-	feedAlligator: (critter, amount) ->
-
-		# CA+ knows that it's an Animal. Poor guy.
+	# [Boolean] animalEscapes
+	feedAlligator: (critter, animalEscapes) ->
+		# CA+ knows that it's an Animal. Will he escape?
 		critter.[autocomplete]
 ```
 
