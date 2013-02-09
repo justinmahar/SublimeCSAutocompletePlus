@@ -1,0 +1,203 @@
+{
+	"coffee_autocomplete_plus_built_in_types": 
+	[
+		{
+			"name": "Array",
+			"constructor": {"args": []},
+			"static_properties": [],
+			"static_methods": 
+			[
+				{"name":"isArray", "args": [{"name": "obj"}]}
+			],
+			"instance_properties": [],
+			"instance_methods":
+			[
+				{"name":"pop", "args": []},
+				{"name":"push", "args": [{"name": "element1, ..., elementN"}]},
+				{"name":"reverse", "args": []},
+				{"name":"shift", "args": []},
+				{"name":"sort", "args": [{"name": "[compareFunction]"}]},
+				{"name":"splice", "args": [{"name": "index"}, {"name": "howMany"}, {"name": "element1, ..., elementN"}]},
+				{"name":"unshift", "args": [{"name": "element1, ..., elementN"}]},
+				{"name":"concat", "args": [{"name": "value1, ..., valueN"}]},
+				{"name":"join", "args": [{"name": "separator"}]},
+				{"name":"slice", "args": [{"name": "begin"}, {"name": "[end]"}]},
+				{"name":"toString", "args": []},
+				{"name":"indexOf", "args": [{"name": "searchElement"}, {"name": "[fromIndex]"}]},
+				{"name":"lastIndexOf", "args": [{"name": "searchElement"}, {"name": "[fromIndex]"}]},
+				{"name":"forEach", "args": [{"name": "callback"}, {"name": "[thisArg]"}]},
+				{"name":"every", "args": [{"name": "callback"}, {"name": "[thisArg]"}]},
+				{"name":"some", "args": [{"name": "callback"}, {"name": "[thisArg]"}]},
+				{"name":"filter", "args": [{"name": "callback"}, {"name": "[thisArg]"}]},
+				{"name":"map", "args": [{"name": "callback"}, {"name": "[thisArg]"}]},
+				{"name":"reduce", "args": [{"name": "callback(p,c,i,a)"}, {"name": "[initialVal]"}]},
+				{"name":"reduceRight", "args": [{"name": "callback(p,c,i,a)"}, {"name": "[initialVal]"}]}
+			]
+		},
+		{
+			"name": "Boolean",
+			"constructor": {"args": []},
+			"static_properties": [],
+			"static_methods": [],
+			"instance_properties": [],
+			"instance_methods": []
+		},
+		{
+			"name": "Date",
+			"constructor": {"args": []},
+			"static_properties": [],
+			"static_methods": 
+			[
+				{"name":"now", "args": []},
+				{"name":"parse", "args": [{"name": "dateString"}]},
+				{"name":"UTC", "args": [{"name": "year"}, {"name": "month"}, {"name": "[date]"}, {"name": "[hrs]"}, {"name": "[min]"}, {"name": "[sec]"}, {"name": "[ms]"}]}
+			],
+			"instance_properties": [],
+			"instance_methods":
+			[
+				{"name":"getDate", "args": []},
+				{"name":"getDay", "args": []},
+				{"name":"getFullYear", "args": []},
+				{"name":"getHours", "args": []},
+				{"name":"getMilliseconds", "args": []},
+				{"name":"getMinutes", "args": []},
+				{"name":"getMonth", "args": []},
+				{"name":"getSeconds", "args": []},
+				{"name":"getTime", "args": []},
+				{"name":"getTimezoneOffset", "args": []},
+				{"name":"getUTCDate", "args": []},
+				{"name":"getUTCDay", "args": []},
+				{"name":"getUTCFullYear", "args": []},
+				{"name":"getUTCHours", "args": []},
+				{"name":"getUTCMilliseconds", "args": []},
+				{"name":"getUTCMinutes", "args": []},
+				{"name":"getUTCMonth", "args": []},
+				{"name":"getUTCSeconds", "args": []},
+				{"name":"setDate", "args": [{"name": "dayValue1to31"}]},
+				{"name":"setFullYear", "args": [{"name": "year"}, {"name": "[month0to11]"}, {"name": "[day1to31]"}]},
+				{"name":"setHours", "args": [{"name": "hours0to23"}, {"name": "[mins0to59]"}, {"name": "[secs0to59]"}, {"name": "[ms0to999]"}]},
+				{"name":"setMilliseconds", "args": [{"name": "millis0to999"}]},
+				{"name":"setMinutes", "args": [{"name": "mins0to59"}, {"name": "[secs0to59]"}, {"name": "[ms0to999]"}]},
+				{"name":"setMonth", "args": [{"name": "month0to11"}, {"name": "[day1to31]"}]},
+				{"name":"setSeconds", "args": [{"name": "secs0to59"}, {"name": "[ms0to999]"}]},
+				{"name":"setTime", "args": [{"name": "millisSinceEpoch"}]},
+				{"name":"setUTCDate", "args": [{"name": "dayValue1to31"}]},
+				{"name":"setUTCFullYear", "args": [{"name": "year"}, {"name": "[month0to11]"}, {"name": "[day1to31]"}]},
+				{"name":"setUTCHours", "args": [{"name": "hours0to23"}, {"name": "[mins0to59]"}, {"name": "[secs0to59]"}, {"name": "[ms0to999]"}]},
+				{"name":"setUTCMilliseconds", "args": [{"name": "millis0to999"}]},
+				{"name":"setUTCMinutes", "args": [{"name": "mins0to59"}, {"name": "[secs0to59]"}, {"name": "[ms0to999]"}]},
+				{"name":"setUTCMonth", "args": [{"name": "month0to11"}, {"name": "[day1to31]"}]},
+				{"name":"setUTCSeconds", "args": [{"name": "secs0to59"}, {"name": "[ms0to999]"}]},
+				{"name":"toDateString", "args": []},
+				{"name":"toISOString", "args": []},
+				{"name":"toJSON", "args": []},
+				{"name":"toLocaleDateString", "args": []},
+				{"name":"toLocaleString", "args": []},
+				{"name":"toLocaleTimeString", "args": []},
+				{"name":"toString", "args": []},
+				{"name":"toTimeString", "args": []},
+				{"name":"toUTCString", "args": []}
+			]
+		},
+		{
+			"name": "Function",
+			"constructor": {"args": []},
+			"static_properties": [],
+			"static_methods": [],
+			"instance_properties": [{"name": "length"}],
+			"instance_methods":
+			[
+				{"name":"apply", "args": [{"name": "thisArg"}, {"name": "[argsArray]"}]},
+				{"name":"bind", "args": [{"name": "thisArg"}, {"name": "arg1, ..., argN"}]},
+				{"name":"call", "args": [{"name": "thisArg"}, {"name": "arg1, ..., argN"}]},
+				{"name":"isGenerator", "args": []}
+			]
+		},
+		{
+			"name": "Number",
+			"constructor": {"args": []},
+			"static_properties": [{"name": "MAX_VALUE"}, {"name": "MIN_VALUE"}, {"name": "NaN"}, {"name": "NEGATIVE_INFINITY"}, {"name": "POSITIVE_INFINITY"}],
+			"static_methods": [],
+			"instance_properties": [],
+			"instance_methods":
+			[
+				{"name":"toExponential", "args": [{"name": "[fractionDigits]"}]},
+				{"name":"toFixed", "args": [{"name": "[digits]"}]},
+				{"name":"toPrecision", "args": [{"name": "[precision]"}]}
+			]
+		},
+		{
+			"name": "Object",
+			"constructor": {"args": []},
+			"static_properties": [{"name": "prototype"}],
+			"static_methods": 
+			[
+				{"name":"create", "args": [{"name": "proto"}, {"name": "[propertiesObject]"}]},
+				{"name":"defineProperty", "args": [{"name": "obj"}, {"name": "prop"}, {"name": "descriptor"}]},
+				{"name":"defineProperties", "args": [{"name": "obj"}, {"name": "props"}]},
+				{"name":"getOwnPropertyDescriptor", "args": [{"name": "obj"}, {"name": "prop"}]},
+				{"name":"keys", "args": [{"name": "obj"}]},
+				{"name":"getOwnPropertyNames", "args": [{"name": "obj"}]},
+				{"name":"getPrototypeOf", "args": [{"name": "object"}]},
+				{"name":"preventExtensions", "args": [{"name": "obj"}]},
+				{"name":"isExtensible", "args": [{"name": "obj"}]},
+				{"name":"seal", "args": [{"name": "obj"}]},
+				{"name":"isSealed", "args": [{"name": "obj"}]},
+				{"name":"freeze", "args": [{"name": "obj"}]},
+				{"name":"isFrozen", "args": [{"name": "obj"}]}
+			],
+			"instance_properties": [{"name": "constructor"}],
+			"instance_methods":
+			[
+				{"name":"hasOwnProperty", "args": [{"name": "prop"}]},
+				{"name":"isPrototypeOf", "args": [{"name": "object"}]},
+				{"name":"propertyIsEnumerable", "args": [{"name": "prop"}]},
+				{"name":"toLocaleString", "args": []},
+				{"name":"toString", "args": []},
+				{"name":"valueOf", "args": []}
+			]
+		},
+		{
+			"name": "RegExp",
+			"constructor": {"args": []},
+			"static_properties": [],
+			"static_methods": [],
+			"instance_properties": [{"name": "global"}, {"name": "ignoreCase"}, {"name": "lastIndex"}, {"name": "multiline"}, {"name": "source"}],
+			"instance_methods": []
+		},
+		{
+			"name": "String",
+			"constructor": {"args": []},
+			"static_properties": [],
+			"static_methods": 
+			[
+				{"name":"fromCharCode", "args": [{"name": "num1,...,numN"}]}
+			],
+			"instance_properties": [],
+			"instance_methods":
+			[
+				{"name":"charAt", "args": [{"name": "index"}]},
+				{"name":"charCodeAt", "args": [{"name": "index"}]},
+				{"name":"concat", "args": [{"name": "string2, ..., stringN"}]},
+				{"name":"contains", "args": [{"name": "searchString"}, {"name": "[position]"}]},
+				{"name":"endsWith", "args": [{"name": "searchString"}, {"name": "[position]"}]},
+				{"name":"indexOf", "args": [{"name": "searchValue"}, {"name": "[fromIndex]"}]},
+				{"name":"lastIndexOf", "args": [{"name": "searchValue"}, {"name": "[fromIndex]"}]},
+				{"name":"localeCompare", "args": [{"name": "compareString"}]},
+				{"name":"match", "args": [{"name": "regexp"}]},
+				{"name":"replace", "args": [{"name": "regexp|substr"}, {"name": "newSubStr|function"}]},
+				{"name":"search", "args": [{"name": "regexp"}]},
+				{"name":"slice", "args": [{"name": "beginslice"}, {"name": "[endSlice]"}]},
+				{"name":"split", "args": [{"name": "[separator|regex]"}, {"name": "[limit]"}]},
+				{"name":"startsWith", "args": [{"name": "searchString"}, {"name": "[position]"}]},
+				{"name":"substr", "args": [{"name": "start"}, {"name": "[length]"}]},
+				{"name":"substring", "args": [{"name": "arg1"}, {"name": "arg2"}]},
+				{"name":"toLocaleLowerCase", "args": []},
+				{"name":"toLocaleUpperCase", "args": []},
+				{"name":"toLowerCase", "args": []},
+				{"name":"toUpperCase", "args": []},
+				{"name":"trim", "args": []}
+			]
+		}
+	]
+}
