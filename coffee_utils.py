@@ -73,6 +73,7 @@ BUILT_IN_TYPES_INSTANCE_METHOD_NAME_KEY = "name"
 BUILT_IN_TYPES_METHOD_NAME_KEY = "name"
 BUILT_IN_TYPES_METHOD_ARGS_KEY = "args"
 BUILT_IN_TYPES_METHOD_ARG_NAME_KEY = "name"
+BUILT_IN_TYPES_INHERITS_FROM_OBJECT_KEY = "inherits_from_object"
 
 # Utility functions
 def debug(message):
@@ -137,6 +138,10 @@ def is_capitalized(word):
 	if len(az_word) > 0:
 		first_letter = az_word[0]
 		capitalized = first_letter.isupper()
+
+	# Special case for $
+	capitalized = capitalized | word.startswith("$")
+
 	return capitalized
 
 def get_files_in(directory_list, filename_regex, excluded_dirs):
@@ -423,9 +428,13 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
 	
 	# TODO: Use prefix to make suggestions.
 
+	print "Looking for " + str(class_name)
+
 	completions = []
 	scanned_classes = []
+	original_class_name_found = False
 
+	function_completions = []
 	object_completions = []
 	
 	# First, determine if it is a built in type and return those completions...
@@ -436,8 +445,11 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
 			if next_class_name == class_name:
 				# We are looking at a built-in type! Collect completions for it...
 				completions = get_completions_for_built_in_type(next_built_in_type, search_statically, False)
+				original_class_name_found = True
+			elif next_class_name == "Function" and not function_completions:
+				function_completions = get_completions_for_built_in_type(next_built_in_type, False, True)
 			elif next_class_name == "Object" and not object_completions:
-				object_completions = get_completions_for_built_in_type(next_built_in_type, search_statically, True)
+				object_completions = get_completions_for_built_in_type(next_built_in_type, False, True)
 		except Exception, e:
 			print repr(e)
 
@@ -470,14 +482,21 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
 					else:
 						completion_tuple = collect_instance_completions_from_file(class_file_lines, current_class_name, is_inherited)
 			
+			if current_class_name == class_name and completion_tuple[0]:
+				original_class_name_found = True
+
 			# print "Tuple: " + str(completion_tuple)
 			completions.extend(completion_tuple[1])
 			scanned_classes.append(current_class_name)
 			current_class_name = completion_tuple[2]
 			is_inherited = True
 
-	# Add Object completions (if available) -- Everything is an Object
-	completions.extend(object_completions)
+	if original_class_name_found:
+		# Add Object completions (if available) -- Everything is an Object
+		completions.extend(object_completions)
+		if search_statically: 
+			completions.extend(function_completions)
+
 
 	# Remove all duplicates
 	completions = list(set(completions))

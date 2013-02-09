@@ -42,7 +42,6 @@ class CoffeeAutocomplete(sublime_plugin.EventListener):
 			# http://www.sublimetext.com/forum/viewtopic.php?f=6&t=9076
 			settings = sublime.load_settings(coffee_utils.SETTINGS_FILE_NAME)
 
-
 			built_in_types_settings = sublime.load_settings(coffee_utils.BUILT_IN_TYPES_SETTINGS_FILE_NAME)
 			built_in_types = built_in_types_settings.get(coffee_utils.BUILT_IN_TYPES_SETTINGS_KEY)
 			if not built_in_types:
@@ -226,8 +225,8 @@ class CoffeeAutocompleteThread(threading.Thread):
 							exact_file_name_regex = "^" + re.escape(variable_type + coffee_utils.COFFEE_EXTENSION_WITH_DOT) + "$"
 							exact_name_file_paths = coffee_utils.get_files_in(project_folder_list, exact_file_name_regex, excluded_dirs)
 							completions = coffee_utils.get_completions_for_class(variable_type, False, current_file_lines, prefix, exact_name_file_paths, built_in_types)
-							if not completions:
-								# Now we search globally...
-								completions = coffee_utils.get_completions_for_class(variable_type, False, None, prefix, all_coffee_file_paths, built_in_types)
+					if not completions:
+						# Now we search globally for a class... Maybe they're making a static call on something lowercase? Bad design, but check anyways.
+						completions = coffee_utils.get_completions_for_class(token, True, None, prefix, all_coffee_file_paths, built_in_types)
 		if completions:
 			self.completions = completions

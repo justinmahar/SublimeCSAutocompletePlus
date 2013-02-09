@@ -35,7 +35,7 @@ Features
 
 Autocomplete will make suggestions when you trigger autocomplete after a dot operator. It starts with the current view, then branches out to other coffee files. Because of this, most lookups are blazingly fast. You can configure CA+ to exclude certain directories and to only look in others. This will further increase speed as less searching will be needed.
 
-Autocomplete suggestions alphabetically show properties first, as indicated by a &#x25CB; symbol before each property name, followed by alphabetically sorted methods, as indicated by a &#x25CF; symbol before each method name.
+Autocomplete suggestions alphabetically show properties first, as indicated by a &#x25CB; symbol before each property name, followed by alphabetically sorted methods, as indicated by a &#x25CF; symbol before each method name. Inherited properties and methods will be preceded by a &#x2C75; symbol.
 
 For example:
 
@@ -45,6 +45,10 @@ For example:
 	● methodOne()
 	● methodTwo(arg1, arg2)
 	● lastMethod(arg1, arg2, arg3)
+	Ⱶ○ inheritedProperty1
+	Ⱶ○ inheritedPropertyTwo
+	Ⱶ● inheritedMethod1()
+	Ⱶ● inheritedMethod2(arg1, arg2)
 
 Here are the main features. In the examples, `[autocomplete]` represents the user action of triggering autocomplete, which is typically `ctrl+space`.
 
@@ -139,7 +143,7 @@ CA+ now supports autocompletion for the following built-in types:
 
 This makes life that much easier.
 
-In addition, autocomplete suggests inherited properties and methods from Object. Built-in types are defined in `CoffeeScript Autocomplete Plus Built-In Types.sublime-settings`. You can experiment with this, but it is currently under development. I have plans to add a separate file for your own custom types should you be interested in doing so.
+In addition, autocomplete suggests inherited properties and methods from Object. Built-in types are defined in `CoffeeScript Autocomplete Plus Built-In Types.sublime-settings`. You can experiment with this, but there is a separate file for your own custom types should you be interested in adding them. See the configuration section below for more on adding custom types.
 
 ### Goto Definition
 
@@ -204,10 +208,10 @@ In `CoffeeScript Autocomplete Plus.sublime-settings`:
 * Mappings for the return types of special functions, like jQuery. -- `coffee_autocomplete_plus_function_return_types`
   - You may want to make calls directly off of special functions. For example, when using jQuery, you might type `$(selector).` and want some autocomplete suggestions. If you have a custom type defined, you can map the returns of function names, like `$` and `jQuery`, to that custom type. See the next config section for defining custom types.
 
-In ``CoffeeScript Autocomplete Plus Custom Types.sublime-settings`:
+In `CoffeeScript Autocomplete Plus Custom Types.sublime-settings`:
 
-* Custom types, allowing libraries like jQuery -- `coffee_autocomplete_plus_this_aliases`
-  - If you would like to define custom types, put them here. I have partially started jQuery.
+* Custom types, allowing libraries like jQuery -- `coffee_autocomplete_plus_custom_types`
+  - If you would like to define custom types, put them here. I have partially started a custom type for jQuery.
 
 To configure these settings, open Preferences -> Package Settings -> CoffeeScript Autocomplete Plus -> Settings.  It is not recommended that you change the Default settings as they will be overwritten by plugin updates. Instead, make your changes in User settings, which will override the Default settings.
 
