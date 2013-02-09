@@ -5,7 +5,7 @@ CoffeeScript Autocomplete Plus (CA+) is a [Sublime Text 2](http://www.sublimetex
 
 In addition, this plugin adds the "Coffee: Goto Definition" command, which will look up the class, function or variable definition of the selected token. 
 
-Do you miss the old days? When, at the control-tap a spacebar, your IDE came running to you, menu in hand, asking, "what would you like, sir?" And that menu actually made sense? And suggested menu items you were interested in? I missed those days, so I decided to do something about it. I learned about [Sublime Text 2](http://www.sublimetext.com/2). Best decision of my life. Then, I learned how to make plugins. My first order of business was to make this plugin&mdash;and now it's available for you to use.
+Do you miss the old days? When, at the control-tap of a spacebar, your IDE joyfully came running to you, list in hand, asking, "what would you like, sir?" And that list actually made sense? And suggested items you were interested in? I missed those days, so I decided to do something about it. I learned about [Sublime Text 2](http://www.sublimetext.com/2). Best decision of my life. Then, I learned how to make plugins. My first order of business was to make this plugin&mdash;and now it's available for you to use.
 
 Autocompletions. Zooming to definitions.
 
