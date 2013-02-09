@@ -53,6 +53,7 @@ NEW_OPERATION_REGEX = r"new\s+([a-zA-Z0-9_$.]+)"
 
 PROPERTY_INDICATOR = u'\u25CB'
 METHOD_INDICATOR = u'\u25CF'
+INHERITED_INDICATOR = u'\u2C75'
 
 BUILT_IN_TYPES_TYPE_NAME_KEY = "name"
 BUILT_IN_TYPES_CONSTRUCTOR_KEY = "constructor"
@@ -415,17 +416,18 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
 	for next_built_in_type in built_in_types:
 		try:
 			next_class_name = next_built_in_type[BUILT_IN_TYPES_TYPE_NAME_KEY]
-			if next_class_name == "Object":
-				object_completions = get_completions_for_built_in_type(next_built_in_type, search_statically)
-			elif next_class_name == class_name:
+			if next_class_name == class_name:
 				# We are looking at a built-in type! Collect completions for it...
-				completions = get_completions_for_built_in_type(next_built_in_type, search_statically)
+				completions = get_completions_for_built_in_type(next_built_in_type, search_statically, False)
+			elif next_class_name == "Object" and not object_completions:
+				object_completions = get_completions_for_built_in_type(next_built_in_type, search_statically, True)
 		except Exception, e:
 			print repr(e)
 
 	# If we didn't find completions for a built-in type, look further...
 	if not completions:
 		current_class_name = class_name
+		is_inherited = False
 		while current_class_name and current_class_name not in scanned_classes:
 			# print "Scanning " + current_class_name + "..."
 			# (class_found, completions, next_class_to_scan)
@@ -434,9 +436,9 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
 				# print "Searching locally..."
 				# Search in local file.
 				if search_statically:
-					completion_tuple = collect_static_completions_from_file(local_file_lines, current_class_name)
+					completion_tuple = collect_static_completions_from_file(local_file_lines, current_class_name, is_inherited)
 				else:
-					completion_tuple = collect_instance_completions_from_file(local_file_lines, current_class_name)
+					completion_tuple = collect_instance_completions_from_file(local_file_lines, current_class_name, is_inherited)
 
 			# Search globally if nothing found and not local only...
 			if global_file_path_list and (not completion_tuple or not completion_tuple[0]):
@@ -447,14 +449,15 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
 					file_to_open = global_class_location_search_tuple[0]
 					class_file_lines = get_lines_for_file(file_to_open)
 					if search_statically:
-						completion_tuple = collect_static_completions_from_file(class_file_lines, current_class_name)
+						completion_tuple = collect_static_completions_from_file(class_file_lines, current_class_name, is_inherited)
 					else:
-						completion_tuple = collect_instance_completions_from_file(class_file_lines, current_class_name)
+						completion_tuple = collect_instance_completions_from_file(class_file_lines, current_class_name, is_inherited)
 			
 			# print "Tuple: " + str(completion_tuple)
 			completions.extend(completion_tuple[1])
 			scanned_classes.append(current_class_name)
 			current_class_name = completion_tuple[2]
+			is_inherited = True
 
 	# Add Object completions (if available) -- Everything is an Object
 	completions.extend(object_completions)
@@ -468,7 +471,7 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
 def case_insensitive_startswith(original_string, prefix):
 	return original_string.lower().startswith(prefix.lower())
 
-def get_completions_for_built_in_type(built_in_type, is_static):
+def get_completions_for_built_in_type(built_in_type, is_static, is_inherited=False):
 	completions = []
 	if is_static:
 		
@@ -477,8 +480,7 @@ def get_completions_for_built_in_type(built_in_type, is_static):
 		for next_static_property_obj in static_property_objs:
 			static_properties.append(next_static_property_obj[BUILT_IN_TYPES_STATIC_PROPERTY_NAME_KEY])
 		for next_static_property in static_properties:
-		
-			next_completion = get_property_completion_tuple(next_static_property)
+			next_completion = get_property_completion_tuple(next_static_property, is_inherited)
 			completions.append(next_completion)
 
 		static_methods = built_in_type[BUILT_IN_TYPES_STATIC_METHODS_KEY]
@@ -488,7 +490,7 @@ def get_completions_for_built_in_type(built_in_type, is_static):
 			method_args_objs = next_static_method[BUILT_IN_TYPES_METHOD_ARGS_KEY]
 			for next_method_arg_obj in method_args_objs:
 				method_args.append(next_method_arg_obj[BUILT_IN_TYPES_METHOD_ARG_NAME_KEY])
-			next_completion = get_method_completion_tuple(method_name, method_args)
+			next_completion = get_method_completion_tuple(method_name, method_args, is_inherited)
 			completions.append(next_completion)		
 	else:
 		instance_properties = []
@@ -496,7 +498,7 @@ def get_completions_for_built_in_type(built_in_type, is_static):
 		for next_instance_property_obj in instance_property_objs:
 			instance_properties.append(next_instance_property_obj[BUILT_IN_TYPES_INSTANCE_PROPERTY_NAME_KEY])
 		for next_instance_property in instance_properties:
-			next_completion = get_property_completion_tuple(next_instance_property)
+			next_completion = get_property_completion_tuple(next_instance_property, is_inherited)
 			completions.append(next_completion)
 
 		instance_methods = built_in_type[BUILT_IN_TYPES_INSTANCE_METHODS_KEY]
@@ -506,11 +508,11 @@ def get_completions_for_built_in_type(built_in_type, is_static):
 			method_args_objs = next_instance_method[BUILT_IN_TYPES_METHOD_ARGS_KEY]
 			for next_method_arg_obj in method_args_objs:
 				method_args.append(next_method_arg_obj[BUILT_IN_TYPES_METHOD_ARG_NAME_KEY])
-			next_completion = get_method_completion_tuple(method_name, method_args)
+			next_completion = get_method_completion_tuple(method_name, method_args, is_inherited)
 			completions.append(next_completion)
 	return completions
 
-def collect_instance_completions_from_file(file_lines, class_name):
+def collect_instance_completions_from_file(file_lines, class_name, is_inherited=False):
 
 	completions = []
 	extended_class = None
@@ -555,7 +557,7 @@ def collect_instance_completions_from_file(file_lines, class_name):
 							match = re.search(this_assignment_regex, next_row)
 							if match:
 								prop = match.group(3)
-								prop_completion_alias = get_property_completion_alias(prop)
+								prop_completion_alias = get_property_completion_alias(prop, is_inherited)
 								prop_completion_insertion = get_property_completion_insertion(prop)
 								prop_completion = (prop_completion_alias, prop_completion_insertion)
 								if prop_completion not in property_completions:
@@ -577,7 +579,7 @@ def collect_instance_completions_from_file(file_lines, class_name):
 										next_arg = next_arg.strip()
 										next_arg = re.sub("[^a-zA-Z0-9_$].*", "", next_arg)
 										function_args_list[i] = re.sub(THIS_SUGAR_SYMBOL, "", next_arg)
-									function_alias = get_method_completion_alias(function_name, function_args_list)
+									function_alias = get_method_completion_alias(function_name, function_args_list, is_inherited)
 									function_insertion = get_method_completion_insertion(function_name, function_args_list)
 									function_completion = (function_alias, function_insertion)
 									if function_completion not in function_completions:
@@ -594,7 +596,7 @@ def collect_instance_completions_from_file(file_lines, class_name):
 											# Clean it up...
 											next_arg = re.sub(THIS_SUGAR_SYMBOL, "", next_arg)
 											next_arg = re.sub("[^a-zA-Z0-9_$].*", "", next_arg)
-											prop_completion_alias = get_property_completion_alias(next_arg)
+											prop_completion_alias = get_property_completion_alias(next_arg, is_inherited)
 											prop_completion_insertion = get_property_completion_insertion(next_arg)
 											prop_completion = (prop_completion_alias, prop_completion_insertion)
 											if prop_completion not in property_completions:
@@ -620,7 +622,7 @@ def get_class_from_end_of_chain(dot_operation_chain):
 		class_at_end = None
 	return class_at_end
 
-def collect_static_completions_from_file(file_lines, class_name):
+def collect_static_completions_from_file(file_lines, class_name, is_inherited=False):
 	
 	completions = []
 	extended_class = None
@@ -688,7 +690,7 @@ def collect_static_completions_from_file(file_lines, class_name):
 									next_arg = next_arg.strip()
 									next_arg = re.sub("[^a-zA-Z0-9_$].*", "", next_arg)
 									function_args_list[i] = next_arg
-								function_alias = get_method_completion_alias(function_name, function_args_list)
+								function_alias = get_method_completion_alias(function_name, function_args_list, is_inherited)
 								function_insertion = get_method_completion_insertion(function_name, function_args_list)
 								function_completion = (function_alias, function_insertion)
 								if function_completion not in function_completions:
@@ -699,7 +701,7 @@ def collect_static_completions_from_file(file_lines, class_name):
 								match = re.search(assignment_regex, next_row)
 								if match:
 									prop = match.group(3)
-									prop_completion_alias = get_property_completion_alias(prop)
+									prop_completion_alias = get_property_completion_alias(prop, is_inherited)
 									prop_completion_insertion = get_property_completion_insertion(prop)
 									prop_completion = (prop_completion_alias, prop_completion_insertion)
 									if prop_completion not in property_completions:
@@ -712,8 +714,11 @@ def collect_static_completions_from_file(file_lines, class_name):
 	completion_tuple = (class_found, completions, extended_class)
 	return completion_tuple
 
-def get_property_completion_alias(property_name):
-	completion_string = PROPERTY_INDICATOR + " " + property_name
+def get_property_completion_alias(property_name, is_inherited=False):
+	indicator = PROPERTY_INDICATOR
+	if is_inherited:
+		indicator = INHERITED_INDICATOR + indicator
+	completion_string = indicator + " " + property_name
 	return completion_string
 
 def get_property_completion_insertion(property_name):
@@ -721,12 +726,15 @@ def get_property_completion_insertion(property_name):
 	completion_string = re.sub("[$]", "\$", completion_string)
 	return completion_string
 
-def get_property_completion_tuple(property_name):
-	completion_tuple = (get_property_completion_alias(property_name), get_property_completion_insertion(property_name))
+def get_property_completion_tuple(property_name, is_inherited=False):
+	completion_tuple = (get_property_completion_alias(property_name, is_inherited), get_property_completion_insertion(property_name))
 	return completion_tuple
 
-def get_method_completion_alias(method_name, args):
-	completion_string = METHOD_INDICATOR + " " + method_name + "("
+def get_method_completion_alias(method_name, args, is_inherited=False):
+	indicator = METHOD_INDICATOR
+	if is_inherited:
+		indicator = INHERITED_INDICATOR + indicator
+	completion_string = indicator + " " + method_name + "("
 	for i in range(len(args)):
 		completion_string = completion_string + args[i]
 		if i < len(args) - 1:
@@ -744,8 +752,8 @@ def get_method_completion_insertion(method_name, args):
 	completion_string = completion_string + ")"
 	return completion_string
 
-def get_method_completion_tuple(method_name, args):
-	completion_tuple = (get_method_completion_alias(method_name, args), get_method_completion_insertion(method_name, args))
+def get_method_completion_tuple(method_name, args, is_inherited=False):
+	completion_tuple = (get_method_completion_alias(method_name, args, is_inherited), get_method_completion_insertion(method_name, args))
 	return completion_tuple
 
 def get_view_contents(view):
