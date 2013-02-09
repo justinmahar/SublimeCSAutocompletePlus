@@ -97,7 +97,7 @@ class CoffeeAutocomplete(sublime_plugin.EventListener):
 			# TODO: Smarter region location
 			symbol_region = sublime.Region(locations[0] - len(prefix), locations[0] - len(prefix))
 
-			if (preceding_function_call or token) and coffee_utils.is_autocomplete_trigger(immediately_preceding_symbol):
+			if (preceding_function_call or token or coffee_utils.THIS_SUGAR_SYMBOL == preceding_symbol) and coffee_utils.is_autocomplete_trigger(immediately_preceding_symbol):
 				self.window.active_view().run_command('hide_auto_complete')
 
 				thread = CoffeeAutocompleteThread(project_folder_list, excluded_dirs, this_aliases, current_file_lines, preceding_symbol, prefix, preceding_function_call, function_return_types, token, symbol_region, built_in_types)
