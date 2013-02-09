@@ -166,7 +166,7 @@ If you find yourself using a third-party library often and would like to have au
 ```
 
 * Parameter type hints
-  - If you use [https://github.com/netzpirat/codo](Codo), or are in the habit of documenting your classes, you can add type hints for your method parameters as well. These hints must be in a single-line `#` comment above the method signature. The hint can either be in the form `[TYPENAME] parameterName` or `parameterName [TYPENAME]`. Other text can surround the type hint.
+  - If you use [Codo](https://github.com/netzpirat/codo), or are in the habit of documenting your classes, you can add type hints for your method parameters as well. These hints must be in a single-line `#` comment above the method signature. The hint can either be in the form `[TYPENAME] parameterName` or `parameterName [TYPENAME]`. Other text can surround the type hint.
 
 ```
 	# [Animal] critter
