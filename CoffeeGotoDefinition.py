@@ -23,8 +23,6 @@ STATUS_MESSAGE_COFFEE_GOTO_DEFINITION = "Coffee: Goto Definition of \"%s\""
 # - Codo docs searching for function parameter types
 # X Goto definition knows about function parameters and for loop variables
 # - Smarter operand parsing. E.g. Given: this.test = "test", when goto "test", look for "this.test = ", not "test ="
-# - Add "bad_coding_practices" config for checking for badly named classes and functions
-#      For Readme: Do you suck at naming classes and variables? Don't worry, I've got you covered (but seriously, stop it).
 # - Check contents of currently open views
 # - Menu integration
 
@@ -159,89 +157,83 @@ class CoffeeGotoDefinitionThread(threading.Thread):
 
 		debug(("Selected: \"%s\"" % selected_word))
 
-		# ------ IS A CLASS ------------------------------------------
-		# Check if the selected text starts with a capital letter
-		if coffee_utils.is_capitalized(selected_word):
+		# ------ CURRENT FILE: CLASS (TitleCaps ONLY) ------------
 
-			# ------ CURRENT FILE: CLASS (TitleCaps ONLY) ------------
-
-			if not matched_location_tuple:
-
-					# If so, we assume it is a class. 
-					debug("Checking for local class %s..." % selected_word)
-					class_location_search_tuple = coffee_utils.find_location_of_regex_in_files(class_regex, current_file_lines)
-					if class_location_search_tuple:
-						matched_location_tuple = class_location_search_tuple
-
-			# ------ GLOBAL SEARCH: CLASS ----------------------------
-
-			if not matched_location_tuple:
-
-				# Coffeescript filename regex
-				coffeescript_filename_regex = coffee_utils.COFFEE_FILENAME_REGEX
-				# All coffeescript file paths
-				all_coffee_file_paths = coffee_utils.get_files_in(project_folder_list, coffeescript_filename_regex, excluded_dirs)
-
-				debug("Checking globally for class %s..." % selected_word)
-				# Assume it is a file called selected_word.coffee
-				exact_file_name_regex = "^" + re.escape(selected_word + coffee_utils.COFFEE_EXTENSION_WITH_DOT) + "$"
-				exact_name_file_paths = coffee_utils.get_files_in(project_folder_list, exact_file_name_regex, excluded_dirs)
-				exact_location_search_tuple = coffee_utils.find_location_of_regex_in_files(class_regex, None, exact_name_file_paths)
-				if exact_location_search_tuple:
-					matched_location_tuple = exact_location_search_tuple
-				else:
-					global_class_location_search_tuple = coffee_utils.find_location_of_regex_in_files(class_regex, None, all_coffee_file_paths)
-					if global_class_location_search_tuple:
-						matched_location_tuple = global_class_location_search_tuple
-
-		# ------ NOT A CLASS -----------------------------------------
 		if not matched_location_tuple:
-			# ------ CURRENT FILE: FUNCTION --------------------------
-			if not matched_location_tuple:
-				debug("Checking for local function %s..." % selected_word)
-				local_function_location_search_tuple = coffee_utils.find_location_of_regex_in_files(function_regex, current_file_lines)
-				if local_function_location_search_tuple:
-					matched_location_tuple = local_function_location_search_tuple
 
-			# ------ CURRENT FILE: ASSIGNMENT ------------------------
+				# If so, we assume it is a class. 
+				debug("Checking for local class %s..." % selected_word)
+				class_location_search_tuple = coffee_utils.find_location_of_regex_in_files(class_regex, current_file_lines)
+				if class_location_search_tuple:
+					matched_location_tuple = class_location_search_tuple
 
-			if not matched_location_tuple:
-				
-				debug("Checking for local assignment of %s..." % selected_word)
-				backwards_match_tuple = coffee_utils.search_backwards_for(current_file_lines, assignment_regex, selected_region)
-				if backwards_match_tuple:
+		# ------ GLOBAL SEARCH: CLASS ----------------------------
+
+		if not matched_location_tuple:
+
+			# Coffeescript filename regex
+			coffeescript_filename_regex = coffee_utils.COFFEE_FILENAME_REGEX
+			# All coffeescript file paths
+			all_coffee_file_paths = coffee_utils.get_files_in(project_folder_list, coffeescript_filename_regex, excluded_dirs)
+
+			debug("Checking globally for class %s..." % selected_word)
+			# Assume it is a file called selected_word.coffee
+			exact_file_name_regex = "^" + re.escape(selected_word + coffee_utils.COFFEE_EXTENSION_WITH_DOT) + "$"
+			exact_name_file_paths = coffee_utils.get_files_in(project_folder_list, exact_file_name_regex, excluded_dirs)
+			exact_location_search_tuple = coffee_utils.find_location_of_regex_in_files(class_regex, None, exact_name_file_paths)
+			if exact_location_search_tuple:
+				matched_location_tuple = exact_location_search_tuple
+			else:
+				global_class_location_search_tuple = coffee_utils.find_location_of_regex_in_files(class_regex, None, all_coffee_file_paths)
+				if global_class_location_search_tuple:
+					matched_location_tuple = global_class_location_search_tuple
+
+		# ------ CURRENT FILE: FUNCTION --------------------------
+		if not matched_location_tuple:
+			debug("Checking for local function %s..." % selected_word)
+			local_function_location_search_tuple = coffee_utils.find_location_of_regex_in_files(function_regex, current_file_lines)
+			if local_function_location_search_tuple:
+				matched_location_tuple = local_function_location_search_tuple
+
+		# ------ CURRENT FILE: ASSIGNMENT ------------------------
+
+		if not matched_location_tuple:
+			
+			debug("Checking for local assignment of %s..." % selected_word)
+			backwards_match_tuple = coffee_utils.search_backwards_for(current_file_lines, assignment_regex, selected_region)
+			if backwards_match_tuple:
+				filename_tuple = tuple([None])
+				matched_location_tuple = filename_tuple + backwards_match_tuple
+			else:
+				# Nothing found. Now let's look backwards for a method parameter
+				param_match_tuple = coffee_utils.search_backwards_for(current_file_lines, param_regex, selected_region)
+				if param_match_tuple:
 					filename_tuple = tuple([None])
-					matched_location_tuple = filename_tuple + backwards_match_tuple
+					matched_location_tuple = filename_tuple + param_match_tuple	
 				else:
-					# Nothing found. Now let's look backwards for a method parameter
-					param_match_tuple = coffee_utils.search_backwards_for(current_file_lines, param_regex, selected_region)
-					if param_match_tuple:
+					for_loop_match_tuple = coffee_utils.search_backwards_for(current_file_lines, for_loop_regex, selected_region)
+					if for_loop_match_tuple:
 						filename_tuple = tuple([None])
-						matched_location_tuple = filename_tuple + param_match_tuple	
+						matched_location_tuple = filename_tuple + for_loop_match_tuple
+					# Otherwise, forwards search for it. It could be defined in the constructor.
 					else:
-						for_loop_match_tuple = coffee_utils.search_backwards_for(current_file_lines, for_loop_regex, selected_region)
-						if for_loop_match_tuple:
-							filename_tuple = tuple([None])
-							matched_location_tuple = filename_tuple + for_loop_match_tuple
-						# Otherwise, forwards search for it. It could be defined in the constructor.
-						else:
-							forwards_match_tuple = coffee_utils.find_location_of_regex_in_files(assignment_regex, current_file_lines)
-							if forwards_match_tuple:
-								matched_location_tuple = forwards_match_tuple
+						forwards_match_tuple = coffee_utils.find_location_of_regex_in_files(assignment_regex, current_file_lines)
+						if forwards_match_tuple:
+							matched_location_tuple = forwards_match_tuple
 
-			# ------ GLOBAL SEARCH: FUNCTION -------------------------
+		# ------ GLOBAL SEARCH: FUNCTION -------------------------
 
-			if not matched_location_tuple:
+		if not matched_location_tuple:
 
-				# Coffeescript filename regex
-				coffeescript_filename_regex = coffee_utils.COFFEE_FILENAME_REGEX
-				# All coffeescript file paths
-				all_coffee_file_paths = coffee_utils.get_files_in(project_folder_list, coffeescript_filename_regex, excluded_dirs)
+			# Coffeescript filename regex
+			coffeescript_filename_regex = coffee_utils.COFFEE_FILENAME_REGEX
+			# All coffeescript file paths
+			all_coffee_file_paths = coffee_utils.get_files_in(project_folder_list, coffeescript_filename_regex, excluded_dirs)
 
-				debug("Checking globally for function %s..." % selected_word)
-				global_function_location_search_tuple = coffee_utils.find_location_of_regex_in_files(function_regex, None, all_coffee_file_paths)
-				if global_function_location_search_tuple:
-					matched_location_tuple = global_function_location_search_tuple
+			debug("Checking globally for function %s..." % selected_word)
+			global_function_location_search_tuple = coffee_utils.find_location_of_regex_in_files(function_regex, None, all_coffee_file_paths)
+			if global_function_location_search_tuple:
+				matched_location_tuple = global_function_location_search_tuple
 
 		# ------ DOT OPERATION LOOKUP (TBD) ----------------------
 		# TODO: Pull out dot operator object, determine its assignment type, find class, goto method/property.
@@ -252,6 +244,6 @@ class CoffeeGotoDefinitionThread(threading.Thread):
 		#       extending class and open it to the function the cursor is within.
 
 		# ------ STORE MATCH RESULTS -----------------------------
-		# If not None, then we found a file that matched the search!
+		# If not None, then we found something that matched the search!
 		if matched_location_tuple:
 			self.matched_location_tuple = matched_location_tuple

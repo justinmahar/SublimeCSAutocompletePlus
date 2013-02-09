@@ -5,7 +5,7 @@ CoffeeScript Autocomplete Plus (CA+) is a [Sublime Text 2](http://www.sublimetex
 
 In addition, this plugin adds the "Coffee: Goto Definition" command, which will look up the class, function or variable definition of the selected token. 
 
-Do you miss the old days? When, at the control-tap a spacebar, your IDE came running to you, menu in hand, asking, "what would you like, sir?" And that menu actually made sense? And suggested menu items you were interested in? I missed those days, so I decided to do something about it. I learned about [Sublime Text 2](http://www.sublimetext.com/2). Best decision of my life. Then, I learned [how to make plugins](http://net.tutsplus.com/tutorials/python-tutorials/how-to-create-a-sublime-text-2-plugin/). My first order of business was to make this plugin&mdash;and now it's available for you to use.
+Do you miss the old days? When, at the control-tap a spacebar, your IDE came running to you, menu in hand, asking, "what would you like, sir?" And that menu actually made sense? And suggested menu items you were interested in? I missed those days, so I decided to do something about it. I learned about [Sublime Text 2](http://www.sublimetext.com/2). Best decision of my life. Then, I learned how to make plugins. My first order of business was to make this plugin&mdash;and now it's available for you to use.
 
 Autocompletions. Zooming to definitions.
 
@@ -124,6 +124,21 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 * Expects that you don't suck at naming things. Will assume a class is UpperCamelCase and everything else is lowerCamelCase. It still works either way; it will just be faster if things are named properly.
 * For every 1 million autocompletions, a beautiful masseuse appears and gives you a massage. You must be tired after all that coding.
 
+#### Support for built-in types
+
+CA+ now supports the following built-in types:
+
+* Array
+* Boolean
+* Date
+* Function
+* Number
+* Object
+* RegExp
+* String
+
+In addition, autocomplete now suggests inherit properties and methods from Object. Built in types are defined in `CoffeeScript Autocomplete Plus Built-In Types.sublime-settings`. You can experiment with this, but it is currently under development; I have plans to add a separate file for your own custom types should you be interested in doing so.
+
 ### Goto Definition
 
 Goto Definition is useful for finding where a class, function, or variable was defined or declared. Again, searching is performed from the current view and branches out to other files if nothing is found. With this, you can quickly jump between classes and zoom to functions&mdash;even ones defined in other files&mdash;with ease.
@@ -197,11 +212,13 @@ Autocomplete is smart, but not Mensa smart. Under the hood, we're using regular 
 For now, here is the list of TBDs:
 
 * Hinting
-* Built-in types and custom types
+* Custom types (separate settings file)
+* Additional built-in types
 * An indication that a property or method is being overridden
 * Smarter assignment detection
 * Better token parsing
 * Check contents of currently open views besides the active one
+* Constructors
 
 Far too many times I've installed a plugin only to be disappointed because it fell short of my expectations. If you feel this way, please let me know how I can make this plugin better for you and I will do my best.
 

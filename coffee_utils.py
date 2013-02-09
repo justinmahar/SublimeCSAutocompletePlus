@@ -13,6 +13,8 @@ SETTINGS_FILE_NAME = "CoffeeScript Autocomplete Plus.sublime-settings"
 PREFERENCES_COFFEE_EXCLUDED_DIRS = "coffee_autocomplete_plus_excluded_dirs"
 PREFERENCES_COFFEE_RESTRICTED_TO_PATHS = "coffee_autocomplete_plus_restricted_to_paths"
 PREFERENCES_THIS_ALIASES = "coffee_autocomplete_plus_this_aliases"
+BUILT_IN_TYPES_SETTINGS_FILE_NAME = "CoffeeScript Autocomplete Plus Built-In Types.sublime-settings"
+BUILT_IN_TYPES_SETTINGS_KEY = "coffee_autocomplete_plus_built_in_types"
 
 COFFEESCRIPT_SYNTAX = "CoffeeScript"
 COFFEE_EXTENSION_WITH_DOT = ".coffee"
@@ -41,18 +43,30 @@ PARAM_REGEX = r"\(\s*((%s)|(%s\s*[,].*?)|(.*?[,]\s*%s\s*[,].*?)|(.*?[,]\s*%s))\s
 # Regex for finding a variable declared in a for loop.
 FOR_LOOP_REGEX = r"for\s*.*?[^a-zA-Z0-9_$]%s[^a-zA-Z0-9_$]"
 
-
-
 # Assignment with the value it's being assigned to. Matches:
 # blah = new Dinosaur()
 ASSIGNMENT_VALUE_REGEX = r"(^|[^a-zA-Z0-9_$])%s\s*=\s*(.*)"
 
 # Used to determining what class is being created with the new keyword. Matches:
 # new Macaroni
-NEW_OPERATION_REGEX = r"new\s+([a-zA-Z0-9_$]+)"
+NEW_OPERATION_REGEX = r"new\s+([a-zA-Z0-9_$.]+)"
 
 PROPERTY_INDICATOR = u'\u25CB'
 METHOD_INDICATOR = u'\u25CF'
+
+BUILT_IN_TYPES_TYPE_NAME_KEY = "name"
+BUILT_IN_TYPES_CONSTRUCTOR_KEY = "constructor"
+BUILT_IN_TYPES_STATIC_PROPERTIES_KEY = "static_properties"
+BUILT_IN_TYPES_STATIC_PROPERTY_NAME_KEY = "name"
+BUILT_IN_TYPES_STATIC_METHODS_KEY = "static_methods"
+BUILT_IN_TYPES_STATIC_METHOD_NAME_KEY = "name"
+BUILT_IN_TYPES_INSTANCE_PROPERTIES_KEY = "instance_properties"
+BUILT_IN_TYPES_INSTANCE_PROPERTY_NAME_KEY = "name"
+BUILT_IN_TYPES_INSTANCE_METHODS_KEY = "instance_methods"
+BUILT_IN_TYPES_INSTANCE_METHOD_NAME_KEY = "name"
+BUILT_IN_TYPES_METHOD_NAME_KEY = "name"
+BUILT_IN_TYPES_METHOD_ARGS_KEY = "args"
+BUILT_IN_TYPES_METHOD_ARG_NAME_KEY = "name"
 
 # Utility functions
 def debug(message):
@@ -82,13 +96,10 @@ def get_word_at(view, region):
 	word = word.strip()
 	return word
 
-def get_preceding_symbol(view):
-	symbol = ""
-	if len(view.sel()) > 0:
-		selected_text = view.sel()[0]
-		if selected_text.begin() > 0:
-			symbol_region = sublime.Region(selected_text.begin() - 1, selected_text.begin())
-			symbol = view.substr(symbol_region)
+def get_preceding_symbol(view, prefix, locations):
+	index = locations[0]
+	symbol_region = sublime.Region(index - 1 - len(prefix), index - len(prefix))
+	symbol = view.substr(symbol_region)
 	return symbol
 
 def get_preceding_word(view):
@@ -290,13 +301,38 @@ def get_type_from_assignment_value(assignment_value_string):
 
 	assignment_value_string = assignment_value_string.strip()
 
+	# Check for built in types
+	string_regex = r"(^\".*\"$)|(^.*?\+\s*\".*?\"$)|(^\".*?\"\s*\+.*?$)|(^.*?\s*\+\s*\".*?\"\s*\+\s*.*?$)"
+	if not determined_type:
+		match = re.search(string_regex, assignment_value_string)
+		if match:
+			determined_type = "String"
+	array_regex = r"^\[.*\]$"
+	if not determined_type:
+		match = re.search(array_regex, assignment_value_string)
+		if match:
+			determined_type = "Array"
+	# boolean_regex = r"^(true)|(false)$"
+	# if not determined_type:
+	# 	match = re.search(boolean_regex, assignment_value_string)
+	# 	if match:
+	# 		determined_type = "Boolean"
+	# http://stackoverflow.com/questions/4703390/how-to-extract-a-floating-number-from-a-string-in-python
+	number_regex = r"^[-+]?\d*\.\d+|\d+$"
+	if not determined_type:
+		match = re.search(number_regex, assignment_value_string)
+		if match:
+			determined_type = "Number"
+	regexp_regex = r"^/.*/[a-z]*$"
+	if not determined_type:
+		match = re.search(regexp_regex, assignment_value_string)
+		if match:
+			determined_type = "RegExp"
 	new_operation_regex = NEW_OPERATION_REGEX
-	match = re.search(new_operation_regex, assignment_value_string)
-	if match:
-		determined_type = match.group(1)
-	else:
-		# TODO: Handle internal types ("string", [Arrays], etc)
-		pass
+	if not determined_type:
+		match = re.search(new_operation_regex, assignment_value_string)
+		if match:
+			determined_type = get_class_from_end_of_chain(match.group(1))
 
 	return determined_type
 
@@ -365,48 +401,113 @@ def get_indentation_size(line_of_text):
 	# debug("Indent size [" + str(size) + "]:\n" + re.sub("\n", "", line_of_text))
 	return size
 
-def get_completions_for_class(class_name, search_statically, local_file_lines, global_file_path_list=[]):
+def get_completions_for_class(class_name, search_statically, local_file_lines, prefix, global_file_path_list=[], built_in_types=[]):
 	
+	# TODO: Use prefix to make suggestions.
+
 	completions = []
-	scanned_classes = []	
+	scanned_classes = []
+
+	object_completions = []
 	
-	# TODO: Implement built in types...
-	# TBD: First, determine if it is a built in type and return those completions...
-	#      Maybe these are passed as an optional arg? That way you can define your own...
+	# First, determine if it is a built in type and return those completions...
+	# Built-in types include String, Number, etc, and are configurable in settings.
+	for next_built_in_type in built_in_types:
+		try:
+			next_class_name = next_built_in_type[BUILT_IN_TYPES_TYPE_NAME_KEY]
+			if next_class_name == "Object":
+				object_completions = get_completions_for_built_in_type(next_built_in_type, search_statically)
+			elif next_class_name == class_name:
+				# We are looking at a built-in type! Collect completions for it...
+				completions = get_completions_for_built_in_type(next_built_in_type, search_statically)
+		except Exception, e:
+			print repr(e)
 
-	current_class_name = class_name
-	while current_class_name and current_class_name not in scanned_classes:
-		# print "Scanning " + current_class_name + "..."
-		completion_tuple = None
-		if local_file_lines:
-			# print "Searching locally..."
-			# Search in local file.
-			if search_statically:
-				completion_tuple = collect_static_completions_from_file(local_file_lines, current_class_name)
-			else:
-				completion_tuple = collect_instance_completions_from_file(local_file_lines, current_class_name)
-
-		# Search globally if nothing found and not local only...
-		if global_file_path_list and (not completion_tuple or not completion_tuple[0]):
-			class_regex = CLASS_REGEX % re.escape(current_class_name)
-			global_class_location_search_tuple = find_location_of_regex_in_files(class_regex, None, global_file_path_list)
-			if global_class_location_search_tuple:
-				# If found, perform Class method collection.
-				file_to_open = global_class_location_search_tuple[0]
-				class_file_lines = get_lines_for_file(file_to_open)
+	# If we didn't find completions for a built-in type, look further...
+	if not completions:
+		current_class_name = class_name
+		while current_class_name and current_class_name not in scanned_classes:
+			# print "Scanning " + current_class_name + "..."
+			# (class_found, completions, next_class_to_scan)
+			completion_tuple = (False, [], None)
+			if local_file_lines:
+				# print "Searching locally..."
+				# Search in local file.
 				if search_statically:
-					completion_tuple = collect_static_completions_from_file(class_file_lines, current_class_name)
+					completion_tuple = collect_static_completions_from_file(local_file_lines, current_class_name)
 				else:
-					completion_tuple = collect_instance_completions_from_file(class_file_lines, current_class_name)
-		# print "Tuple: " + str(completion_tuple)
-		completions.extend(completion_tuple[1])
-		scanned_classes.append(current_class_name)
-		current_class_name = completion_tuple[2]
+					completion_tuple = collect_instance_completions_from_file(local_file_lines, current_class_name)
+
+			# Search globally if nothing found and not local only...
+			if global_file_path_list and (not completion_tuple or not completion_tuple[0]):
+				class_regex = CLASS_REGEX % re.escape(current_class_name)
+				global_class_location_search_tuple = find_location_of_regex_in_files(class_regex, None, global_file_path_list)
+				if global_class_location_search_tuple:
+					# If found, perform Class method collection.
+					file_to_open = global_class_location_search_tuple[0]
+					class_file_lines = get_lines_for_file(file_to_open)
+					if search_statically:
+						completion_tuple = collect_static_completions_from_file(class_file_lines, current_class_name)
+					else:
+						completion_tuple = collect_instance_completions_from_file(class_file_lines, current_class_name)
+			
+			# print "Tuple: " + str(completion_tuple)
+			completions.extend(completion_tuple[1])
+			scanned_classes.append(current_class_name)
+			current_class_name = completion_tuple[2]
+
+	# Add Object completions (if available) -- Everything is an Object
+	completions.extend(object_completions)
 
 	# Remove all duplicates
 	completions = list(set(completions))
 	# Sort
 	completions.sort()
+	return completions
+
+def case_insensitive_startswith(original_string, prefix):
+	return original_string.lower().startswith(prefix.lower())
+
+def get_completions_for_built_in_type(built_in_type, is_static):
+	completions = []
+	if is_static:
+		
+		static_properties = []
+		static_property_objs = built_in_type[BUILT_IN_TYPES_STATIC_PROPERTIES_KEY]
+		for next_static_property_obj in static_property_objs:
+			static_properties.append(next_static_property_obj[BUILT_IN_TYPES_STATIC_PROPERTY_NAME_KEY])
+		for next_static_property in static_properties:
+		
+			next_completion = get_property_completion_tuple(next_static_property)
+			completions.append(next_completion)
+
+		static_methods = built_in_type[BUILT_IN_TYPES_STATIC_METHODS_KEY]
+		for next_static_method in static_methods:
+			method_name = next_static_method[BUILT_IN_TYPES_METHOD_NAME_KEY]
+			method_args = []
+			method_args_objs = next_static_method[BUILT_IN_TYPES_METHOD_ARGS_KEY]
+			for next_method_arg_obj in method_args_objs:
+				method_args.append(next_method_arg_obj[BUILT_IN_TYPES_METHOD_ARG_NAME_KEY])
+			next_completion = get_method_completion_tuple(method_name, method_args)
+			completions.append(next_completion)		
+	else:
+		instance_properties = []
+		instance_property_objs = built_in_type[BUILT_IN_TYPES_INSTANCE_PROPERTIES_KEY]
+		for next_instance_property_obj in instance_property_objs:
+			instance_properties.append(next_instance_property_obj[BUILT_IN_TYPES_INSTANCE_PROPERTY_NAME_KEY])
+		for next_instance_property in instance_properties:
+			next_completion = get_property_completion_tuple(next_instance_property)
+			completions.append(next_completion)
+
+		instance_methods = built_in_type[BUILT_IN_TYPES_INSTANCE_METHODS_KEY]
+		for next_instance_method in instance_methods:
+			method_name = next_instance_method[BUILT_IN_TYPES_METHOD_NAME_KEY]
+			method_args = []
+			method_args_objs = next_instance_method[BUILT_IN_TYPES_METHOD_ARGS_KEY]
+			for next_method_arg_obj in method_args_objs:
+				method_args.append(next_method_arg_obj[BUILT_IN_TYPES_METHOD_ARG_NAME_KEY])
+			next_completion = get_method_completion_tuple(method_name, method_args)
+			completions.append(next_completion)
 	return completions
 
 def collect_instance_completions_from_file(file_lines, class_name):
@@ -431,14 +532,7 @@ def collect_instance_completions_from_file(file_lines, class_name):
 
 		extended_class = match.group(3)
 		if extended_class:
-			# Clean it up.
-			next_period_index = extended_class.find(PERIOD_OPERATOR)
-			while next_period_index >= 0:
-				extended_class = extended_class[(next_period_index + 1):]
-				extended_class.strip()
-				next_period_index = extended_class.find(PERIOD_OPERATOR)
-			if len(extended_class) == 0:
-				extended_class = None
+			extended_class = get_class_from_end_of_chain(extended_class)
 
 		# If anything is equal to this after the first line, stop looking.
 		# At that point, the class definition has ended.
@@ -514,6 +608,17 @@ def collect_instance_completions_from_file(file_lines, class_name):
 	completions = property_completions + function_completions
 	completion_tuple = (class_found, completions, extended_class)
 	return completion_tuple
+
+def get_class_from_end_of_chain(dot_operation_chain):
+	class_at_end = dot_operation_chain
+	next_period_index = class_at_end.find(PERIOD_OPERATOR)
+	while next_period_index >= 0:
+		class_at_end = class_at_end[(next_period_index + 1):]
+		class_at_end.strip()
+		next_period_index = class_at_end.find(PERIOD_OPERATOR)
+	if len(class_at_end) == 0:
+		class_at_end = None
+	return class_at_end
 
 def collect_static_completions_from_file(file_lines, class_name):
 	
@@ -616,6 +721,10 @@ def get_property_completion_insertion(property_name):
 	completion_string = re.sub("[$]", "\$", completion_string)
 	return completion_string
 
+def get_property_completion_tuple(property_name):
+	completion_tuple = (get_property_completion_alias(property_name), get_property_completion_insertion(property_name))
+	return completion_tuple
+
 def get_method_completion_alias(method_name, args):
 	completion_string = METHOD_INDICATOR + " " + method_name + "("
 	for i in range(len(args)):
@@ -634,6 +743,10 @@ def get_method_completion_insertion(method_name, args):
 			completion_string = completion_string + ", "
 	completion_string = completion_string + ")"
 	return completion_string
+
+def get_method_completion_tuple(method_name, args):
+	completion_tuple = (get_method_completion_alias(method_name, args), get_method_completion_insertion(method_name, args))
+	return completion_tuple
 
 def get_view_contents(view):
 	contents = ""
