@@ -128,7 +128,7 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 * Expects that you don't suck at naming things. Will assume a class is UpperCamelCase and everything else is lowerCamelCase. It still works either way; it will just be faster if things are named properly.
 * For every 1 million autocompletions, a beautiful masseuse appears and gives you a massage. You must be tired after all that coding.
 
-#### Support For Built-in Types
+### Support For Built-in Types
 
 CA+ now supports autocompletion for the following built-in types:
 
@@ -144,6 +144,10 @@ CA+ now supports autocompletion for the following built-in types:
 This makes life that much easier.
 
 In addition, autocomplete suggests inherited properties and methods from Object. Built-in types are defined in `CoffeeScript Autocomplete Plus Built-In Types.sublime-settings`. You can experiment with this, but there is a separate file for your own custom types should you be interested in adding them. See the configuration section below for more on adding custom types.
+
+### Custom Types
+
+If you find yourself using a third-party library often and would like to have autocompletions for that library, you can create custom type. This is essentially a collection of autocomplete suggestions. CA+ supports jQuery (partially -- under development) out of the box, but you can always add others. If you do add a custom type and would like to share it, please issue a pull request and I will add it to the plugin. If your library is used as function, like jQuery, you can map that function's return value to a type. See the configuration section for how to do this.
 
 ### Goto Definition
 
@@ -229,7 +233,7 @@ In `CoffeeScript Autocomplete Plus.sublime-settings`:
 ```
  
 * `coffee_autocomplete_plus_function_return_types` -- Mappings for the return types of special functions, like jQuery.
-  - You may want to make calls directly off of special functions. For example, when using jQuery, you might type `$(selector).` and want some autocomplete suggestions. If you have a custom type defined, you can map the returns of function names, like `$` and `jQuery`, to that custom type. See the next config section for defining custom types.
+  - You may want to make calls directly off of the returned values of special functions. For example, when using jQuery, you might type `$(selector).` and want some autocomplete suggestions. If you have a custom type defined, you can map the returns of function names, like `$` and `jQuery`, to that custom type. See the next config section for defining custom types.
   - Expected value: Array of objects. Each object has a `function_names` property that maps to an array of string names, and a `type_name` property that maps to the string name of the type the functions return.
   - Example:
 
@@ -246,7 +250,7 @@ In `CoffeeScript Autocomplete Plus.sublime-settings`:
 In `CoffeeScript Autocomplete Plus Custom Types.sublime-settings`:
 
 * `coffee_autocomplete_plus_custom_types` -- Custom types, allowing libraries like jQuery.
-  - If you would like to define custom types, put them here. I have partially started a custom type for jQuery.
+  - If you would like to define custom types, put them here. Autocomplete will then make the defined suggestions for you. By default, jQuery is available (partially completed).
   - Use the following example as a starting point:
 
 ```
