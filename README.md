@@ -173,7 +173,7 @@ If you find yourself using a third-party library often and would like to have au
 	# [Boolean] animalEscapes
 	feedAlligator: (critter, animalEscapes) ->
 		if animalEscapes:
-			# CA+ knows that it's an Animal. Will he escape? Autosuggest!
+			# CA+ knows that it's an Animal. Will he escape? Autocomplete!
 			critter.[autocomplete]
 ```
 
