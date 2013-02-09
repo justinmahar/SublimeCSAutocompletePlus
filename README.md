@@ -205,17 +205,23 @@ In `CoffeeScript Autocomplete Plus.sublime-settings`:
   - Directories to exclude from searching for CoffeeScript classes, functions and variables. All directories in your project are searched except for the ones that match the names listed in this setting. **This is recommended.** Some excluded directories have already been specified in settings.
   - Expected value: Array of directory names. 
   - Example: 
+ ```
 		"coffee_autocomplete_plus_excluded_dirs" : [".git", "SVN", "pub", "docs"]
+ ```
 * `coffee_autocomplete_plus_restricted_to_paths` -- Restrict searching to these directories.
   - Paths to restrict the search to. If one or more path is specified, searching will be restricted to `PATH_TO_PROJECT/your/defined/path'. For example, you specify `src/coffee`. Now, only `PROJECT_PATH/src/coffee` will be scanned. **This is recommended.** If `[]`, no restrictions are applied.
   - Expected value: Array of paths relative to your project directory.
   - Example:
+ ```
   		"coffee_autocomplete_plus_restricted_to_paths" : ["src/coffee", "lib/src/coffee"]
+ ```
 * `coffee_autocomplete_plus_this_aliases` -- Aliases for `this` keyword
   - Due to lexical scoping you sometimes need to assign an alias for `this`, such as `that` or `self`. This config setting allows you to add or remove aliases that cause autocomplete to behave just like using `this` would. I aim to remove this setting with smarter assignment detection, but for now, it's convenient to have.
   - Expected value: Array of alias strings.
   - Example:
+ ```
   		"coffee_autocomplete_plus_this_aliases" : ["that", "self"]
+ ```
 * `coffee_autocomplete_plus_function_return_types` -- Mappings for the return types of special functions, like jQuery.
   - You may want to make calls directly off of special functions. For example, when using jQuery, you might type `$(selector).` and want some autocomplete suggestions. If you have a custom type defined, you can map the returns of function names, like `$` and `jQuery`, to that custom type. See the next config section for defining custom types.
   - Expected value: Array of objects. Each object has a `function_names` property that maps to an array of string names, and a `type_name` property that maps to the string name of the type the functions return.
