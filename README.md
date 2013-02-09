@@ -245,7 +245,7 @@ In `CoffeeScript Autocomplete Plus.sublime-settings`:
 
 In `CoffeeScript Autocomplete Plus Custom Types.sublime-settings`:
 
-* Custom types, allowing libraries like jQuery -- `coffee_autocomplete_plus_custom_types`
+* `coffee_autocomplete_plus_custom_types` -- Custom types, allowing libraries like jQuery.
   - If you would like to define custom types, put them here. I have partially started a custom type for jQuery.
   - Use the following example as a starting point:
 
