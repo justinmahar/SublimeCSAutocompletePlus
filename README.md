@@ -124,9 +124,9 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 * Expects that you don't suck at naming things. Will assume a class is UpperCamelCase and everything else is lowerCamelCase. It still works either way; it will just be faster if things are named properly.
 * For every 1 million autocompletions, a beautiful masseuse appears and gives you a massage. You must be tired after all that coding.
 
-#### Support for built-in types
+#### Support For Built-in Types
 
-CA+ now supports the following built-in types:
+CA+ now supports autocompletion for the following built-in types:
 
 * Array
 * Boolean
@@ -137,7 +137,9 @@ CA+ now supports the following built-in types:
 * RegExp
 * String
 
-In addition, autocomplete now suggests inherit properties and methods from Object. Built in types are defined in `CoffeeScript Autocomplete Plus Built-In Types.sublime-settings`. You can experiment with this, but it is currently under development; I have plans to add a separate file for your own custom types should you be interested in doing so.
+This makes life that much easier.
+
+In addition, autocomplete suggests inherited properties and methods from Object. Built-in types are defined in `CoffeeScript Autocomplete Plus Built-In Types.sublime-settings`. You can experiment with this, but it is currently under development. I have plans to add a separate file for your own custom types should you be interested in doing so.
 
 ### Goto Definition
 
