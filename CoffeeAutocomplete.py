@@ -48,6 +48,13 @@ class CoffeeAutocomplete(sublime_plugin.EventListener):
 			if not built_in_types:
 				built_in_types = []
 
+			custom_types_settings = sublime.load_settings(coffee_utils.CUSTOM_TYPES_SETTINGS_FILE_NAME)
+			custom_types = custom_types_settings.get(coffee_utils.CUSTOM_TYPES_SETTINGS_KEY)
+			if not custom_types:
+				custom_types = []
+
+			built_in_types.extend(custom_types)
+
 			# Pull the excluded dirs from preferences
 			excluded_dirs = settings.get(coffee_utils.PREFERENCES_COFFEE_EXCLUDED_DIRS)
 			if not excluded_dirs:
@@ -68,6 +75,10 @@ class CoffeeAutocomplete(sublime_plugin.EventListener):
 						specific_project_folders.append(next_specific_folder)
 				project_folder_list = specific_project_folders
 
+			function_return_types = settings.get(coffee_utils.FUNCTION_RETURN_TYPES_SETTINGS_KEY)
+			if not function_return_types:
+				function_return_types = []
+
 			this_aliases = settings.get(coffee_utils.PREFERENCES_THIS_ALIASES)
 			if not this_aliases:
 				this_aliases = []
@@ -79,16 +90,18 @@ class CoffeeAutocomplete(sublime_plugin.EventListener):
 			preceding_symbol = coffee_utils.get_preceding_symbol(view, prefix, locations)
 			immediately_preceding_symbol = coffee_utils.get_preceding_symbol(view, "", locations)
 
+			preceding_function_call = coffee_utils.get_preceding_function_call(view).strip()
+
 			# Determine preceding token, if any (if a period was typed).
-			token = coffee_utils.get_preceding_word(view)
+			token = coffee_utils.get_preceding_word(view).strip()
 
 			# TODO: Smarter region location
 			symbol_region = sublime.Region(locations[0] - len(prefix), locations[0] - len(prefix))
 
-			if coffee_utils.is_autocomplete_trigger(immediately_preceding_symbol):
+			if (preceding_function_call or token) and coffee_utils.is_autocomplete_trigger(immediately_preceding_symbol):
 				self.window.active_view().run_command('hide_auto_complete')
 
-				thread = CoffeeAutocompleteThread(project_folder_list, excluded_dirs, this_aliases, current_file_lines, preceding_symbol, prefix, token, symbol_region, built_in_types)
+				thread = CoffeeAutocompleteThread(project_folder_list, excluded_dirs, this_aliases, current_file_lines, preceding_symbol, prefix, preceding_function_call, function_return_types, token, symbol_region, built_in_types)
 				thread.start()
 				self.check_operation(thread, final_completions, current_location, token, status)
 			else: 
@@ -131,7 +144,7 @@ class CoffeeAutocomplete(sublime_plugin.EventListener):
 
 class CoffeeAutocompleteThread(threading.Thread):
 
-	def __init__(self, project_folder_list, excluded_dirs, this_aliases, current_file_lines, preceding_symbol, prefix, token, symbol_region, built_in_types):
+	def __init__(self, project_folder_list, excluded_dirs, this_aliases, current_file_lines, preceding_symbol, prefix, preceding_function_call, function_return_types, token, symbol_region, built_in_types):
 		
 		self.project_folder_list = project_folder_list
 		self.excluded_dirs = excluded_dirs
@@ -139,6 +152,8 @@ class CoffeeAutocompleteThread(threading.Thread):
 		self.current_file_lines = current_file_lines
 		self.preceding_symbol = preceding_symbol
 		self.prefix = prefix
+		self.preceding_function_call = preceding_function_call
+		self.function_return_types = function_return_types
 		self.token = token
 		self.symbol_region = symbol_region
 		self.built_in_types = built_in_types
@@ -155,53 +170,64 @@ class CoffeeAutocompleteThread(threading.Thread):
 		current_file_lines = self.current_file_lines
 		preceding_symbol = self.preceding_symbol
 		prefix = self.prefix
+		preceding_function_call = self.preceding_function_call
+		function_return_types = self.function_return_types
 		token = self.token
 		symbol_region = self.symbol_region
 		built_in_types = self.built_in_types
 
 		completions = []
 
-		# Prepare to search globally if we need to...
-		# Coffeescript filename regex
-		coffeescript_filename_regex = coffee_utils.COFFEE_FILENAME_REGEX
-		# All coffeescript file paths
-		all_coffee_file_paths = coffee_utils.get_files_in(project_folder_list, coffeescript_filename_regex, excluded_dirs)
+		# First see if it is a special function return definition, like $ for $("#selector")
+		if preceding_function_call:
+			for next_return_type in function_return_types:
+				function_names = next_return_type[coffee_utils.FUNCTION_RETURN_TYPE_FUNCTION_NAMES_KEY]
+				if preceding_function_call in function_names:
+					return_type = next_return_type[coffee_utils.FUNCTION_RETURN_TYPE_TYPE_NAME_KEY]
+					completions = coffee_utils.get_completions_for_class(return_type, False, None, prefix, None, built_in_types)
 
-		# If @ typed, process as "this."
-		if preceding_symbol == coffee_utils.THIS_SUGAR_SYMBOL:
-			# Process as "this."
-			this_type = coffee_utils.get_this_type(current_file_lines, symbol_region)
-			if this_type:
-				completions = coffee_utils.get_completions_for_class(this_type, False, current_file_lines, prefix, all_coffee_file_paths, built_in_types)
-			pass
-		elif preceding_symbol == coffee_utils.PERIOD_OPERATOR:
-			# If "this" or a substitute for it, process as "this."
-			if token == coffee_utils.THIS_KEYWORD or token in this_aliases:
+		if not completions:
+			# Prepare to search globally if we need to...
+			# Coffeescript filename regex
+			coffeescript_filename_regex = coffee_utils.COFFEE_FILENAME_REGEX
+			# All coffeescript file paths
+			all_coffee_file_paths = coffee_utils.get_files_in(project_folder_list, coffeescript_filename_regex, excluded_dirs)
+
+			# If @ typed, process as "this."
+			if preceding_symbol == coffee_utils.THIS_SUGAR_SYMBOL:
 				# Process as "this."
 				this_type = coffee_utils.get_this_type(current_file_lines, symbol_region)
 				if this_type:
 					completions = coffee_utils.get_completions_for_class(this_type, False, current_file_lines, prefix, all_coffee_file_paths, built_in_types)
-			else:
-				# If TitleCase, assume a class, and that we want static properties and functions.
-				if coffee_utils.is_capitalized(token):
-					# Assume it is either in the current view or in a file called token.coffee
-					exact_file_name_regex = "^" + re.escape(token + coffee_utils.COFFEE_EXTENSION_WITH_DOT) + "$"
-					exact_name_file_paths = coffee_utils.get_files_in(project_folder_list, exact_file_name_regex, excluded_dirs)
-					completions = coffee_utils.get_completions_for_class(token, True, current_file_lines, prefix, exact_name_file_paths, built_in_types)
-					if not completions:
-						# Now we search globally...
-						completions = coffee_utils.get_completions_for_class(token, True, None, prefix, all_coffee_file_paths, built_in_types)
-
-				# If nothing yet, assume a variable.
-				if not completions:
-					variable_type = coffee_utils.get_variable_type(current_file_lines, token, symbol_region)
-					if variable_type:
-						# Assume it is either in the current view or in a file called variable_type.coffee
-						exact_file_name_regex = "^" + re.escape(variable_type + coffee_utils.COFFEE_EXTENSION_WITH_DOT) + "$"
+				pass
+			elif preceding_symbol == coffee_utils.PERIOD_OPERATOR:
+				# If "this" or a substitute for it, process as "this."
+				if token == coffee_utils.THIS_KEYWORD or token in this_aliases:
+					# Process as "this."
+					this_type = coffee_utils.get_this_type(current_file_lines, symbol_region)
+					if this_type:
+						completions = coffee_utils.get_completions_for_class(this_type, False, current_file_lines, prefix, all_coffee_file_paths, built_in_types)
+				else:
+					# If TitleCase, assume a class, and that we want static properties and functions.
+					if coffee_utils.is_capitalized(token):
+						# Assume it is either in the current view or in a file called token.coffee
+						exact_file_name_regex = "^" + re.escape(token + coffee_utils.COFFEE_EXTENSION_WITH_DOT) + "$"
 						exact_name_file_paths = coffee_utils.get_files_in(project_folder_list, exact_file_name_regex, excluded_dirs)
-						completions = coffee_utils.get_completions_for_class(variable_type, False, current_file_lines, prefix, exact_name_file_paths, built_in_types)
+						completions = coffee_utils.get_completions_for_class(token, True, current_file_lines, prefix, exact_name_file_paths, built_in_types)
 						if not completions:
 							# Now we search globally...
-							completions = coffee_utils.get_completions_for_class(variable_type, False, None, prefix, all_coffee_file_paths, built_in_types)
+							completions = coffee_utils.get_completions_for_class(token, True, None, prefix, all_coffee_file_paths, built_in_types)
+
+					# If nothing yet, assume a variable.
+					if not completions:
+						variable_type = coffee_utils.get_variable_type(current_file_lines, token, symbol_region)
+						if variable_type:
+							# Assume it is either in the current view or in a file called variable_type.coffee
+							exact_file_name_regex = "^" + re.escape(variable_type + coffee_utils.COFFEE_EXTENSION_WITH_DOT) + "$"
+							exact_name_file_paths = coffee_utils.get_files_in(project_folder_list, exact_file_name_regex, excluded_dirs)
+							completions = coffee_utils.get_completions_for_class(variable_type, False, current_file_lines, prefix, exact_name_file_paths, built_in_types)
+							if not completions:
+								# Now we search globally...
+								completions = coffee_utils.get_completions_for_class(variable_type, False, None, prefix, all_coffee_file_paths, built_in_types)
 		if completions:
 			self.completions = completions

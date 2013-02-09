@@ -15,6 +15,11 @@ PREFERENCES_COFFEE_RESTRICTED_TO_PATHS = "coffee_autocomplete_plus_restricted_to
 PREFERENCES_THIS_ALIASES = "coffee_autocomplete_plus_this_aliases"
 BUILT_IN_TYPES_SETTINGS_FILE_NAME = "CoffeeScript Autocomplete Plus Built-In Types.sublime-settings"
 BUILT_IN_TYPES_SETTINGS_KEY = "coffee_autocomplete_plus_built_in_types"
+CUSTOM_TYPES_SETTINGS_FILE_NAME = "CoffeeScript Autocomplete Plus Custom Types.sublime-settings"
+CUSTOM_TYPES_SETTINGS_KEY = "coffee_autocomplete_plus_custom_types"
+FUNCTION_RETURN_TYPES_SETTINGS_KEY = "coffee_autocomplete_plus_function_return_types"
+FUNCTION_RETURN_TYPE_TYPE_NAME_KEY = "type_name"
+FUNCTION_RETURN_TYPE_FUNCTION_NAMES_KEY = "function_names"
 
 COFFEESCRIPT_SYNTAX = "CoffeeScript"
 COFFEE_EXTENSION_WITH_DOT = ".coffee"
@@ -93,7 +98,7 @@ def get_word_at(view, region):
 	word = ""
 	word_region = view.word(region)
 	word = view.substr(word_region)
-	word = re.sub('[\W]', '', word)
+	word = re.sub(r'[^a-zA-Z0-9_$]', '', word)
 	word = word.strip()
 	return word
 
@@ -102,6 +107,18 @@ def get_preceding_symbol(view, prefix, locations):
 	symbol_region = sublime.Region(index - 1 - len(prefix), index - len(prefix))
 	symbol = view.substr(symbol_region)
 	return symbol
+
+def get_preceding_function_call(view):
+	function_call = ""
+	if len(view.sel()) > 0:
+		selected_text = view.sel()[0]
+		selected_line = view.line(sublime.Region(selected_text.begin() - 1, selected_text.begin() - 1))
+		preceding_text = view.substr(sublime.Region(selected_line.begin(), selected_text.begin() - 1)).strip()
+		function_call_regex = r".*?([a-zA-Z0-9_$]+)\s*\(.*?\)"
+		match = re.search(function_call_regex, preceding_text)
+		if match:
+			function_call = match.group(1)
+	return function_call
 
 def get_preceding_word(view):
 	word = ""

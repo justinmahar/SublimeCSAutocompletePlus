@@ -20,5 +20,12 @@
 	"coffee_autocomplete_plus_this_aliases": 
 	[
 		"that", "self"
+	],
+	"coffee_autocomplete_plus_function_return_types": 
+	[
+		{
+			"function_names": ["$", "jQuery"],
+			"type_name": "$"
+		}
 	]
 }

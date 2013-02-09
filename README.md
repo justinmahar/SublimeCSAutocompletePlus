@@ -195,10 +195,19 @@ Configuration
 
 CoffeeScript Autocomplete Plus has the following configurable settings:
 
+In `CoffeeScript Autocomplete Plus.sublime-settings`:
+
 * Excluded directories -- `coffee_autocomplete_plus_excluded_dirs`
   - Directories to exclude from searching for CoffeeScript classes, functions and variables.
 * Aliases for `this` keyword -- `coffee_autocomplete_plus_this_aliases`
   - Due to lexical scoping you sometimes need to assign an alias for `this`, such as `that` or `self`. This config setting allows you to add or remove aliases that cause autocomplete to behave just like using `this` would.
+* Mappings for the return types of special functions, like jQuery. -- `coffee_autocomplete_plus_function_return_types`
+  - You may want to make calls directly off of special functions. For example, when using jQuery, you might type `$(selector).` and want some autocomplete suggestions. If you have a custom type defined, you can map the returns of function names, like `$` and `jQuery`, to that custom type. See the next config section for defining custom types.
+
+In ``CoffeeScript Autocomplete Plus Custom Types.sublime-settings`:
+
+* Custom types, allowing libraries like jQuery -- `coffee_autocomplete_plus_this_aliases`
+  - If you would like to define custom types, put them here. I have partially started jQuery.
 
 To configure these settings, open Preferences -> Package Settings -> CoffeeScript Autocomplete Plus -> Settings.  It is not recommended that you change the Default settings as they will be overwritten by plugin updates. Instead, make your changes in User settings, which will override the Default settings.
 
@@ -215,11 +224,8 @@ For now, here is the list of TBDs:
 
 * Hinting
 * Custom types (separate settings file)
-* Additional built-in types
-* An indication that a property or method is being overridden
+* Additional built-in types (Error, etc)
 * Smarter assignment detection
-* Better token parsing
-* Check contents of currently open views besides the active one
 * Constructors
 
 Far too many times I've installed a plugin only to be disappointed because it fell short of my expectations. If you feel this way, please let me know how I can make this plugin better for you and I will do my best.
