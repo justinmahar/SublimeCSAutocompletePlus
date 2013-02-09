@@ -151,11 +151,10 @@ class CoffeeGotoDefinitionThread(threading.Thread):
 		# The regex used to search for the selected variable assignment
 		assignment_regex = coffee_utils.ASSIGNMENT_REGEX % re.escape(selected_word)
 		# The regex used to search for the selected variable as a parameter in a method
-		param_regex = coffee_utils.PARAM_REGEX % (re.escape(selected_word), re.escape(selected_word), re.escape(selected_word), re.escape(selected_word))
+		param_regex = coffee_utils.PARAM_REGEX.format(name=re.escape(selected_word))
+		print param_regex
 		# The regex used to search for the selected variable as a for loop var
 		for_loop_regex = coffee_utils.FOR_LOOP_REGEX % re.escape(selected_word)
-
-		debug(("Selected: \"%s\"" % selected_word))
 
 		# ------ CURRENT FILE: CLASS (TitleCaps ONLY) ------------
 

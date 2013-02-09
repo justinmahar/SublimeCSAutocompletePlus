@@ -149,6 +149,34 @@ In addition, autocomplete suggests inherited properties and methods from Object.
 
 If you find yourself using a third-party library often and would like to have autocompletions for that library, you can create custom type. This is essentially a collection of autocomplete suggestions. CA+ supports jQuery (partially -- under development) out of the box, but you can always add others. If you do add a custom type and would like to share it, please issue a pull request and I will add it to the plugin. If your library is used as function, like jQuery, you can map that function's return value to a type. See the configuration section for how to do this.
 
+### Type Hinting
+
+* Variable declaration type hints
+  - When you assign a variable, you can add a type hint that CA+ will use to look up the class autocompletions for you. This type must be in square brackets, and in a single-line `#` comment on either the same line or the previous line, in the form `[TYPENAME]`. Other text can surround the type hint. This works for assignments only.
+
+```
+	# The [String] to add type hinting for
+	myString = someObject.getSomething()
+
+	# Now, CA+ knows that it's a String
+	myString.[autocomplete]
+
+	# Alternate way to add type hinting
+	otherString = someObject.getSomethingElse() # It's a [String], son.
+```
+
+* Parameter type hints
+  - If you use [https://github.com/netzpirat/codo](Codo), or are in the habit of documenting your classes, you can add type hints for your method parameters as well. These hints must be in a single-line `#` comment above the method signature. The hint can either be in the form `[TYPENAME] parameterName` or `parameterName [TYPENAME]`. Other text can surround the type hint.
+
+```
+	# [Animal] critter
+	# [Number] amount
+	feedAlligator: (critter, amount) ->
+
+		# CA+ knows that it's an Animal. Poor guy.
+		critter.[autocomplete]
+```
+
 ### Goto Definition
 
 Goto Definition is useful for finding where a class, function, or variable was defined or declared. Again, searching is performed from the current view and branches out to other files if nothing is found. With this, you can quickly jump between classes and zoom to functions&mdash;even ones defined in other files&mdash;with ease.

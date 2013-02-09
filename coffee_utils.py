@@ -32,6 +32,8 @@ CLASS_REGEX = r"class\s+%s((\s*$)|[^a-zA-Z0-9_$])"
 CLASS_REGEX_ANY = r"class\s+([a-zA-Z0-9_$]+)((\s*$)|[^a-zA-Z0-9_$])"
 CLASS_REGEX_WITH_EXTENDS = r"class\s+%s\s*($|(\s+extends\s+([a-zA-Z0-9_$.]+)))"
 SINGLE_LINE_COMMENT_REGEX = r"#.*?$"
+TYPE_HINT_COMMENT_REGEX = r"#.*?\[([a-zA-Z0-9_$]+)\].*$"
+TYPE_HINT_PARAMETER_COMMENT_REGEX = r"#.*?(\[([a-zA-Z0-9_$]+)\]\s*{var_name}((\s*$)|[^a-zA-Z0-9_$]))|({var_name}\s*\[([a-zA-Z0-9_$]+)\]((\s*$)|[^a-zA-Z0-9_$]))"
 # Function regular expression. Matches:
 # methodName  =   (aas,bsa, casd )	->
 FUNCTION_REGEX = r"(^|[^a-zA-Z0-9_$])(%s)\s*[:]\s*(\((.*?)\))?\s*\->"
@@ -43,8 +45,8 @@ ASSIGNMENT_REGEX = r"(^|[^a-zA-Z0-9_$])%s\s*="
 STATIC_ASSIGNMENT_REGEX = r"^\s*([@]|(this\s*[.]))\s*([a-zA-Z0-9_$]+)\s*[:=]"
 # Static function regex
 STATIC_FUNCTION_REGEX = r"(^|[^a-zA-Z0-9_$])\s*([@]|(this\s*[.]))\s*([a-zA-Z0-9_$]+)\s*[:]\s*(\((.*?)\))?\s*\->"
-# Regex for finding a function parameter. Requires the same item 4 times in a tuple.
-PARAM_REGEX = r"\(\s*((%s)|(%s\s*[,].*?)|(.*?[,]\s*%s\s*[,].*?)|(.*?[,]\s*%s))\s*\)\s*\->"
+# Regex for finding a function parameter. Call format on the string, with name=var_name
+PARAM_REGEX = r"\(\s*(({name})|({name}\s*[,].*?)|(.*?[,]\s*{name}\s*[,].*?)|(.*?[,]\s*{name}))\s*\)\s*\->"
 # Regex for finding a variable declared in a for loop.
 FOR_LOOP_REGEX = r"for\s*.*?[^a-zA-Z0-9_$]%s[^a-zA-Z0-9_$]"
 
@@ -299,7 +301,7 @@ def get_this_type(file_lines, start_region):
 
 	return type_found
 
-def get_variable_type(file_lines, variable_name, start_region):
+def get_variable_type(file_lines, variable_name, start_region, previous_variable_names=[]):
 
 	type_found = None
 	# Search backwards from current position for the type
@@ -309,9 +311,58 @@ def get_variable_type(file_lines, variable_name, start_region):
 	match_tuple = search_backwards_for(file_lines, assignment_regex, start_region)
 	if match_tuple:
 		match = match_tuple[2]
-		type_found = get_type_from_assignment_value(match_tuple[2].group(2))
+		assignment_value_string = match_tuple[2].group(2)
+		# Check for a type hint on current row or previous row.
+		# These will override anything else.
+		matched_row = match_tuple[0]
+		previous_row = matched_row - 1
+		current_row_text = file_lines[matched_row]
+		hint_match = re.search(TYPE_HINT_COMMENT_REGEX, current_row_text)
+		if hint_match:
+			type_found = hint_match.group(1)
+		if not type_found and previous_row >= 0:
+			previous_row_text = file_lines[previous_row]
+			hint_match = re.search(TYPE_HINT_COMMENT_REGEX, previous_row_text)
+			if hint_match:
+				type_found = hint_match.group(1)
+		if not type_found:
+			assignment_value_string = re.sub(SINGLE_LINE_COMMENT_REGEX, "", assignment_value_string).strip()
+			type_found = get_type_from_assignment_value(assignment_value_string, previous_variable_names)
+
+	# Let's try searching backwards for parameter hints in comments...
+	if not type_found:
+		# The regex used to search for the variable as a parameter in a method
+		param_regex = PARAM_REGEX.format(name=re.escape(variable_name))
+		match_tuple = search_backwards_for(file_lines, param_regex, start_region)
+		# We found the variable! it's a parameter. Let's find a comment with a type hint.
+		if match_tuple:
+			# Check for comments, and hopefully type hints, on previous rows.
+			matched_row = match_tuple[0]
+			row_to_check_index = matched_row - 1
+			
+			non_comment_code_reached = False
+			while not non_comment_code_reached and row_to_check_index >= 0 and not type_found:
+				current_row_text = file_lines[row_to_check_index]
+				# Make sure this line only contains comments.
+				mod_line = re.sub(SINGLE_LINE_COMMENT_REGEX, "", current_row_text).strip()
+				# If it wasn't just a comment line...
+				if len(mod_line) > 0:
+					non_comment_code_reached = True
+				else:
+					# It's a comment. Let's look for a type hint in the form: 
+					# variable_name [TYPE] ~OR~ [TYPE] variable_name
+					hint_regex = TYPE_HINT_PARAMETER_COMMENT_REGEX.format(var_name=re.escape(variable_name))
+					hint_match = re.search(hint_regex, current_row_text)
+					if hint_match:
+						# One of these two groups contains the type...
+						if hint_match.group(2):
+							type_found = hint_match.group(2)
+						else:
+							type_found = hint_match.group(6)
+				row_to_check_index = row_to_check_index - 1
+
 	# If backwards searching isn't working, at least try to find something...
-	else:
+	if not type_found:
 		# Forward search from beginning for assignment:
 		match_tuple = get_positions_of_regex_match_in_file(file_lines, assignment_regex)
 		if match_tuple:
@@ -320,7 +371,7 @@ def get_variable_type(file_lines, variable_name, start_region):
 
 	return type_found
 
-def get_type_from_assignment_value(assignment_value_string):
+def get_type_from_assignment_value(assignment_value_string, previous_variable_names=[]):
 	determined_type = None
 
 	assignment_value_string = assignment_value_string.strip()
