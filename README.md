@@ -201,11 +201,13 @@ CoffeeScript Autocomplete Plus has the following configurable settings:
 
 In `CoffeeScript Autocomplete Plus.sublime-settings`:
 
-* Excluded directories -- `coffee_autocomplete_plus_excluded_dirs`
-  - Directories to exclude from searching for CoffeeScript classes, functions and variables.
-* Aliases for `this` keyword -- `coffee_autocomplete_plus_this_aliases`
-  - Due to lexical scoping you sometimes need to assign an alias for `this`, such as `that` or `self`. This config setting allows you to add or remove aliases that cause autocomplete to behave just like using `this` would.
-* Mappings for the return types of special functions, like jQuery. -- `coffee_autocomplete_plus_function_return_types`
+* `coffee_autocomplete_plus_excluded_dirs` -- Excluded directories.
+  - Directories to exclude from searching for CoffeeScript classes, functions and variables. All directories in your project are searched except for the ones that match the names listed in this setting. **This is recommended.** Some excluded directories have already been specified in settings.
+* `coffee_autocomplete_plus_restricted_to_paths` -- Restrict searching to these directories.
+  - Paths to restrict the search to. If one or more path is specified, searching will be restricted to `PATH_TO_PROJECT/your/defined/path'. For example, you specify `src/coffee`. Now, only `PROJECT_PATH/src/coffee` will be scanned. **This is recommended.** If `[]`, no restrictions are applied.
+* `coffee_autocomplete_plus_this_aliases` -- Aliases for `this` keyword
+  - Due to lexical scoping you sometimes need to assign an alias for `this`, such as `that` or `self`. This config setting allows you to add or remove aliases that cause autocomplete to behave just like using `this` would. I aim to remove this setting with smarter assignment detection, but for now, it's convenient to have.
+* `coffee_autocomplete_plus_function_return_types` -- Mappings for the return types of special functions, like jQuery.
   - You may want to make calls directly off of special functions. For example, when using jQuery, you might type `$(selector).` and want some autocomplete suggestions. If you have a custom type defined, you can map the returns of function names, like `$` and `jQuery`, to that custom type. See the next config section for defining custom types.
 
 In `CoffeeScript Autocomplete Plus Custom Types.sublime-settings`:
