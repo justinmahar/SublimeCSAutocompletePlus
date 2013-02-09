@@ -143,7 +143,7 @@ CA+ now supports autocompletion for the following built-in types:
 
 This makes life that much easier.
 
-In addition, autocomplete suggests inherited properties and methods from Object. Built-in types are defined in `CoffeeScript Autocomplete Plus Built-In Types.sublime-settings`. You can experiment with this, but there is a separate file for your own custom types should you be interested in adding them. See the configuration section below for more on adding custom types.
+In addition, autocomplete suggests inherited properties and methods from Object.
 
 ### Custom Types
 
@@ -198,6 +198,8 @@ Autocomplete: `ctrl+space` (after a dot operator)
 
 Goto Definition: `ctrl+alt+d` or `ctrl+alt`+`left click`
 
+Key bindings can be changed by navigating to Preferences -> Package Settings -> CoffeeScript Autocomplete Plus -> Key Bindings. It is not recommended that you change the Default settings as they will be overwritten by plugin updates. Instead, make your changes in User settings, which will override the Default settings.
+
 Configuration
 -------------
 
@@ -250,12 +252,14 @@ In `CoffeeScript Autocomplete Plus.sublime-settings`:
 In `CoffeeScript Autocomplete Plus Custom Types.sublime-settings`:
 
 * `coffee_autocomplete_plus_custom_types` -- Custom types, allowing libraries like jQuery.
-  - If you would like to define custom types, put them here. Autocomplete will then make the defined suggestions for you. By default, jQuery is available (partially completed).
+  - If you would like to define custom types, put them here. Autocomplete will then make the defined suggestions for you. By default, jQuery is defined (partially completed).
+  - Use the `enabled` property to enable or disable a custom type.
   - Use the following example as a starting point:
 
 ```
 		{
 			"name": "MyType",
+			"enabled": true,
 			"constructor": {"args": []},
 			"static_properties": [{"name": "CONSTANT_ONE"}, {"name": "CONSTANT_TWO"}],
 			"static_methods": 
@@ -272,9 +276,13 @@ In `CoffeeScript Autocomplete Plus Custom Types.sublime-settings`:
 		}
 ```
 
-To configure these settings, open Preferences -> Package Settings -> CoffeeScript Autocomplete Plus -> Settings.  It is not recommended that you change the Default settings as they will be overwritten by plugin updates. Instead, make your changes in User settings, which will override the Default settings.
+In `CoffeeScript Autocomplete Plus Built-In Types.sublime-settings`:
 
-Key bindings can be changed by navigating to Preferences -> Package Settings -> CoffeeScript Autocomplete Plus -> Key Bindings. Same spiel as before about where to put your settings.
+* `coffee_autocomplete_plus_built_in_types` -- Built-in types, like Object, Array, and String.
+  - These are JavaScript's build-in types. These specs were gleaned from the [Mozilla MDN](https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects).
+  - Any of the built-in types can be disabled, if you'd like. Change the `enabled` property to `false`.
+
+To configure these settings, open Preferences -> Package Settings -> CoffeeScript Autocomplete Plus.  It is not recommended that you change the Default settings as they will be overwritten by plugin updates. Instead, make your changes in User settings, which will override the Default settings.
 
 Limitations and Plans
 ---------------------

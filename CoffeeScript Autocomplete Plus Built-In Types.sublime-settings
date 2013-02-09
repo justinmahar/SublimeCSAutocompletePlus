@@ -3,6 +3,7 @@
 	[
 		{
 			"name": "Array",
+			"enabled": true,
 			"constructor": {"args": []},
 			"static_properties": [],
 			"static_methods": 
@@ -36,6 +37,7 @@
 		},
 		{
 			"name": "Boolean",
+			"enabled": true,
 			"constructor": {"args": []},
 			"static_properties": [],
 			"static_methods": [],
@@ -44,6 +46,7 @@
 		},
 		{
 			"name": "Date",
+			"enabled": true,
 			"constructor": {"args": []},
 			"static_properties": [],
 			"static_methods": 
@@ -101,6 +104,7 @@
 		},
 		{
 			"name": "Function",
+			"enabled": true,
 			"constructor": {"args": []},
 			"static_properties": [],
 			"static_methods": [],
@@ -115,6 +119,7 @@
 		},
 		{
 			"name": "Number",
+			"enabled": true,
 			"constructor": {"args": []},
 			"static_properties": [{"name": "MAX_VALUE"}, {"name": "MIN_VALUE"}, {"name": "NaN"}, {"name": "NEGATIVE_INFINITY"}, {"name": "POSITIVE_INFINITY"}],
 			"static_methods": [],
@@ -128,6 +133,7 @@
 		},
 		{
 			"name": "Object",
+			"enabled": true,
 			"constructor": {"args": []},
 			"static_properties": [{"name": "prototype"}],
 			"static_methods": 
@@ -159,6 +165,7 @@
 		},
 		{
 			"name": "RegExp",
+			"enabled": true,
 			"constructor": {"args": []},
 			"static_properties": [],
 			"static_methods": [],
@@ -167,6 +174,7 @@
 		},
 		{
 			"name": "String",
+			"enabled": true,
 			"constructor": {"args": []},
 			"static_properties": [],
 			"static_methods": 

@@ -80,7 +80,28 @@
                                 },
                                 "caption": "Key Bindings – User"
                             },
-                            { "caption": "-" }
+                            { "caption": "-" },
+                            {
+                                "command": "open_file",
+                                "args": {"file": "${packages}/CoffeeScript Autocomplete Plus/CoffeeScript Autocomplete Plus Custom Types.sublime-settings"},
+                                "caption": "Custom Types – Default"
+                            },
+                            {
+                                "command": "open_file",
+                                "args": {"file": "${packages}/User/CoffeeScript Autocomplete Plus Custom Types.sublime-settings"},
+                                "caption": "Custom Types – User"
+                            },
+                            { "caption": "-" },
+                            {
+                                "command": "open_file",
+                                "args": {"file": "${packages}/CoffeeScript Autocomplete Plus/CoffeeScript Autocomplete Plus Built-In Types.sublime-settings"},
+                                "caption": "Built-In Types – Default"
+                            },
+                            {
+                                "command": "open_file",
+                                "args": {"file": "${packages}/User/CoffeeScript Autocomplete Plus Built-In Types.sublime-settings"},
+                                "caption": "Built-In Types – User"
+                            }
                         ]
                     }
                 ]

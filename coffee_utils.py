@@ -61,6 +61,7 @@ METHOD_INDICATOR = u'\u25CF'
 INHERITED_INDICATOR = u'\u2C75'
 
 BUILT_IN_TYPES_TYPE_NAME_KEY = "name"
+BUILT_IN_TYPES_TYPE_ENABLED_KEY = "enabled"
 BUILT_IN_TYPES_CONSTRUCTOR_KEY = "constructor"
 BUILT_IN_TYPES_STATIC_PROPERTIES_KEY = "static_properties"
 BUILT_IN_TYPES_STATIC_PROPERTY_NAME_KEY = "name"
@@ -439,15 +440,16 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
 	# Built-in types include String, Number, etc, and are configurable in settings.
 	for next_built_in_type in built_in_types:
 		try:
-			next_class_name = next_built_in_type[BUILT_IN_TYPES_TYPE_NAME_KEY]
-			if next_class_name == class_name:
-				# We are looking at a built-in type! Collect completions for it...
-				completions = get_completions_for_built_in_type(next_built_in_type, search_statically, False)
-				original_class_name_found = True
-			elif next_class_name == "Function" and not function_completions:
-				function_completions = get_completions_for_built_in_type(next_built_in_type, False, True)
-			elif next_class_name == "Object" and not object_completions:
-				object_completions = get_completions_for_built_in_type(next_built_in_type, False, True)
+			if next_built_in_type[BUILT_IN_TYPES_TYPE_ENABLED_KEY]:
+				next_class_name = next_built_in_type[BUILT_IN_TYPES_TYPE_NAME_KEY]
+				if next_class_name == class_name:
+					# We are looking at a built-in type! Collect completions for it...
+					completions = get_completions_for_built_in_type(next_built_in_type, search_statically, False)
+					original_class_name_found = True
+				elif next_class_name == "Function" and not function_completions:
+					function_completions = get_completions_for_built_in_type(next_built_in_type, False, True)
+				elif next_class_name == "Object" and not object_completions:
+					object_completions = get_completions_for_built_in_type(next_built_in_type, False, True)
 		except Exception, e:
 			print repr(e)
 
