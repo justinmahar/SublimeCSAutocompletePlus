@@ -217,7 +217,7 @@ In `CoffeeScript Autocomplete Plus.sublime-settings`:
 ```
 
 * `coffee_autocomplete_plus_restricted_to_paths` -- Restrict searching to these directories.
-  - Paths to restrict the search to. If one or more path is specified, searching will be restricted to `PATH_TO_PROJECT/your/defined/path'. For example, you specify `src/coffee`. Now, only `PROJECT_PATH/src/coffee` will be scanned. **This is recommended.** If `[]`, no restrictions are applied.
+  - Paths to restrict the search to. If one or more path is specified, searching will be restricted to `PATH_TO_PROJECT/your/defined/path`. For example, you specify `src/coffee`. Now, only `PROJECT_PATH/src/coffee` will be scanned. **This is recommended.** If `[]`, no restrictions are applied.
   - Expected value: Array of paths relative to your project directory.
   - Example:
 
