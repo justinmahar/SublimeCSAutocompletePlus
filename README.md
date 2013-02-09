@@ -293,11 +293,12 @@ Autocomplete is smart, but not Mensa smart. Under the hood, we're using regular 
 
 For now, here is the list of TBDs:
 
+* Finish jQuery custom type
 * Hinting
-* Custom types (separate settings file)
-* Additional built-in types (Error, etc)
 * Smarter assignment detection
-* Constructors
+* Constructor support
+  - Add constructors to built-in types
+* Additional built-in types (Error, etc)
 
 Far too many times I've installed a plugin only to be disappointed because it fell short of my expectations. If you feel this way, please let me know how I can make this plugin better for you and I will do my best.
 
