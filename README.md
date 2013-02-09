@@ -107,7 +107,7 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 			@isLampAwesome: (lamp) ->
 				if lamp.color == LavaLamp.BEST_COLOR
 					console.log "Definitely"
-				else:
+				else
 					console.log "Probably"
 			# Non-static
 			constructor: (@color, size) ->
