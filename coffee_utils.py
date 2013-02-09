@@ -428,8 +428,6 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
 	
 	# TODO: Use prefix to make suggestions.
 
-	print "Looking for " + str(class_name)
-
 	completions = []
 	scanned_classes = []
 	original_class_name_found = False
