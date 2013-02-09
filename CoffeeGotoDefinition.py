@@ -89,8 +89,8 @@ class CoffeeGotoDefinitionCommand(sublime_plugin.TextCommand):
 			if matched_location_tuple:
 				# debug("Match found!")
 				file_to_open = matched_location_tuple[0]
-				row = matched_location_tuple[1]
-				column = matched_location_tuple[2]
+				row = matched_location_tuple[1] + 1
+				column = matched_location_tuple[2] + 1
 				match = matched_location_tuple[3]
 				row_start_index = matched_location_tuple[4]
 				# If there is a file to open...
@@ -152,9 +152,11 @@ class CoffeeGotoDefinitionThread(threading.Thread):
 		assignment_regex = coffee_utils.ASSIGNMENT_REGEX % re.escape(selected_word)
 		# The regex used to search for the selected variable as a parameter in a method
 		param_regex = coffee_utils.PARAM_REGEX.format(name=re.escape(selected_word))
-		print param_regex
+
 		# The regex used to search for the selected variable as a for loop var
 		for_loop_regex = coffee_utils.FOR_LOOP_REGEX % re.escape(selected_word)
+
+		debug(("Selected: \"%s\"" % selected_word))
 
 		# ------ CURRENT FILE: CLASS (TitleCaps ONLY) ------------
 

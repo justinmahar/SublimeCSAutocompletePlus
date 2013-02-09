@@ -108,13 +108,13 @@
 			"constructor": {"args": []},
 			"static_properties": [],
 			"static_methods": [],
-			"instance_properties": [{"name": "length"}],
+			"instance_properties": [{"name": "name"}, {"name": "length"}, {"name": "caller"}, {"name": "arguments"}],
 			"instance_methods":
 			[
 				{"name":"apply", "args": [{"name": "thisArg"}, {"name": "[argsArray]"}]},
 				{"name":"bind", "args": [{"name": "thisArg"}, {"name": "arg1, ..., argN"}]},
-				{"name":"call", "args": [{"name": "thisArg"}, {"name": "arg1, ..., argN"}]},
-				{"name":"isGenerator", "args": []}
+				{"name":"call", "args": [{"name": "thisArg"}, {"name": "arg1, ..., argN"}]}
+				//{"name":"isGenerator", "args": []}
 			]
 		},
 		{
