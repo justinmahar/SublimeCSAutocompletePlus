@@ -92,7 +92,7 @@ class CoffeeAutocomplete(sublime_plugin.EventListener):
 			preceding_function_call = coffee_utils.get_preceding_function_call(view).strip()
 
 			# Determine preceding token, if any (if a period was typed).
-			token = coffee_utils.get_preceding_word(view).strip()
+			token = coffee_utils.get_preceding_token(view).strip()
 
 			# TODO: Smarter region location
 			symbol_region = sublime.Region(locations[0] - len(prefix), locations[0] - len(prefix))
@@ -175,6 +175,8 @@ class CoffeeAutocompleteThread(threading.Thread):
 		symbol_region = self.symbol_region
 		built_in_types = self.built_in_types
 
+		selected_word = token[token.rfind(".") + 1:]
+
 		completions = []
 
 		# First see if it is a special function return definition, like $ for $("#selector")
@@ -201,25 +203,25 @@ class CoffeeAutocompleteThread(threading.Thread):
 				pass
 			elif preceding_symbol == coffee_utils.PERIOD_OPERATOR:
 				# If "this" or a substitute for it, process as "this."
-				if token == coffee_utils.THIS_KEYWORD or token in this_aliases:
+				if selected_word == coffee_utils.THIS_KEYWORD or selected_word in this_aliases:
 					# Process as "this."
 					this_type = coffee_utils.get_this_type(current_file_lines, symbol_region)
 					if this_type:
 						completions = coffee_utils.get_completions_for_class(this_type, False, current_file_lines, prefix, all_coffee_file_paths, built_in_types)
 				else:
 					# If TitleCase, assume a class, and that we want static properties and functions.
-					if coffee_utils.is_capitalized(token):
-						# Assume it is either in the current view or in a file called token.coffee
-						exact_file_name_regex = "^" + re.escape(token + coffee_utils.COFFEE_EXTENSION_WITH_DOT) + "$"
+					if coffee_utils.is_capitalized(selected_word):
+						# Assume it is either in the current view or in a file called selected_word.coffee
+						exact_file_name_regex = "^" + re.escape(selected_word + coffee_utils.COFFEE_EXTENSION_WITH_DOT) + "$"
 						exact_name_file_paths = coffee_utils.get_files_in(project_folder_list, exact_file_name_regex, excluded_dirs)
-						completions = coffee_utils.get_completions_for_class(token, True, current_file_lines, prefix, exact_name_file_paths, built_in_types)
+						completions = coffee_utils.get_completions_for_class(selected_word, True, current_file_lines, prefix, exact_name_file_paths, built_in_types)
 						if not completions:
 							# Now we search globally...
-							completions = coffee_utils.get_completions_for_class(token, True, None, prefix, all_coffee_file_paths, built_in_types)
+							completions = coffee_utils.get_completions_for_class(selected_word, True, None, prefix, all_coffee_file_paths, built_in_types)
 
 					# If nothing yet, assume a variable.
 					if not completions:
-						variable_type = coffee_utils.get_variable_type(current_file_lines, token, symbol_region)
+						variable_type = coffee_utils.get_variable_type(current_file_lines, token, symbol_region, [])
 						if variable_type:
 							# Assume it is either in the current view or in a file called variable_type.coffee
 							exact_file_name_regex = "^" + re.escape(variable_type + coffee_utils.COFFEE_EXTENSION_WITH_DOT) + "$"
@@ -227,6 +229,6 @@ class CoffeeAutocompleteThread(threading.Thread):
 							completions = coffee_utils.get_completions_for_class(variable_type, False, current_file_lines, prefix, exact_name_file_paths, built_in_types)
 					if not completions:
 						# Now we search globally for a class... Maybe they're making a static call on something lowercase? Bad design, but check anyways.
-						completions = coffee_utils.get_completions_for_class(token, True, None, prefix, all_coffee_file_paths, built_in_types)
+						completions = coffee_utils.get_completions_for_class(selected_word, True, None, prefix, all_coffee_file_paths, built_in_types)
 		if completions:
 			self.completions = completions

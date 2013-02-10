@@ -6,6 +6,10 @@ import os
 # - Document this file.
 # - Split out functionality where possible.
 
+# This file is what happens when you code non-stop for several days.
+# I tried to make the main files as easy to follow along as possible. 
+# This file, not so much.
+
 # Set to true to enable debug output
 DEBUG = False
 
@@ -54,7 +58,7 @@ CONSTRUCTOR_SELF_ASSIGNMENT_PARAM_REGEX = r"constructor\s*[:]\s*\(\s*((@{name})|
 
 # Assignment with the value it's being assigned to. Matches:
 # blah = new Dinosaur()
-ASSIGNMENT_VALUE_REGEX = r"(^|[^a-zA-Z0-9_$])%s\s*=\s*(.*)"
+ASSIGNMENT_VALUE_REGEX = r"(^|[^a-zA-Z0-9_$.])%s\s*=\s*(.*)"
 
 # Used to determining what class is being created with the new keyword. Matches:
 # new Macaroni
@@ -108,6 +112,18 @@ def get_word_at(view, region):
 	word = word.strip()
 	return word
 
+def get_token_at(view, region):
+	token = ""
+	if len(view.sel()) > 0:
+		selected_line = view.line(region)
+		preceding_text = view.substr(sublime.Region(selected_line.begin(), region.begin())).strip()
+		token_regex = r".*?([a-zA-Z0-9_$.@]+)"
+		match = re.search(token_regex, preceding_text)
+		if match:
+			token = match.group(1)
+	token = token.strip()
+	return token
+
 def get_preceding_symbol(view, prefix, locations):
 	index = locations[0]
 	symbol_region = sublime.Region(index - 1 - len(prefix), index - len(prefix))
@@ -126,13 +142,26 @@ def get_preceding_function_call(view):
 			function_call = match.group(1)
 	return function_call
 
-def get_preceding_word(view):
-	word = ""
+def get_preceding_token(view):
+	token = ""
 	if len(view.sel()) > 0:
 		selected_text = view.sel()[0]
 		if selected_text.begin() > 2:
-			word_region = sublime.Region(selected_text.begin() - 1, selected_text.begin() - 1)
-			word = get_word_at(view, word_region)
+			token_region = sublime.Region(selected_text.begin() - 1, selected_text.begin() - 1)
+			token = get_token_at(view, token_region)
+	return token
+
+def get_preceding_call_chain(view):
+	word = ""
+	if len(view.sel()) > 0:
+		selected_text = view.sel()[0]
+		selected_text = view.sel()[0]
+		selected_line = view.line(sublime.Region(selected_text.begin() - 1, selected_text.begin() - 1))
+		preceding_text = view.substr(sublime.Region(selected_line.begin(), selected_text.begin() - 1)).strip()
+		function_call_regex = r".*?([a-zA-Z0-9_$]+)\s*\(.*?\)"
+		match = re.search(function_call_regex, preceding_text)
+		if match:
+			function_call = match.group(1)
 	return word
 
 def is_capitalized(word): 
@@ -301,45 +330,80 @@ def get_this_type(file_lines, start_region):
 
 	return type_found
 
-def get_variable_type(file_lines, variable_name, start_region, previous_variable_names=[]):
+def get_variable_type(file_lines, token, start_region, previous_variable_names=[]):
+
 
 	type_found = None
-	# Search backwards from current position for the type
+
+	# Check for "this"
+	if token == "this":
+		type_found = get_this_type(file_lines, start_region)
+	elif token.startswith("@"):
+		token = "this." + token[1:]
+
 	# We're looking for a variable assignent
-	assignment_regex = ASSIGNMENT_VALUE_REGEX % variable_name
-	match_tuple = search_backwards_for(file_lines, assignment_regex, start_region)
-	if match_tuple:
-		type_found = get_type_from_assignment_match_tuple(variable_name, match_tuple, file_lines)
+	assignment_regex = ASSIGNMENT_VALUE_REGEX % token
+
+	# Search backwards from current position for the type
+	if not type_found:
+		match_tuple = search_backwards_for(file_lines, assignment_regex, start_region)
+		if match_tuple:
+			type_found = get_type_from_assignment_match_tuple(token, match_tuple, file_lines, previous_variable_names)
+			# Well, we found the assignment. But we don't know what it is.
+			# Let's try to find a variable name and get THAT variable type...
+			if not type_found:
+				type_found = get_type_from_assigned_variable_name(file_lines, token, match_tuple, previous_variable_names)
 
 	# Let's try searching backwards for parameter hints in comments...
 	if not type_found:
 		# The regex used to search for the variable as a parameter in a method
-		param_regex = PARAM_REGEX.format(name=re.escape(variable_name))
+		param_regex = PARAM_REGEX.format(name=re.escape(token))
 		match_tuple = search_backwards_for(file_lines, param_regex, start_region)
 		# We found the variable! it's a parameter. Let's find a comment with a type hint.
 		if match_tuple:
-			type_found = get_type_from_parameter_match_tuple(variable_name, match_tuple, file_lines, previous_variable_names)
+			type_found = get_type_from_parameter_match_tuple(token, match_tuple, file_lines, previous_variable_names)
 
 	# If backwards searching isn't working, at least try to find something...
 	if not type_found:
 		# Forward search from beginning for assignment:
 		match_tuple = get_positions_of_regex_match_in_file(file_lines, assignment_regex)
 		if match_tuple:
-			type_found = get_type_from_assignment_match_tuple(variable_name, match_tuple, file_lines, previous_variable_names)
+			type_found = get_type_from_assignment_match_tuple(token, match_tuple, file_lines, previous_variable_names)
+			if not type_found:
+				type_found = get_type_from_assigned_variable_name(file_lines, token, match_tuple, previous_variable_names)
 
 	# If still nothing, maybe it's an @ parameter in the constructor?
 	if not type_found:
-		# The regex used to search for the variable as a parameter in a method
-		param_regex = CONSTRUCTOR_SELF_ASSIGNMENT_PARAM_REGEX.format(name=re.escape(variable_name))
-		print param_regex
-		# Forward search from beginning for param:
-		match_tuple = get_positions_of_regex_match_in_file(file_lines, param_regex)
-		# We found the variable! it's a parameter. Let's find a comment with a type hint.
-		if match_tuple:
-			print "Match! " + match_tuple[2].group()
-			print "Matched row: " + file_lines[match_tuple[1]]
-			type_found = get_type_from_parameter_match_tuple(variable_name, match_tuple, file_lines)
+		if token.startswith(THIS_KEYWORD + ".") or token.startswith(THIS_SUGAR_SYMBOL):
 
+			# Get the last word in the chain, if it's a chain. 
+			# E.g. Get variableName from this.variableName.[autocomplete]
+			selected_word = token[token.rfind(".") + 1:]
+
+			# The regex used to search for the variable as a parameter in a method
+			param_regex = CONSTRUCTOR_SELF_ASSIGNMENT_PARAM_REGEX.format(name=re.escape(selected_word))
+
+			# Forward search from beginning for param:
+			match_tuple = get_positions_of_regex_match_in_file(file_lines, param_regex)
+			# We found the variable! it's a parameter. Let's find a comment with a type hint.
+			if match_tuple:
+				type_found = get_type_from_parameter_match_tuple(selected_word, match_tuple, file_lines)
+
+	return type_found
+
+def get_type_from_assigned_variable_name(file_lines, token, match_tuple, previous_variable_names=[]):
+	type_found = None
+	assignment_value_string = match_tuple[2].group(2).strip()
+	token_match = re.search(r"^([a-zA-Z0-9_$.]+)$", assignment_value_string)
+	if token_match:
+		next_token = token_match.group(1)
+		if next_token not in previous_variable_names:
+			print next_token
+			# row start index + column index
+			token_index = match_tuple[3] + match_tuple[1]
+			previous_variable_names.append(token)
+			next_token_region = sublime.Region(token_index, token_index)
+			type_found = get_variable_type(file_lines, next_token, next_token_region, previous_variable_names)
 	return type_found
 
 def get_type_from_assignment_match_tuple(variable_name, match_tuple, file_lines, previous_variable_names=[]):
@@ -363,7 +427,7 @@ def get_type_from_assignment_match_tuple(variable_name, match_tuple, file_lines,
 				type_found = hint_match.group(1)
 		if not type_found:
 			assignment_value_string = re.sub(SINGLE_LINE_COMMENT_REGEX, "", assignment_value_string).strip()
-			type_found = get_type_from_assignment_value(assignment_value_string, previous_variable_names)
+			type_found = get_type_from_assignment_value(assignment_value_string)
 	return type_found
 
 
@@ -378,7 +442,7 @@ def get_type_from_parameter_match_tuple(variable_name, match_tuple, file_lines, 
 		non_comment_code_reached = False
 		while not non_comment_code_reached and row_to_check_index >= 0 and not type_found:
 			current_row_text = file_lines[row_to_check_index]
-			print "Checking: " + current_row_text
+
 			# Make sure this line only contains comments.
 			mod_line = re.sub(SINGLE_LINE_COMMENT_REGEX, "", current_row_text).strip()
 			# If it wasn't just a comment line...
@@ -398,7 +462,7 @@ def get_type_from_parameter_match_tuple(variable_name, match_tuple, file_lines, 
 			row_to_check_index = row_to_check_index - 1
 	return type_found
 
-def get_type_from_assignment_value(assignment_value_string, previous_variable_names=[]):
+def get_type_from_assignment_value(assignment_value_string):
 	determined_type = None
 
 	assignment_value_string = assignment_value_string.strip()
@@ -414,11 +478,11 @@ def get_type_from_assignment_value(assignment_value_string, previous_variable_na
 		match = re.search(array_regex, assignment_value_string)
 		if match:
 			determined_type = "Array"
-	# boolean_regex = r"^(true)|(false)$"
-	# if not determined_type:
-	# 	match = re.search(boolean_regex, assignment_value_string)
-	# 	if match:
-	# 		determined_type = "Boolean"
+	boolean_regex = r"^(true)|(false)$"
+	if not determined_type:
+		match = re.search(boolean_regex, assignment_value_string)
+		if match:
+			determined_type = "Boolean"
 	# http://stackoverflow.com/questions/4703390/how-to-extract-a-floating-number-from-a-string-in-python
 	number_regex = r"^[-+]?\d*\.\d+|\d+$"
 	if not determined_type:

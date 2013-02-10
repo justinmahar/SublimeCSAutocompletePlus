@@ -164,7 +164,7 @@ class CoffeeGotoDefinitionThread(threading.Thread):
 
 				# If so, we assume it is a class. 
 				debug("Checking for local class %s..." % selected_word)
-				class_location_search_tuple = coffee_utils.find_location_of_regex_in_files(class_regex, current_file_lines)
+				class_location_search_tuple = coffee_utils.find_location_of_regex_in_files(class_regex, current_file_lines, [])
 				if class_location_search_tuple:
 					matched_location_tuple = class_location_search_tuple
 
@@ -192,7 +192,7 @@ class CoffeeGotoDefinitionThread(threading.Thread):
 		# ------ CURRENT FILE: FUNCTION --------------------------
 		if not matched_location_tuple:
 			debug("Checking for local function %s..." % selected_word)
-			local_function_location_search_tuple = coffee_utils.find_location_of_regex_in_files(function_regex, current_file_lines)
+			local_function_location_search_tuple = coffee_utils.find_location_of_regex_in_files(function_regex, current_file_lines, [])
 			if local_function_location_search_tuple:
 				matched_location_tuple = local_function_location_search_tuple
 
@@ -218,7 +218,7 @@ class CoffeeGotoDefinitionThread(threading.Thread):
 						matched_location_tuple = filename_tuple + for_loop_match_tuple
 					# Otherwise, forwards search for it. It could be defined in the constructor.
 					else:
-						forwards_match_tuple = coffee_utils.find_location_of_regex_in_files(assignment_regex, current_file_lines)
+						forwards_match_tuple = coffee_utils.find_location_of_regex_in_files(assignment_regex, current_file_lines, [])
 						if forwards_match_tuple:
 							matched_location_tuple = forwards_match_tuple
 

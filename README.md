@@ -322,7 +322,7 @@ Autocomplete is smart, but not Mensa smart. Under the hood, we're using regular 
 For now, here is the list of TBDs:
 
 * Finish jQuery custom type
-* Smarter assignment detection
+* Even smarter assignment detection (methods, where they came from)
 * Constructor support
   - Add constructors to built-in types
 * Additional built-in types (Error, etc)
