@@ -10,7 +10,7 @@
 			[
 				{"name":"isArray", "args": [{"name": "obj"}]}
 			],
-			"instance_properties": [],
+			"instance_properties": [{"name": "length"}],
 			"instance_methods":
 			[
 				{"name":"pop", "args": []},
