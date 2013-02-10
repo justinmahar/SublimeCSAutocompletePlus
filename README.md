@@ -253,8 +253,8 @@ In `CoffeeScript Autocomplete Plus.sublime-settings`:
   		"coffee_autocomplete_plus_restricted_to_paths" : ["src/coffee", "lib/src/coffee"]
 ```
 
-* `coffee_autocomplete_plus_this_aliases` -- Aliases for `this` keyword
-  - Due to lexical scoping you sometimes need to assign an alias for `this`, such as `that` or `self`. This config setting allows you to add or remove aliases that cause autocomplete to behave just like using `this` would. I aim to remove this setting with smarter assignment detection, but for now, it's convenient to have.
+* _DEPRECATED_ `coffee_autocomplete_plus_this_aliases` -- Aliases for `this` keyword
+  - *Newer features have made this feature obsolete.** Due to lexical scoping you sometimes need to assign an alias for `this`, such as `that` or `self`. This config setting allows you to add or remove aliases that cause autocomplete to behave just like using `this` would.
   - Expected value: Array of alias strings.
   - Example:
 
