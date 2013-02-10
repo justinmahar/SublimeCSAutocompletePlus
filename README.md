@@ -151,8 +151,12 @@ If you find yourself using a third-party library often and would like to have au
 
 ### Type Hinting
 
-* Variable declaration type hints
-  - When you assign a variable, you can add a type hint that CA+ will use to look up the class autocompletions for you. This type must be in square brackets, and in a single-line `#` comment on either the same line or the previous line, in the form `[TYPENAME]`. Other text can surround the type hint. This works for assignments only.
+Document your code and you shall be rewarded in many ways. One of these way is autocompletion. Another of these ways is a warm, fuzzy feeling all over.
+
+CA+ can detect types using hints you provide it in comments. You can even add method headers with hints for parameters.
+
+* Variable assignment type hints
+  - When you assign a variable, you can add a type hint that CA+ will use to look up the class autocompletions for you. This type must be in square brackets, and in a single-line `#` comment on either the same line or the previous line, in the form `[TYPENAME]`. Other text can surround the type hint.
 
 ```
 	# The [String] to add type hinting for
@@ -173,7 +177,7 @@ If you find yourself using a third-party library often and would like to have au
 	# [Boolean] animalEscapes
 	feedAlligator: (critter, animalEscapes) ->
 		if animalEscapes:
-			# CA+ knows that it's an Animal. Will he escape? Autocomplete!
+			# CA+ knows that it's an Animal. Will he escape? Autocomplete and choose his destiny!
 			critter.[autocomplete]
 ```
 
@@ -190,9 +194,9 @@ Goto Definition is useful for finding where a class, function, or variable was d
 
 ### General 
 
-* Generally fast lookups.
-* You can configure directories to be be excluded from global .coffee search **(recommended)**
-* You can configure the tool to only search in specific locations **(recommended)**
+* Asynchronous and fast lookups. That means no UI freezing while waiting for completions or Goto Definiton. Hate that.
+* You can configure directories to be be excluded from global .coffee search. **(recommended)**
+* You can configure the tool to only search in specific locations. **(recommended)**
 
 Usage
 -----
@@ -207,7 +211,7 @@ Example usage: Inside a class, you type `this.` and would like a list of the ava
 
 Looking for where a class, function or variable was defined? Look no further.
 
-Place your cursor on any word and press `ctrl+alt+d` in Windows/Linux, and `ctrl+alt+d` in OS X, to goto the definition of the selected class, function or variable.
+Place your cursor on any word and press `ctrl+alt+d` in Windows/Linux, and `ctrl+alt+d` in OS X, to goto the definition of the selected class, function or variable. Life's good.
 
 Alternatively, use `ctrl+alt` + `left click` in Windows/Linux, and `ctrl+alt` + `left click` in OS X.
 
@@ -321,11 +325,14 @@ Autocomplete is smart, but not Mensa smart. Under the hood, we're using regular 
 
 For now, here is the list of TBDs:
 
-* Finish jQuery custom type
-* Even smarter assignment detection (methods, where they came from)
+* Method return type hinting.
 * Constructor support
-  - Add constructors to built-in types
+	- Add constructors to built-in types
+* Finish jQuery custom type
 * Additional built-in types (Error, etc)
+* Optional parameter detection
+	- Square brackets indicate optional params.
+	- Example: `methodName(var1, optionalVar2="hey, I'm optional")` will autocomplete to `classInstance.methodName(var1, [optionalVar2])`
 
 Far too many times I've installed a plugin only to be disappointed because it fell short of my expectations. If you feel this way, please let me know how I can make this plugin better for you and I will do my best.
 
