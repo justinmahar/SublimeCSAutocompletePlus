@@ -50,7 +50,7 @@ STATIC_ASSIGNMENT_REGEX = r"^\s*([@]|(this\s*[.]))\s*([a-zA-Z0-9_$]+)\s*[:=]"
 # Static function regex
 STATIC_FUNCTION_REGEX = r"(^|[^a-zA-Z0-9_$])\s*([@]|(this\s*[.]))\s*([a-zA-Z0-9_$]+)\s*[:]\s*(\((.*?)\))?\s*\->"
 # Regex for finding a function parameter. Call format on the string, with name=var_name
-PARAM_REGEX = r"\(\s*(({name})|({name}\s*[,].*?)|(.*?[,]\s*{name}\s*[,].*?)|(.*?[,]\s*{name}))\s*\)\s*\->"
+PARAM_REGEX = r"\(\s*(({name})|({name}\s*=?.*?[,].*?)|(.*?[,]\s*{name}\s*=?.*?[,].*?)|(.*?[,]\s*{name}))\s*=?.*?\)\s*\->"
 # Regex for finding a variable declared in a for loop.
 FOR_LOOP_REGEX = r"for\s*.*?[^a-zA-Z0-9_$]%s[^a-zA-Z0-9_$]"
 # Regex for constructor @ params, used for type hinting.
