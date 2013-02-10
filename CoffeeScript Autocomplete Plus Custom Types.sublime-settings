@@ -1,0 +1,63 @@
+{
+	"coffee_autocomplete_plus_custom_types": 
+	[
+		// {
+		// 	"name": "MyType",
+		// 	"constructors": [{"args": []}],
+		// 	"static_properties": [{"name": "CONSTANT_ONE"}, {"name": "CONSTANT_TWO"}],
+		// 	"static_methods": 
+		// 	[
+		// 		{"name":"myStaticMethod", "args": [{"name": "arg1"}, {"name": "arg2"}]},
+		// 		{"name":"myStaticMethodTwo", "args": []}
+		// 	],
+		// 	"instance_properties": [{"name": "thingOne"}, {"name": "thingTwo"}, {"name": "thingThree"}],
+		// 	"instance_methods":
+		// 	[
+		// 		{"name":"doStuff", "args": [{"name": "numTimes"}]},
+		// 		{"name":"doMoreStuff", "args": [{"name": "numTimes"}, {"name": "extraAmount"}]}
+		// 	]
+		// },
+		{
+			"name": "$",
+			"enabled": true,
+			"constructors": [{"args": []}],
+			"static_properties": [],
+			"static_methods": 
+			[
+				// Core
+				{"name":"holdReady", "args": [{"name": "hold"}]},
+				{"name":"noConflict", "args": [{"name": "[removeAll]"}]},
+				{"name":"sub", "args": []},
+				{"name":"when", "args": [{"name": "deferreds"}]}
+			],
+			"instance_properties": [],
+			"instance_methods":
+			[
+				// Category: Attributes
+				{"name":"addClass", "args": [{"name": "className"}]},
+				{"name":"addClass", "args": [{"name": "function(index, currentClass)"}]},
+				{"name":"attr", "args": [{"name": "attributeName"}]},
+				{"name":"attr", "args": [{"name": "attributeName"}, {"name": "value"}]},
+				{"name":"attr", "args": [{"name": "attributes"}]},
+				{"name":"attr", "args": [{"name": "attributeName"}, {"name": "function(index, attr)"}]},
+				{"name":"hasClass", "args": [{"name": "className"}]},
+				{"name":"html", "args": []},
+				{"name":"html", "args": [{"name": "htmlString"}]},
+				{"name":"html", "args": [{"name": "function(index, oldhtml)"}]},
+				{"name":"prop", "args": [{"name": "propertyName"}]},
+				{"name":"prop", "args": [{"name": "propertyName"}, {"name": "value"}]},
+				{"name":"prop", "args": [{"name": "properties"}]},
+				{"name":"prop", "args": [{"name": "propertyName"}, {"name": "function(index, oldPropertyValue)"}]},
+				{"name":"removeAttr", "args": [{"name": "attributeName"}]},
+				{"name":"removeClass", "args": [{"name": "className"}]},
+				{"name":"removeClass", "args": [{"name": "function(index, class)"}]},
+				{"name":"removeProp", "args": [{"name": "propertyName"}]},
+				{"name":"toggleClass", "args": [{"name": "className"}]},
+				{"name":"toggleClass", "args": [{"name": "className"}, {"name": "switch"}]},
+				{"name":"toggleClass", "args": [{"name": "[switch]"}]},
+				{"name":"toggleClass", "args": [{"name": "function(index, class, switch)"}, {"name": "[switch]"}]},
+				{"name":"val", "args": []}
+			]
+		}
+	]
+}
