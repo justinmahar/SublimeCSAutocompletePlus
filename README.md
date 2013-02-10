@@ -182,7 +182,7 @@ CA+ can detect types using hints you provide it in comments. You can even add me
 ```
 
 * Method return type hints
-  - If a variable is assigned to the return value of a method, type hinting can collected from that method. The method must have a single-line `#` comment on a previous line with the hint `@return [TYPE]`. This is a bonus convenience. Remember, you can always use the regular assignment type hinting mentioned above.
+  - If a variable is assigned to the return value of a method, type hinting can collected from that method. The method must have a single-line `#` comment on a previous line with the hint `@return [TYPE]`. This is a bonus convenience. Remember, you can always use the regular assignment type hinting mentioned above when assigning variables!
 
 ```
 	class Alligator
