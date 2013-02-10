@@ -118,7 +118,7 @@ def get_token_at(view, region):
 	if len(view.sel()) > 0:
 		selected_line = view.line(region)
 		preceding_text = view.substr(sublime.Region(selected_line.begin(), region.begin())).strip()
-		token_regex = r".*?([a-zA-Z0-9_$.@]+)"
+		token_regex = r"[^a-zA-Z0-9_$.@]*?([a-zA-Z0-9_$.@]+)$"
 		match = re.search(token_regex, preceding_text)
 		if match:
 			token = match.group(1)

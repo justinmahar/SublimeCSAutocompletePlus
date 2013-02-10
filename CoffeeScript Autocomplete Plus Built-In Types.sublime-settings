@@ -4,7 +4,7 @@
 		{
 			"name": "Array",
 			"enabled": true,
-			"constructor": {"args": []},
+			"constructors": [{"args": []}],
 			"static_properties": [],
 			"static_methods": 
 			[
@@ -38,7 +38,7 @@
 		{
 			"name": "Boolean",
 			"enabled": true,
-			"constructor": {"args": []},
+			"constructors": [{"args": []}],
 			"static_properties": [],
 			"static_methods": [],
 			"instance_properties": [],
@@ -47,7 +47,7 @@
 		{
 			"name": "Date",
 			"enabled": true,
-			"constructor": {"args": []},
+			"constructors": [{"args": []}],
 			"static_properties": [],
 			"static_methods": 
 			[
@@ -105,7 +105,7 @@
 		{
 			"name": "Function",
 			"enabled": true,
-			"constructor": {"args": []},
+			"constructors": [{"args": []}],
 			"static_properties": [],
 			"static_methods": [],
 			"instance_properties": [{"name": "name"}, {"name": "length"}, {"name": "caller"}, {"name": "arguments"}],
@@ -120,7 +120,7 @@
 		{
 			"name": "Number",
 			"enabled": true,
-			"constructor": {"args": []},
+			"constructors": [{"args": []}],
 			"static_properties": [{"name": "MAX_VALUE"}, {"name": "MIN_VALUE"}, {"name": "NaN"}, {"name": "NEGATIVE_INFINITY"}, {"name": "POSITIVE_INFINITY"}],
 			"static_methods": [],
 			"instance_properties": [],
@@ -134,7 +134,7 @@
 		{
 			"name": "Object",
 			"enabled": true,
-			"constructor": {"args": []},
+			"constructors": [{"args": []}],
 			"static_properties": [{"name": "prototype"}],
 			"static_methods": 
 			[
@@ -152,7 +152,7 @@
 				{"name":"freeze", "args": [{"name": "obj"}]},
 				{"name":"isFrozen", "args": [{"name": "obj"}]}
 			],
-			"instance_properties": [{"name": "constructor"}],
+			"instance_properties": [{"name": "constructors"}],
 			"instance_methods":
 			[
 				{"name":"hasOwnProperty", "args": [{"name": "prop"}]},
@@ -166,7 +166,7 @@
 		{
 			"name": "RegExp",
 			"enabled": true,
-			"constructor": {"args": []},
+			"constructors": [{"args": []}],
 			"static_properties": [],
 			"static_methods": [],
 			"instance_properties": [{"name": "global"}, {"name": "ignoreCase"}, {"name": "lastIndex"}, {"name": "multiline"}, {"name": "source"}],
@@ -175,7 +175,7 @@
 		{
 			"name": "String",
 			"enabled": true,
-			"constructor": {"args": []},
+			"constructors": [{"args": []}],
 			"static_properties": [],
 			"static_methods": 
 			[

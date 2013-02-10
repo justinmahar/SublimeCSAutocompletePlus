@@ -309,7 +309,7 @@ In `CoffeeScript Autocomplete Plus Custom Types.sublime-settings`:
 		{
 			"name": "MyType",
 			"enabled": true,
-			"constructor": {"args": []},
+			"constructors": [{"args": []}],
 			"static_properties": [{"name": "CONSTANT_ONE"}, {"name": "CONSTANT_TWO"}],
 			"static_methods": 
 			[
