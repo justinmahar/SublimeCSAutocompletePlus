@@ -58,7 +58,8 @@ CONSTRUCTOR_SELF_ASSIGNMENT_PARAM_REGEX = r"constructor\s*[:]\s*\(\s*((@{name})|
 
 # Assignment with the value it's being assigned to. Matches:
 # blah = new Dinosaur()
-ASSIGNMENT_VALUE_REGEX = r"(^|[^a-zA-Z0-9_$.])%s\s*=\s*(.*)"
+ASSIGNMENT_VALUE_WITH_DOT_REGEX = r"(^|[^a-zA-Z0-9_$.])%s\s*=\s*(.*)"
+ASSIGNMENT_VALUE_WITHOUT_DOT_REGEX = r"(^|[^a-zA-Z0-9_$])%s\s*=\s*(.*)"
 
 # Used to determining what class is being created with the new keyword. Matches:
 # new Macaroni
@@ -342,7 +343,7 @@ def get_variable_type(file_lines, token, start_region, previous_variable_names=[
 		token = "this." + token[1:]
 
 	# We're looking for a variable assignent
-	assignment_regex = ASSIGNMENT_VALUE_REGEX % token
+	assignment_regex = ASSIGNMENT_VALUE_WITH_DOT_REGEX % token
 
 	# Search backwards from current position for the type
 	if not type_found:
@@ -374,11 +375,12 @@ def get_variable_type(file_lines, token, start_region, previous_variable_names=[
 
 	# If still nothing, maybe it's an @ parameter in the constructor?
 	if not type_found:
-		if token.startswith(THIS_KEYWORD + ".") or token.startswith(THIS_SUGAR_SYMBOL):
 
-			# Get the last word in the chain, if it's a chain. 
-			# E.g. Get variableName from this.variableName.[autocomplete]
-			selected_word = token[token.rfind(".") + 1:]
+		# Get the last word in the chain, if it's a chain. 
+		# E.g. Get variableName from this.variableName.[autocomplete]
+		selected_word = token[token.rfind(".") + 1:]
+
+		if token.startswith(THIS_KEYWORD + ".") or token.startswith(THIS_SUGAR_SYMBOL):
 
 			# The regex used to search for the variable as a parameter in a method
 			param_regex = CONSTRUCTOR_SELF_ASSIGNMENT_PARAM_REGEX.format(name=re.escape(selected_word))
@@ -388,6 +390,17 @@ def get_variable_type(file_lines, token, start_region, previous_variable_names=[
 			# We found the variable! it's a parameter. Let's find a comment with a type hint.
 			if match_tuple:
 				type_found = get_type_from_parameter_match_tuple(selected_word, match_tuple, file_lines)
+
+		if not type_found:
+			# Find something. Anything!			
+			word_assignment_regex = ASSIGNMENT_VALUE_WITHOUT_DOT_REGEX % selected_word
+			print word_assignment_regex
+			# Forward search from beginning for assignment:
+			match_tuple = get_positions_of_regex_match_in_file(file_lines, word_assignment_regex)
+			if match_tuple:
+				type_found = get_type_from_assignment_match_tuple(token, match_tuple, file_lines, previous_variable_names)
+				if not type_found:
+					type_found = get_type_from_assigned_variable_name(file_lines, token, match_tuple, previous_variable_names)
 
 	return type_found
 
