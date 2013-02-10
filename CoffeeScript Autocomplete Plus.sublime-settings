@@ -29,5 +29,10 @@
 			"function_names": ["$", "jQuery"],
 			"type_name": "$"
 		}
-	]
+	],
+
+	// OBSOLETE
+	// Aliases for "this", like "that" and "self".
+	// CA+ assignment detection is now able to detect that = this assignments.
+	"coffee_autocomplete_plus_this_aliases" : []
 }
