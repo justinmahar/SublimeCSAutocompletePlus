@@ -1,4 +1,6 @@
 {
+	// These dirs will not be searched when looking for .coffee files.
+	// These should be dir names only. No relative paths.
 	"coffee_autocomplete_plus_excluded_dirs": 
 	[
 		".svn", 
@@ -15,12 +17,12 @@
 		"builds", 
 		"bin"
 	],
-	"coffee_autocomplete_plus_restricted_to_paths": 
-	[],
-	"coffee_autocomplete_plus_this_aliases": 
-	[
-		"that", "self"
-	],
+
+	// List of strings. These paths will be appended to your project's root and searched.
+	// Leave empty to search all directories in your project's root directory.
+	"coffee_autocomplete_plus_restricted_to_paths": [],
+
+	// Map function names to types.
 	"coffee_autocomplete_plus_function_return_types": 
 	[
 		{
