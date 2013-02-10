@@ -181,6 +181,23 @@ CA+ can detect types using hints you provide it in comments. You can even add me
 			critter.[autocomplete]
 ```
 
+* Method return type hints
+  - If a variable is assigned to the return value of a method, type hinting can collected from that method. The method must have a single-line `#` comment on a previous line with the hint `@return [TYPE]`. This is a bonus convenience. Remember, you can always use the regular assignment type hinting mentioned above.
+
+```
+	class Alligator
+		
+		# @return [Animal]
+		getLastMeal: ->
+			this.lastMeal
+
+		rememberGoodTimes: ->
+			critter = this.getLastMeal()
+			# CA+ will detect your return type hint and display suggestions for type Animal
+			console.log "I remember the time I ate a critter named " + critter.[autocomplete]
+
+```
+
 ### Goto Definition
 
 Goto Definition is useful for finding where a class, function, or variable was defined or declared. Again, searching is performed from the current view and branches out to other files if nothing is found. With this, you can quickly jump between classes and zoom to functions&mdash;even ones defined in other files&mdash;with ease.
@@ -325,7 +342,6 @@ Autocomplete is smart, but not Mensa smart. Under the hood, we're using regular 
 
 For now, here is the list of TBDs:
 
-* Method return type hinting.
 * Constructor support
 	- Add constructors to built-in types
 * Finish jQuery custom type
@@ -333,6 +349,8 @@ For now, here is the list of TBDs:
 * Optional parameter detection
 	- Square brackets indicate optional params.
 	- Example: `methodName(var1, optionalVar2="hey, I'm optional")` will autocomplete to `classInstance.methodName(var1, [optionalVar2])`
+* Goto Definition knows types of objects methods are called on. Right now, it makes a guess.
+* Support for built-in types when getting the return type for a method.
 
 Far too many times I've installed a plugin only to be disappointed because it fell short of my expectations. If you feel this way, please let me know how I can make this plugin better for you and I will do my best.
 

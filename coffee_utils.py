@@ -58,8 +58,8 @@ CONSTRUCTOR_SELF_ASSIGNMENT_PARAM_REGEX = r"constructor\s*[:]\s*\(\s*((@{name})|
 
 # Assignment with the value it's being assigned to. Matches:
 # blah = new Dinosaur()
-ASSIGNMENT_VALUE_WITH_DOT_REGEX = r"(^|[^a-zA-Z0-9_$.])%s\s*=\s*(.*)"
-ASSIGNMENT_VALUE_WITHOUT_DOT_REGEX = r"(^|[^a-zA-Z0-9_$])%s\s*=\s*(.*)"
+ASSIGNMENT_VALUE_WITH_DOT_REGEX = r"(^|[^a-zA-Z0-9_$])%s\s*=\s*(.*)"
+ASSIGNMENT_VALUE_WITHOUT_DOT_REGEX = r"(^|[^a-zA-Z0-9_$.])%s\s*=\s*(.*)"
 
 # Used to determining what class is being created with the new keyword. Matches:
 # new Macaroni
@@ -331,8 +331,7 @@ def get_this_type(file_lines, start_region):
 
 	return type_found
 
-def get_variable_type(file_lines, token, start_region, previous_variable_names=[]):
-
+def get_variable_type(file_lines, token, start_region, global_file_path_list, built_in_types, previous_variable_names=[]):
 
 	type_found = None
 
@@ -345,6 +344,8 @@ def get_variable_type(file_lines, token, start_region, previous_variable_names=[
 	# We're looking for a variable assignent
 	assignment_regex = ASSIGNMENT_VALUE_WITH_DOT_REGEX % token
 
+	# print "Assignment regex: " + assignment_regex
+
 	# Search backwards from current position for the type
 	if not type_found:
 		match_tuple = search_backwards_for(file_lines, assignment_regex, start_region)
@@ -353,7 +354,7 @@ def get_variable_type(file_lines, token, start_region, previous_variable_names=[
 			# Well, we found the assignment. But we don't know what it is.
 			# Let's try to find a variable name and get THAT variable type...
 			if not type_found:
-				type_found = get_type_from_assigned_variable_name(file_lines, token, match_tuple, previous_variable_names)
+				type_found = get_type_from_assigned_variable_name(file_lines, token, match_tuple, global_file_path_list, built_in_types, previous_variable_names)
 
 	# Let's try searching backwards for parameter hints in comments...
 	if not type_found:
@@ -371,7 +372,7 @@ def get_variable_type(file_lines, token, start_region, previous_variable_names=[
 		if match_tuple:
 			type_found = get_type_from_assignment_match_tuple(token, match_tuple, file_lines, previous_variable_names)
 			if not type_found:
-				type_found = get_type_from_assigned_variable_name(file_lines, token, match_tuple, previous_variable_names)
+				type_found = get_type_from_assigned_variable_name(file_lines, token, match_tuple, global_file_path_list, built_in_types, previous_variable_names)
 
 	# If still nothing, maybe it's an @ parameter in the constructor?
 	if not type_found:
@@ -394,29 +395,107 @@ def get_variable_type(file_lines, token, start_region, previous_variable_names=[
 		if not type_found:
 			# Find something. Anything!			
 			word_assignment_regex = ASSIGNMENT_VALUE_WITHOUT_DOT_REGEX % selected_word
-			print word_assignment_regex
+			
 			# Forward search from beginning for assignment:
 			match_tuple = get_positions_of_regex_match_in_file(file_lines, word_assignment_regex)
 			if match_tuple:
 				type_found = get_type_from_assignment_match_tuple(token, match_tuple, file_lines, previous_variable_names)
 				if not type_found:
-					type_found = get_type_from_assigned_variable_name(file_lines, token, match_tuple, previous_variable_names)
+					type_found = get_type_from_assigned_variable_name(file_lines, token, match_tuple, global_file_path_list, built_in_types, previous_variable_names)
 
 	return type_found
 
-def get_type_from_assigned_variable_name(file_lines, token, match_tuple, previous_variable_names=[]):
+def get_type_from_assigned_variable_name(file_lines, token, match_tuple, global_file_path_list, built_in_types, previous_variable_names=[]):
+
 	type_found = None
+
 	assignment_value_string = match_tuple[2].group(2).strip()
+	# row start index + column index
+	token_index = match_tuple[3] + match_tuple[1]
+	token_region = sublime.Region(token_index, token_index)
 	token_match = re.search(r"^([a-zA-Z0-9_$.]+)$", assignment_value_string)
 	if token_match:
 		next_token = token_match.group(1)
 		if next_token not in previous_variable_names:
-			print next_token
-			# row start index + column index
-			token_index = match_tuple[3] + match_tuple[1]
 			previous_variable_names.append(token)
-			next_token_region = sublime.Region(token_index, token_index)
-			type_found = get_variable_type(file_lines, next_token, next_token_region, previous_variable_names)
+			type_found = get_variable_type(file_lines, next_token, token_region, global_file_path_list, built_in_types, previous_variable_names)
+
+	# Determine what type a method returns
+	if not type_found:
+		# print "assignment_value_string: " + assignment_value_string
+		method_call_regex = r"([a-zA-Z0-9_$.]+)\s*[.]\s*([a-zA-Z0-9_$]+)\s*\("
+		method_call_match = re.search(method_call_regex, assignment_value_string)
+		if method_call_match:
+			object_name = method_call_match.group(1)
+			method_name = method_call_match.group(2)
+			object_reference_region = sublime.Region(token_index, token_index)
+			object_type = get_variable_type(file_lines, object_name, token_region, global_file_path_list, built_in_types, previous_variable_names)
+			if object_type:
+				type_found = get_return_type_for_method(object_type, method_name, file_lines, global_file_path_list, built_in_types)
+
+	return type_found
+
+def get_return_type_for_method(object_type, method_name, file_lines, global_file_path_list, built_in_types):
+
+	type_found = None
+
+	next_class_to_scan = object_type
+
+	# Search the class and all super classes
+	while next_class_to_scan and not type_found:
+
+		class_regex = CLASS_REGEX % re.escape(next_class_to_scan)
+		# (file_path, row, column, match, row_start_index)
+		class_location_search_tuple = find_location_of_regex_in_files(class_regex, file_lines, global_file_path_list)
+		if class_location_search_tuple:
+
+			file_found = class_location_search_tuple[0]
+
+			# Consider if it was found locally, in the view
+			if not file_found:
+				class_file_lines = file_lines
+			else:
+				class_file_lines = get_lines_for_file(file_found)
+
+			# If found, search for the method in question.
+			method_regex = FUNCTION_REGEX % re.escape(method_name)
+			positions_tuple = get_positions_of_regex_match_in_file(class_file_lines, method_regex)
+			# (row, column, match, row_start_index)
+			if positions_tuple:
+				# Check for comments, and hopefully the return hint, on previous rows.
+				matched_row = positions_tuple[0]
+				row_to_check_index = matched_row - 1
+				
+				non_comment_code_reached = False
+				while not non_comment_code_reached and row_to_check_index >= 0 and not type_found:
+					current_row_text = class_file_lines[row_to_check_index]
+
+					# Make sure this line only contains comments.
+					mod_line = re.sub(SINGLE_LINE_COMMENT_REGEX, "", current_row_text).strip()
+					# If it wasn't just a comment line...
+					if len(mod_line) > 0:
+						non_comment_code_reached = True
+					else:
+						# Search for hint: @return [TYPE]
+						return_type_hint_regex = r"@return\s*\[([a-zA-Z0-9_$]+)\]"
+						hint_match = re.search(return_type_hint_regex, current_row_text)
+						if hint_match:
+							# We found it!
+							type_found = hint_match.group(1)
+					row_to_check_index = row_to_check_index - 1
+
+			# If nothing was found, see if the class extends another one and is inheriting the method.
+			if not type_found:
+				extends_regex = CLASS_REGEX_WITH_EXTENDS % next_class_to_scan
+				# (row, column, match, row_start_index)
+				extends_match_positions = get_positions_of_regex_match_in_file(class_file_lines, extends_regex)
+				if extends_match_positions: 
+					extends_match = extends_match_positions[2]
+					next_class_to_scan = extends_match.group(3)
+				else:
+					next_class_to_scan = None
+
+
 	return type_found
 
 def get_type_from_assignment_match_tuple(variable_name, match_tuple, file_lines, previous_variable_names=[]):
@@ -549,6 +628,7 @@ def search_backwards_for(file_lines, regex, start_region):
 		# Go backwards, searching for the class definition. 
 		for i in reversed(range(start_line+1)):
 			previous_line = file_lines[i]
+			# print "Next line: " + previous_line[:-1]
 			row_start_index = row_start_index - len(previous_line)
 			# debug("Line " + str(i) + ": " + re.sub("\n", "", previous_line))
 			# Returns -1 for empty lines or lines with comments only.

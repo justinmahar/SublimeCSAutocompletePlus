@@ -221,7 +221,7 @@ class CoffeeAutocompleteThread(threading.Thread):
 
 					# If nothing yet, assume a variable.
 					if not completions:
-						variable_type = coffee_utils.get_variable_type(current_file_lines, token, symbol_region, [])
+						variable_type = coffee_utils.get_variable_type(current_file_lines, token, symbol_region, all_coffee_file_paths, built_in_types, [])
 						if variable_type:
 							# Assume it is either in the current view or in a file called variable_type.coffee
 							exact_file_name_regex = "^" + re.escape(variable_type + coffee_utils.COFFEE_EXTENSION_WITH_DOT) + "$"
