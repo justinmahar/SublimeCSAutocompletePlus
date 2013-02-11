@@ -17,6 +17,7 @@ SETTINGS_FILE_NAME = "CoffeeScript Autocomplete Plus.sublime-settings"
 PREFERENCES_COFFEE_EXCLUDED_DIRS = "coffee_autocomplete_plus_excluded_dirs"
 PREFERENCES_COFFEE_RESTRICTED_TO_PATHS = "coffee_autocomplete_plus_restricted_to_paths"
 PREFERENCES_THIS_ALIASES = "coffee_autocomplete_plus_this_aliases"
+PREFERENCES_MEMBER_EXCLUSION_REGEXES = "coffee_autocomplete_plus_member_exclusion_regexes"
 BUILT_IN_TYPES_SETTINGS_FILE_NAME = "CoffeeScript Autocomplete Plus Built-In Types.sublime-settings"
 BUILT_IN_TYPES_SETTINGS_KEY = "coffee_autocomplete_plus_built_in_types"
 CUSTOM_TYPES_SETTINGS_FILE_NAME = "CoffeeScript Autocomplete Plus Custom Types.sublime-settings"
@@ -660,7 +661,7 @@ def get_indentation_size(line_of_text):
 	# debug("Indent size [" + str(size) + "]:\n" + re.sub("\n", "", line_of_text))
 	return size
 
-def get_completions_for_class(class_name, search_statically, local_file_lines, prefix, global_file_path_list=[], built_in_types=[]):
+def get_completions_for_class(class_name, search_statically, local_file_lines, prefix, global_file_path_list, built_in_types, property_exclusion_regexes):
 	
 	# TODO: Use prefix to make suggestions.
 
@@ -679,12 +680,12 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
 				next_class_name = next_built_in_type[BUILT_IN_TYPES_TYPE_NAME_KEY]
 				if next_class_name == class_name:
 					# We are looking at a built-in type! Collect completions for it...
-					completions = get_completions_for_built_in_type(next_built_in_type, search_statically, False)
+					completions = get_completions_for_built_in_type(next_built_in_type, search_statically, False, property_exclusion_regexes)
 					original_class_name_found = True
 				elif next_class_name == "Function" and not function_completions:
-					function_completions = get_completions_for_built_in_type(next_built_in_type, False, True)
+					function_completions = get_completions_for_built_in_type(next_built_in_type, False, True, property_exclusion_regexes)
 				elif next_class_name == "Object" and not object_completions:
-					object_completions = get_completions_for_built_in_type(next_built_in_type, False, True)
+					object_completions = get_completions_for_built_in_type(next_built_in_type, False, True, property_exclusion_regexes)
 		except Exception, e:
 			print repr(e)
 
@@ -700,9 +701,9 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
 				# print "Searching locally..."
 				# Search in local file.
 				if search_statically:
-					completion_tuple = collect_static_completions_from_file(local_file_lines, current_class_name, is_inherited)
+					completion_tuple = collect_static_completions_from_file(local_file_lines, current_class_name, is_inherited, property_exclusion_regexes)
 				else:
-					completion_tuple = collect_instance_completions_from_file(local_file_lines, current_class_name, is_inherited)
+					completion_tuple = collect_instance_completions_from_file(local_file_lines, current_class_name, is_inherited, property_exclusion_regexes)
 
 			# Search globally if nothing found and not local only...
 			if global_file_path_list and (not completion_tuple or not completion_tuple[0]):
@@ -742,14 +743,20 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
 def case_insensitive_startswith(original_string, prefix):
 	return original_string.lower().startswith(prefix.lower())
 
-def get_completions_for_built_in_type(built_in_type, is_static, is_inherited=False):
+def get_completions_for_built_in_type(built_in_type, is_static, is_inherited, property_exclusion_regexes):
 	completions = []
 	if is_static:
 		
 		static_properties = []
 		static_property_objs = built_in_type[BUILT_IN_TYPES_STATIC_PROPERTIES_KEY]
 		for next_static_property_obj in static_property_objs:
-			static_properties.append(next_static_property_obj[BUILT_IN_TYPES_STATIC_PROPERTY_NAME_KEY])
+			next_property = next_static_property_obj[BUILT_IN_TYPES_STATIC_PROPERTY_NAME_KEY]
+			excluded = False
+			print property_exclusion_regexes
+			for next_property_exclusion_regex in property_exclusion_regexes:
+				excluded = excluded or re.search(next_property_exclusion_regex, next_property)
+			if not excluded:
+				static_properties.append(next_static_property_obj[BUILT_IN_TYPES_STATIC_PROPERTY_NAME_KEY])
 		for next_static_property in static_properties:
 			next_completion = get_property_completion_tuple(next_static_property, is_inherited)
 			completions.append(next_completion)
@@ -783,7 +790,7 @@ def get_completions_for_built_in_type(built_in_type, is_static, is_inherited=Fal
 			completions.append(next_completion)
 	return completions
 
-def collect_instance_completions_from_file(file_lines, class_name, is_inherited=False):
+def collect_instance_completions_from_file(file_lines, class_name, is_inherited, property_exclusion_regexes):
 
 	completions = []
 	extended_class = None
@@ -893,7 +900,7 @@ def get_class_from_end_of_chain(dot_operation_chain):
 		class_at_end = None
 	return class_at_end
 
-def collect_static_completions_from_file(file_lines, class_name, is_inherited=False):
+def collect_static_completions_from_file(file_lines, class_name, is_inherited, property_exclusion_regexes):
 	
 	completions = []
 	extended_class = None

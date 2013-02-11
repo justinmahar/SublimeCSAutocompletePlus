@@ -28,6 +28,23 @@ For your convenience:
 git clone https://github.com/justinmahar/SublimeCSAutocompletePlus.git "CoffeeScript Autocomplete Plus"
 ```
 
+Usage
+-----
+
+### Autocomplete
+
+Autocomplete can be triggered in coffee files after the dot operator. With the cursor after a dot operator `.`, press `ctrl+space`. This will trigger autocomplete, which will then try to figure out what you're doing and propose a list of suggestions.
+
+Example usage: Inside a class, you type `this.` and would like a list of the available methods and properties. Press `ctrl+space` to trigger autocomplete, and view the available suggestions.
+
+### Goto Definition
+
+Looking for where a class, function or variable was defined? Look no further.
+
+Place your cursor on any word and press `ctrl+alt+d` in Windows/Linux, and `ctrl+alt+d` in OS X, to goto the definition of the selected class, function or variable. Life's good.
+
+Alternatively, use `ctrl+alt` + `left click` in Windows/Linux, and `ctrl+alt` + `left click` in OS X.
+
 Features
 --------
 
@@ -198,6 +215,18 @@ CA+ can detect types using hints you provide it in comments. You can even add me
 
 ```
 
+### Data-Hiding With Private Member Exclusion
+
+CoffeeScript doesn't provide an explicit way to hide properties and methods of a class. [According to Jeremy Ashkenas](https://groups.google.com/forum/#!topic/coffeescript/jgG7DhvyzzM), creator of coffeescript:
+
+> The norm in JavaScript is that hiding stuff is not that big of a deal, and you prefix private properties of an object with an underscore, as a convention.
+
+So, it's left up to you. 
+
+The convention I've seen most often is to simply prefix your private members with an underscore `_`. This is all well and fine until your autocomplete list is all cluttered up with things you don't care/want to see.
+
+But worry not! You can define regular expressions to exclude any members of your choosing. By default, members starting with an underscore are not shown. See the configuration section for how to add/remove exclusions.
+
 ### Goto Definition
 
 Goto Definition is useful for finding where a class, function, or variable was defined or declared. Again, searching is performed from the current view and branches out to other files if nothing is found. With this, you can quickly jump between classes and zoom to functions&mdash;even ones defined in other files&mdash;with ease.
@@ -214,23 +243,6 @@ Goto Definition is useful for finding where a class, function, or variable was d
 * Asynchronous and fast lookups. That means no UI freezing while waiting for completions or Goto Definiton. Hate that.
 * You can configure directories to be be excluded from global .coffee search. **(recommended)**
 * You can configure the tool to only search in specific locations. **(recommended)**
-
-Usage
------
-
-### Autocomplete
-
-Autocomplete can be triggered in coffee files after the dot operator. With the cursor after a dot operator `.`, press `ctrl+space`. This will trigger autocomplete, which will then try to figure out what you're doing and propose a list of suggestions.
-
-Example usage: Inside a class, you type `this.` and would like a list of the available methods and properties. Press `ctrl+space` to trigger autocomplete, and view the available suggestions.
-
-### Goto Definition
-
-Looking for where a class, function or variable was defined? Look no further.
-
-Place your cursor on any word and press `ctrl+alt+d` in Windows/Linux, and `ctrl+alt+d` in OS X, to goto the definition of the selected class, function or variable. Life's good.
-
-Alternatively, use `ctrl+alt` + `left click` in Windows/Linux, and `ctrl+alt` + `left click` in OS X.
 
 Default Key Bindings
 --------------------
@@ -263,6 +275,15 @@ In `CoffeeScript Autocomplete Plus.sublime-settings`:
 
 ```
 		"coffee_autocomplete_plus_excluded_dirs" : [".git", "SVN", "pub", "docs"]
+```
+
+* `coffee_autocomplete_plus_member_exclusion_regexes` -- Regular expressions for members excluded from autocomplete suggestions
+  - CoffeeScript doesn't provide a mechanism for making members `private` in the traditional sense. Conventionally, private members are prefixed with an underscore `_`. This configuration setting allows you to define regular expressions for members you would like to exclude. By default, members beginning with an underscore are excluded.
+  - Expected value: Array of Python regular expression strings.
+  - Example:
+
+```
+		"coffee_autocomplete_plus_member_exclusion_regexes": ["^_"] // Excludes members prefixed with underscore
 ```
 
 * `coffee_autocomplete_plus_restricted_to_paths` -- Restrict searching to these directories.

@@ -30,7 +30,13 @@
 			"type_name": "$"
 		}
 	],
-
+	// Regular expression of members to exclude from autocomplete.
+	// This is useful for properties/methods that are regarded "private" and start
+	// with an underscore. E.g.  _privateVariable
+	"coffee_autocomplete_plus_member_exclusion_regexes": 
+	[
+		"^_" // Starts with underscore
+	],
 	// OBSOLETE
 	// Aliases for "this", like "that" and "self".
 	// CA+ assignment detection is now able to detect that = this assignments.
