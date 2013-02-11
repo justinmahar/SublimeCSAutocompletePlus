@@ -32,7 +32,6 @@
 			],
 			"static_methods": 
 			[
-				// Core
 				{"name":"ajax", "args": [{"name": "url"}, {"name": "[settings]"}]},
 				{"name":"ajax", "args": [{"name": "[settings]"}]},
 				{"name":"ajaxPrefilter", "args": [{"name": "[dataTypes]"}, {"name": "handler(options, originalOptions, jqXHR)"}]},
@@ -99,7 +98,6 @@
 			],
 			"instance_methods":
 			[
-				// Category: Attributes
 				{"name":"add", "args": [{"name": "selector"}]},
 				{"name":"add", "args": [{"name": "elements"}]},
 				{"name":"add", "args": [{"name": "html"}]},
@@ -126,132 +124,142 @@
 				{"name":"attr", "args": [{"name": "attributeName"}, {"name": "value"}]},
 				{"name":"attr", "args": [{"name": "attributes"}]},
 				{"name":"attr", "args": [{"name": "attributeName"}, {"name": "function(index, attr)"}]},
-				{"name":"before", "args": []},
-				{"name":"bind", "args": []},
-				{"name":"blur", "args": []},
-				{"name":"change", "args": []},
-				{"name":"children", "args": []},
-				{"name":"clearQueue", "args": []},
-				{"name":"click", "args": []},
-				{"name":"clone", "args": []},
-				{"name":"closest", "args": []},
-				{"name":"contents", "args": []},
-				{"name":"css", "args": []},
-				{"name":"data", "args": []},
-				{"name":"dblclick", "args": []},
-				{"name":"delay", "args": []},
-				{"name":"delegate", "args": []},
-				{"name":"dequeue", "args": []},
-				{"name":"detach", "args": []},
-				{"name":"die", "args": []},
-				{"name":"each", "args": []},
-				{"name":"empty", "args": []},
-				{"name":"end", "args": []},
-				{"name":"eq", "args": []},
-				{"name":"error", "args": []},
-				{"name":"fadeIn", "args": []},
-				{"name":"fadeOut", "args": []},
-				{"name":"fadeTo", "args": []},
-				{"name":"fadeToggle", "args": []},
-				{"name":"filter", "args": []},
-				{"name":"find", "args": []},
-				{"name":"finish", "args": []},
-				{"name":"first", "args": []},
-				{"name":"focus", "args": []},
-				{"name":"focusin", "args": []},
-				{"name":"focusout", "args": []},
-				{"name":"get", "args": []},
-				{"name":"has", "args": []},
-				{"name":"hasClass", "args": []},
-				{"name":"height", "args": []},
-				{"name":"hide", "args": []},
-				{"name":"hover", "args": []},
-				{"name":"html", "args": []},
-				{"name":"index", "args": []},
-				{"name":"innerHeight", "args": []},
-				{"name":"innerWidth", "args": []},
-				{"name":"insertAfter", "args": []},
-				{"name":"insertBefore", "args": []},
-				{"name":"is", "args": []},
-				{"name":"keydown", "args": []},
-				{"name":"keypress", "args": []},
-				{"name":"keyup", "args": []},
-				{"name":"last", "args": []},
-				{"name":"live", "args": []},
-				{"name":"load", "args": []},
-				{"name":"load", "args": []},
-				{"name":"map", "args": []},
-				{"name":"mousedown", "args": []},
-				{"name":"mouseenter", "args": []},
-				{"name":"mouseleave", "args": []},
-				{"name":"mousemove", "args": []},
-				{"name":"mouseout", "args": []},
-				{"name":"mouseover", "args": []},
-				{"name":"mouseup", "args": []},
-				{"name":"next", "args": []},
-				{"name":"nextAll", "args": []},
-				{"name":"nextUntil", "args": []},
-				{"name":"not", "args": []},
-				{"name":"off", "args": []},
-				{"name":"offset", "args": []},
-				{"name":"offsetParent", "args": []},
-				{"name":"on", "args": []},
-				{"name":"one", "args": []},
-				{"name":"outerHeight", "args": []},
-				{"name":"outerWidth", "args": []},
-				{"name":"parent", "args": []},
-				{"name":"parents", "args": []},
-				{"name":"parentsUntil", "args": []},
-				{"name":"position", "args": []},
-				{"name":"prepend", "args": []},
-				{"name":"prependTo", "args": []},
-				{"name":"prev", "args": []},
-				{"name":"prevAll", "args": []},
-				{"name":"prevUntil", "args": []},
-				{"name":"promise", "args": []},
-				{"name":"prop", "args": []},
-				{"name":"pushStack", "args": []},
-				{"name":"queue", "args": []},
-				{"name":"ready", "args": []},
-				{"name":"remove", "args": []},
-				{"name":"removeAttr", "args": []},
-				{"name":"removeClass", "args": []},
-				{"name":"removeData", "args": []},
-				{"name":"removeProp", "args": []},
-				{"name":"replaceAll", "args": []},
-				{"name":"replaceWith", "args": []},
-				{"name":"resize", "args": []},
-				{"name":"scroll", "args": []},
-				{"name":"scrollLeft", "args": []},
-				{"name":"scrollTop", "args": []},
-				{"name":"select", "args": []},
-				{"name":"serialize", "args": []},
-				{"name":"serializeArray", "args": []},
-				{"name":"show", "args": []},
-				{"name":"siblings", "args": []},
-				{"name":"size", "args": []},
-				{"name":"slice", "args": []},
-				{"name":"slideDown", "args": []},
-				{"name":"slideToggle", "args": []},
-				{"name":"slideUp", "args": []},
-				{"name":"stop", "args": []},
-				{"name":"submit", "args": []},
-				{"name":"text", "args": []},
-				{"name":"toArray", "args": []},
-				{"name":"toggle", "args": []},
-				{"name":"toggle", "args": []},
-				{"name":"toggleClass", "args": []},
-				{"name":"trigger", "args": []},
-				{"name":"triggerHandler", "args": []},
-				{"name":"unbind", "args": []},
-				{"name":"undelegate", "args": []},
-				{"name":"unload", "args": []},
-				{"name":"unwrap", "args": []},
+				{"name":"before", "args": []}, // -------
+				{"name":"bind", "args": []}, // -------
+				{"name":"blur", "args": []}, // -------
+				{"name":"change", "args": []}, // -------
+				{"name":"children", "args": []}, // -------
+				{"name":"clearQueue", "args": []}, // -------
+				{"name":"click", "args": []}, // -------
+				{"name":"clone", "args": []}, // -------
+				{"name":"closest", "args": []}, // -------
+				{"name":"contents", "args": []}, // -------
+				{"name":"css", "args": []}, // -------
+				{"name":"data", "args": []}, // -------
+				{"name":"dblclick", "args": []}, // -------
+				{"name":"delay", "args": []}, // -------
+				{"name":"delegate", "args": []}, // -------
+				{"name":"dequeue", "args": []}, // -------
+				{"name":"detach", "args": []}, // -------
+				{"name":"die", "args": []}, // -------
+				{"name":"each", "args": []}, // -------
+				{"name":"empty", "args": []}, // -------
+				{"name":"end", "args": []}, // -------
+				{"name":"eq", "args": []}, // -------
+				{"name":"error", "args": []}, // -------
+				{"name":"fadeIn", "args": []}, // -------
+				{"name":"fadeOut", "args": []}, // -------
+				{"name":"fadeTo", "args": []}, // -------
+				{"name":"fadeToggle", "args": []}, // -------
+				{"name":"filter", "args": []}, // -------
+				{"name":"find", "args": []}, // -------
+				{"name":"finish", "args": []}, // -------
+				{"name":"first", "args": []}, // -------
+				{"name":"focus", "args": []}, // -------
+				{"name":"focusin", "args": []}, // -------
+				{"name":"focusout", "args": []}, // -------
+				{"name":"get", "args": []}, // -------
+				{"name":"has", "args": []}, // -------
+				{"name":"hasClass", "args": [{"name": "className"}]},
+				{"name":"height", "args": []}, // -------
+				{"name":"hide", "args": []}, // -------
+				{"name":"hover", "args": []}, // -------
+				{"name":"html", "args": []}, // -------
+				{"name":"html", "args": [{"name": "htmlString"}]},
+				{"name":"html", "args": [{"name": "function(index, oldhtml)"}]},
+				{"name":"index", "args": []}, // -------
+				{"name":"innerHeight", "args": []}, // -------
+				{"name":"innerWidth", "args": []}, // -------
+				{"name":"insertAfter", "args": []}, // -------
+				{"name":"insertBefore", "args": []}, // -------
+				{"name":"is", "args": []}, // -------
+				{"name":"keydown", "args": []}, // -------
+				{"name":"keypress", "args": []}, // -------
+				{"name":"keyup", "args": []}, // -------
+				{"name":"last", "args": []}, // -------
+				{"name":"live", "args": []}, // -------
+				{"name":"load", "args": []}, // -------
+				{"name":"load", "args": []}, // -------
+				{"name":"map", "args": []}, // -------
+				{"name":"mousedown", "args": []}, // -------
+				{"name":"mouseenter", "args": []}, // -------
+				{"name":"mouseleave", "args": []}, // -------
+				{"name":"mousemove", "args": []}, // -------
+				{"name":"mouseout", "args": []}, // -------
+				{"name":"mouseover", "args": []}, // -------
+				{"name":"mouseup", "args": []}, // -------
+				{"name":"next", "args": []}, // -------
+				{"name":"nextAll", "args": []}, // -------
+				{"name":"nextUntil", "args": []}, // -------
+				{"name":"not", "args": []}, // -------
+				{"name":"off", "args": []}, // -------
+				{"name":"offset", "args": []}, // -------
+				{"name":"offsetParent", "args": []}, // -------
+				{"name":"on", "args": []}, // -------
+				{"name":"one", "args": []}, // -------
+				{"name":"outerHeight", "args": []}, // -------
+				{"name":"outerWidth", "args": []}, // -------
+				{"name":"parent", "args": []}, // -------
+				{"name":"parents", "args": []}, // -------
+				{"name":"parentsUntil", "args": []}, // -------
+				{"name":"position", "args": []}, // -------
+				{"name":"prepend", "args": []}, // -------
+				{"name":"prependTo", "args": []}, // -------
+				{"name":"prev", "args": []}, // -------
+				{"name":"prevAll", "args": []}, // -------
+				{"name":"prevUntil", "args": []}, // -------
+				{"name":"promise", "args": []}, // -------
+				{"name":"prop", "args": [{"name": "propertyName"}]},
+				{"name":"prop", "args": [{"name": "propertyName"}, {"name": "value"}]},
+				{"name":"prop", "args": [{"name": "properties"}]},
+				{"name":"prop", "args": [{"name": "propertyName"}, {"name": "function(index, oldPropertyValue)"}]},
+				{"name":"pushStack", "args": []}, // -------
+				{"name":"queue", "args": []}, // -------
+				{"name":"ready", "args": []}, // -------
+				{"name":"remove", "args": []}, // -------
+				{"name":"removeAttr", "args": [{"name": "attributeName"}]},
+				{"name":"removeClass", "args": [{"name": "className"}]},
+				{"name":"removeClass", "args": [{"name": "function(index, class)"}]},
+				{"name":"removeData", "args": []}, // DONT OVERLOOK THIS // -------
+				{"name":"removeProp", "args": [{"name": "propertyName"}]},
+				{"name":"removeProp", "args": []}, // -------
+				{"name":"replaceAll", "args": []}, // -------
+				{"name":"replaceWith", "args": []}, // -------
+				{"name":"resize", "args": []}, // -------
+				{"name":"scroll", "args": []}, // -------
+				{"name":"scrollLeft", "args": []}, // -------
+				{"name":"scrollTop", "args": []}, // -------
+				{"name":"select", "args": []}, // -------
+				{"name":"serialize", "args": []}, // -------
+				{"name":"serializeArray", "args": []}, // -------
+				{"name":"show", "args": []}, // -------
+				{"name":"siblings", "args": []}, // -------
+				{"name":"size", "args": []}, // -------
+				{"name":"slice", "args": []}, // -------
+				{"name":"slideDown", "args": []}, // -------
+				{"name":"slideToggle", "args": []}, // -------
+				{"name":"slideUp", "args": []}, // -------
+				{"name":"stop", "args": []}, // -------
+				{"name":"submit", "args": []}, // -------
+				{"name":"text", "args": []}, // -------
+				{"name":"toArray", "args": []}, // -------
+				{"name":"toggle", "args": []}, // -------
+				{"name":"toggle", "args": []}, // -------
+				{"name":"toggleClass", "args": [{"name": "className"}]},
+				{"name":"toggleClass", "args": [{"name": "className"}, {"name": "switch"}]},
+				{"name":"toggleClass", "args": [{"name": "[switch]"}]},
+				{"name":"toggleClass", "args": [{"name": "function(index, class, switch)"}, {"name": "[switch]"}]},
+				{"name":"trigger", "args": []}, // -------
+				{"name":"triggerHandler", "args": []}, // -------
+				{"name":"unbind", "args": []}, // -------
+				{"name":"undelegate", "args": []}, // -------
+				{"name":"unload", "args": []}, // -------
+				{"name":"unwrap", "args": []}, // -------
 				{"name":"val", "args": []},
-				{"name":"width", "args": []},
-				{"name":"wrap", "args": []},
-				{"name":"wrapAll", "args": []},
-				{"name":"wrapInner", "args": []}
+				{"name":"width", "args": []}, // -------
+				{"name":"wrap", "args": []}, // -------
+				{"name":"wrapAll", "args": []}, // -------
+				{"name":"wrapInner", "args": []} // -------
 			]
 		}
 	]
