@@ -147,7 +147,7 @@ In addition, autocomplete suggests inherited properties and methods from Object.
 
 ### Custom Types
 
-If you find yourself using a third-party library often and would like to have autocompletions for that library, you can create custom type. This is essentially a collection of autocomplete suggestions. CA+ supports jQuery (partially -- under development) out of the box, but you can always add others. If you do add a custom type and would like to share it, please issue a pull request and I will add it to the plugin. If your library is used as function, like jQuery, you can map that function's return value to a type. See the configuration section for how to do this.
+If you find yourself using a third-party library often and would like to have autocompletions for that library, you can create custom type. This is essentially a collection of autocomplete suggestions. CA+ supports jQuery out of the box, but you can always add others. If you do add a custom type and would like to share it, please issue a pull request and I will add it to the plugin. If your library is used as function, like jQuery, you can map that function's return value to a type. See the configuration section for how to do this.
 
 ### Type Hinting
 
@@ -301,7 +301,7 @@ In `CoffeeScript Autocomplete Plus.sublime-settings`:
 In `CoffeeScript Autocomplete Plus Custom Types.sublime-settings`:
 
 * `coffee_autocomplete_plus_custom_types` -- Custom types, allowing libraries like jQuery.
-  - If you would like to define custom types, put them here. Autocomplete will then make the defined suggestions for you. By default, jQuery is defined (partially completed).
+  - If you would like to define custom types, put them here. Autocomplete will then make the defined suggestions for you. By default, a type for jQuery is defined.
   - Use the `enabled` property to enable or disable a custom type.
   - Use the following example as a starting point:
 
@@ -342,9 +342,9 @@ Autocomplete is smart, but not Mensa smart. Under the hood, we're using regular 
 
 For now, here is the list of TBDs:
 
+* Clean up code. Make modular/reusable. Right now the code's a mess because I made this in .2 seconds.
 * Constructor support
 	- Add constructors to built-in types
-* Finish jQuery custom type
 * Additional built-in types (Error, etc)
 * Optional parameter detection
 	- Square brackets indicate optional params.
