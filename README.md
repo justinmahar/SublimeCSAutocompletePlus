@@ -223,9 +223,9 @@ CoffeeScript doesn't provide an explicit way to hide properties and methods of a
 
 So, it's left up to you. 
 
-The convention I've seen most often is to simply prefix your private members with an underscore `_`. This is all well and fine until your autocomplete list is all cluttered up with things you don't care/want to see.
+Using an underscore is all well and fine until your autocomplete list is all cluttered up with things you're not supposed to see.
 
-But worry not! You can define regular expressions to exclude any members of your choosing. By default, members starting with an underscore are not shown. See the configuration section for how to add/remove exclusions.
+CA+ to the rescue. You can define regular expressions to exclude any members of your choosing. By default, members starting with an underscore are not shown. See the configuration section for how to add/remove exclusions.
 
 ### Goto Definition
 
@@ -277,7 +277,7 @@ In `CoffeeScript Autocomplete Plus.sublime-settings`:
 		"coffee_autocomplete_plus_excluded_dirs" : [".git", "SVN", "pub", "docs"]
 ```
 
-* `coffee_autocomplete_plus_member_exclusion_regexes` -- Regular expressions for members excluded from autocomplete suggestions
+* `coffee_autocomplete_plus_member_exclusion_regexes` -- Regular expressions for members excluded from autocomplete suggestions.
   - CoffeeScript doesn't provide a mechanism for making members `private` in the traditional sense. Conventionally, private members are prefixed with an underscore `_`. This configuration setting allows you to define regular expressions for members you would like to exclude. By default, members beginning with an underscore are excluded.
   - Expected value: Array of Python regular expression strings.
   - Example:
