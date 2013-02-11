@@ -661,7 +661,7 @@ def get_indentation_size(line_of_text):
 	# debug("Indent size [" + str(size) + "]:\n" + re.sub("\n", "", line_of_text))
 	return size
 
-def get_completions_for_class(class_name, search_statically, local_file_lines, prefix, global_file_path_list, built_in_types, property_exclusion_regexes):
+def get_completions_for_class(class_name, search_statically, local_file_lines, prefix, global_file_path_list, built_in_types, member_exclusion_regexes, show_private):
 	
 	# TODO: Use prefix to make suggestions.
 
@@ -680,12 +680,12 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
 				next_class_name = next_built_in_type[BUILT_IN_TYPES_TYPE_NAME_KEY]
 				if next_class_name == class_name:
 					# We are looking at a built-in type! Collect completions for it...
-					completions = get_completions_for_built_in_type(next_built_in_type, search_statically, False, property_exclusion_regexes)
+					completions = get_completions_for_built_in_type(next_built_in_type, search_statically, False, member_exclusion_regexes)
 					original_class_name_found = True
 				elif next_class_name == "Function" and not function_completions:
-					function_completions = get_completions_for_built_in_type(next_built_in_type, False, True, property_exclusion_regexes)
+					function_completions = get_completions_for_built_in_type(next_built_in_type, False, True, member_exclusion_regexes)
 				elif next_class_name == "Object" and not object_completions:
-					object_completions = get_completions_for_built_in_type(next_built_in_type, False, True, property_exclusion_regexes)
+					object_completions = get_completions_for_built_in_type(next_built_in_type, False, True, member_exclusion_regexes)
 		except Exception, e:
 			print repr(e)
 
@@ -701,9 +701,9 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
 				# print "Searching locally..."
 				# Search in local file.
 				if search_statically:
-					completion_tuple = collect_static_completions_from_file(local_file_lines, current_class_name, is_inherited, property_exclusion_regexes)
+					completion_tuple = collect_static_completions_from_file(local_file_lines, current_class_name, is_inherited, member_exclusion_regexes, show_private)
 				else:
-					completion_tuple = collect_instance_completions_from_file(local_file_lines, current_class_name, is_inherited, property_exclusion_regexes)
+					completion_tuple = collect_instance_completions_from_file(local_file_lines, current_class_name, is_inherited, member_exclusion_regexes, show_private)
 
 			# Search globally if nothing found and not local only...
 			if global_file_path_list and (not completion_tuple or not completion_tuple[0]):
@@ -714,9 +714,9 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
 					file_to_open = global_class_location_search_tuple[0]
 					class_file_lines = get_lines_for_file(file_to_open)
 					if search_statically:
-						completion_tuple = collect_static_completions_from_file(class_file_lines, current_class_name, is_inherited)
+						completion_tuple = collect_static_completions_from_file(class_file_lines, current_class_name, is_inherited, member_exclusion_regexes, show_private)
 					else:
-						completion_tuple = collect_instance_completions_from_file(class_file_lines, current_class_name, is_inherited)
+						completion_tuple = collect_instance_completions_from_file(class_file_lines, current_class_name, is_inherited, member_exclusion_regexes, show_private)
 			
 			if current_class_name == class_name and completion_tuple[0]:
 				original_class_name_found = True
@@ -743,20 +743,16 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
 def case_insensitive_startswith(original_string, prefix):
 	return original_string.lower().startswith(prefix.lower())
 
-def get_completions_for_built_in_type(built_in_type, is_static, is_inherited, property_exclusion_regexes):
+def get_completions_for_built_in_type(built_in_type, is_static, is_inherited, member_exclusion_regexes):
 	completions = []
 	if is_static:
 		
 		static_properties = []
 		static_property_objs = built_in_type[BUILT_IN_TYPES_STATIC_PROPERTIES_KEY]
 		for next_static_property_obj in static_property_objs:
-			next_property = next_static_property_obj[BUILT_IN_TYPES_STATIC_PROPERTY_NAME_KEY]
-			excluded = False
-			print property_exclusion_regexes
-			for next_property_exclusion_regex in property_exclusion_regexes:
-				excluded = excluded or re.search(next_property_exclusion_regex, next_property)
-			if not excluded:
-				static_properties.append(next_static_property_obj[BUILT_IN_TYPES_STATIC_PROPERTY_NAME_KEY])
+			next_static_property = next_static_property_obj[BUILT_IN_TYPES_STATIC_PROPERTY_NAME_KEY]
+			if not is_member_excluded(next_static_property, member_exclusion_regexes):
+				static_properties.append(next_static_property)
 		for next_static_property in static_properties:
 			next_completion = get_property_completion_tuple(next_static_property, is_inherited)
 			completions.append(next_completion)
@@ -764,17 +760,20 @@ def get_completions_for_built_in_type(built_in_type, is_static, is_inherited, pr
 		static_methods = built_in_type[BUILT_IN_TYPES_STATIC_METHODS_KEY]
 		for next_static_method in static_methods:
 			method_name = next_static_method[BUILT_IN_TYPES_METHOD_NAME_KEY]
-			method_args = []
-			method_args_objs = next_static_method[BUILT_IN_TYPES_METHOD_ARGS_KEY]
-			for next_method_arg_obj in method_args_objs:
-				method_args.append(next_method_arg_obj[BUILT_IN_TYPES_METHOD_ARG_NAME_KEY])
-			next_completion = get_method_completion_tuple(method_name, method_args, is_inherited)
-			completions.append(next_completion)		
+			if not is_member_excluded(method_name, member_exclusion_regexes):
+				method_args = []
+				method_args_objs = next_static_method[BUILT_IN_TYPES_METHOD_ARGS_KEY]
+				for next_method_arg_obj in method_args_objs:
+					method_args.append(next_method_arg_obj[BUILT_IN_TYPES_METHOD_ARG_NAME_KEY])
+				next_completion = get_method_completion_tuple(method_name, method_args, is_inherited)
+				completions.append(next_completion)		
 	else:
 		instance_properties = []
 		instance_property_objs = built_in_type[BUILT_IN_TYPES_INSTANCE_PROPERTIES_KEY]
 		for next_instance_property_obj in instance_property_objs:
-			instance_properties.append(next_instance_property_obj[BUILT_IN_TYPES_INSTANCE_PROPERTY_NAME_KEY])
+			next_instance_property = next_instance_property_obj[BUILT_IN_TYPES_INSTANCE_PROPERTY_NAME_KEY]
+			if not is_member_excluded(next_instance_property, member_exclusion_regexes):
+				instance_properties.append(next_instance_property_obj[BUILT_IN_TYPES_INSTANCE_PROPERTY_NAME_KEY])
 		for next_instance_property in instance_properties:
 			next_completion = get_property_completion_tuple(next_instance_property, is_inherited)
 			completions.append(next_completion)
@@ -782,15 +781,16 @@ def get_completions_for_built_in_type(built_in_type, is_static, is_inherited, pr
 		instance_methods = built_in_type[BUILT_IN_TYPES_INSTANCE_METHODS_KEY]
 		for next_instance_method in instance_methods:
 			method_name = next_instance_method[BUILT_IN_TYPES_METHOD_NAME_KEY]
-			method_args = []
-			method_args_objs = next_instance_method[BUILT_IN_TYPES_METHOD_ARGS_KEY]
-			for next_method_arg_obj in method_args_objs:
-				method_args.append(next_method_arg_obj[BUILT_IN_TYPES_METHOD_ARG_NAME_KEY])
-			next_completion = get_method_completion_tuple(method_name, method_args, is_inherited)
-			completions.append(next_completion)
+			if not is_member_excluded(method_name, member_exclusion_regexes):
+				method_args = []
+				method_args_objs = next_instance_method[BUILT_IN_TYPES_METHOD_ARGS_KEY]
+				for next_method_arg_obj in method_args_objs:
+					method_args.append(next_method_arg_obj[BUILT_IN_TYPES_METHOD_ARG_NAME_KEY])
+				next_completion = get_method_completion_tuple(method_name, method_args, is_inherited)
+				completions.append(next_completion)
 	return completions
 
-def collect_instance_completions_from_file(file_lines, class_name, is_inherited, property_exclusion_regexes):
+def collect_instance_completions_from_file(file_lines, class_name, is_inherited, member_exclusion_regexes, show_private):
 
 	completions = []
 	extended_class = None
@@ -835,11 +835,12 @@ def collect_instance_completions_from_file(file_lines, class_name, is_inherited,
 							match = re.search(this_assignment_regex, next_row)
 							if match:
 								prop = match.group(3)
-								prop_completion_alias = get_property_completion_alias(prop, is_inherited)
-								prop_completion_insertion = get_property_completion_insertion(prop)
-								prop_completion = (prop_completion_alias, prop_completion_insertion)
-								if prop_completion not in property_completions:
-									property_completions.append(prop_completion)
+								if show_private or not is_member_excluded(prop, member_exclusion_regexes):
+									prop_completion_alias = get_property_completion_alias(prop, is_inherited)
+									prop_completion_insertion = get_property_completion_insertion(prop)
+									prop_completion = (prop_completion_alias, prop_completion_insertion)
+									if prop_completion not in property_completions:
+										property_completions.append(prop_completion)
 						else: # Not in constructor
 							# Look for method definitions
 							function_regex = FUNCTION_REGEX_ANY
@@ -847,40 +848,42 @@ def collect_instance_completions_from_file(file_lines, class_name, is_inherited,
 							if match and not re.search(STATIC_FUNCTION_REGEX, next_row):
 								function_name = match.group(2)
 								function_args_string = match.group(5)
-								if function_name != CONSTRUCTOR_KEYWORD:
-									function_args_list = []
-									if function_args_string:
-										function_args_list = function_args_string.split(",")
-									for i in range(len(function_args_list)):
-										# Fix each one up...
-										next_arg = function_args_list[i]
-										next_arg = next_arg.strip()
-										next_arg = re.sub("[^a-zA-Z0-9_$].*", "", next_arg)
-										function_args_list[i] = re.sub(THIS_SUGAR_SYMBOL, "", next_arg)
-									function_alias = get_method_completion_alias(function_name, function_args_list, is_inherited)
-									function_insertion = get_method_completion_insertion(function_name, function_args_list)
-									function_completion = (function_alias, function_insertion)
-									if function_completion not in function_completions:
-										function_completions.append(function_completion)
-								else:
-									function_args_list = []
-									if function_args_string:
-										function_args_list = function_args_string.split(",")
-									for i in range(len(function_args_list)):
-										# Check if it starts with @ -- this indicates an auto-set class variable
-										next_arg = function_args_list[i]
-										next_arg = next_arg.strip()
-										if next_arg.startswith(THIS_SUGAR_SYMBOL):
-											# Clean it up...
-											next_arg = re.sub(THIS_SUGAR_SYMBOL, "", next_arg)
+								if show_private or not is_member_excluded(function_name, member_exclusion_regexes):
+									if function_name != CONSTRUCTOR_KEYWORD:
+										function_args_list = []
+										if function_args_string:
+											function_args_list = function_args_string.split(",")
+										for i in range(len(function_args_list)):
+											# Fix each one up...
+											next_arg = function_args_list[i]
+											next_arg = next_arg.strip()
 											next_arg = re.sub("[^a-zA-Z0-9_$].*", "", next_arg)
-											prop_completion_alias = get_property_completion_alias(next_arg, is_inherited)
-											prop_completion_insertion = get_property_completion_insertion(next_arg)
-											prop_completion = (prop_completion_alias, prop_completion_insertion)
-											if prop_completion not in property_completions:
-												property_completions.append(prop_completion)
-									inside_constructor = True
-									constructor_indentation = get_indentation_size(next_row)
+											function_args_list[i] = re.sub(THIS_SUGAR_SYMBOL, "", next_arg)
+										function_alias = get_method_completion_alias(function_name, function_args_list, is_inherited)
+										function_insertion = get_method_completion_insertion(function_name, function_args_list)
+										function_completion = (function_alias, function_insertion)
+										if function_completion not in function_completions:
+											function_completions.append(function_completion)
+									else:
+										function_args_list = []
+										if function_args_string:
+											function_args_list = function_args_string.split(",")
+										for i in range(len(function_args_list)):
+											# Check if it starts with @ -- this indicates an auto-set class variable
+											next_arg = function_args_list[i]
+											next_arg = next_arg.strip()
+											if next_arg.startswith(THIS_SUGAR_SYMBOL):
+												# Clean it up...
+												next_arg = re.sub(THIS_SUGAR_SYMBOL, "", next_arg)
+												next_arg = re.sub("[^a-zA-Z0-9_$].*", "", next_arg)
+												if show_private or not is_member_excluded(next_arg, member_exclusion_regexes):
+													prop_completion_alias = get_property_completion_alias(next_arg, is_inherited)
+													prop_completion_insertion = get_property_completion_insertion(next_arg)
+													prop_completion = (prop_completion_alias, prop_completion_insertion)
+													if prop_completion not in property_completions:
+														property_completions.append(prop_completion)
+										inside_constructor = True
+										constructor_indentation = get_indentation_size(next_row)
 					else:
 						# Indentation limit hit. We're not in the class anymore.
 						break
@@ -900,7 +903,7 @@ def get_class_from_end_of_chain(dot_operation_chain):
 		class_at_end = None
 	return class_at_end
 
-def collect_static_completions_from_file(file_lines, class_name, is_inherited, property_exclusion_regexes):
+def collect_static_completions_from_file(file_lines, class_name, is_inherited, member_exclusion_regexes, show_private):
 	
 	completions = []
 	extended_class = None
@@ -958,32 +961,34 @@ def collect_static_completions_from_file(file_lines, class_name, is_inherited, p
 							match = re.search(function_regex, next_row)
 							if match:
 								function_name = match.group(4)
-								function_args_string = match.group(6)
-								function_args_list = []
-								if function_args_string:
-									function_args_list = function_args_string.split(",")
-								for i in range(len(function_args_list)):
-									# Fix each one up...
-									next_arg = function_args_list[i]
-									next_arg = next_arg.strip()
-									next_arg = re.sub("[^a-zA-Z0-9_$].*", "", next_arg)
-									function_args_list[i] = next_arg
-								function_alias = get_method_completion_alias(function_name, function_args_list, is_inherited)
-								function_insertion = get_method_completion_insertion(function_name, function_args_list)
-								function_completion = (function_alias, function_insertion)
-								if function_completion not in function_completions:
-									function_completions.append(function_completion)
+								if show_private or not is_member_excluded(function_name, member_exclusion_regexes):
+									function_args_string = match.group(6)
+									function_args_list = []
+									if function_args_string:
+										function_args_list = function_args_string.split(",")
+									for i in range(len(function_args_list)):
+										# Fix each one up...
+										next_arg = function_args_list[i]
+										next_arg = next_arg.strip()
+										next_arg = re.sub("[^a-zA-Z0-9_$].*", "", next_arg)
+										function_args_list[i] = next_arg
+									function_alias = get_method_completion_alias(function_name, function_args_list, is_inherited)
+									function_insertion = get_method_completion_insertion(function_name, function_args_list)
+									function_completion = (function_alias, function_insertion)
+									if function_completion not in function_completions:
+										function_completions.append(function_completion)
 							else:
 								# Look for static assignment
 								assignment_regex = STATIC_ASSIGNMENT_REGEX
 								match = re.search(assignment_regex, next_row)
 								if match:
 									prop = match.group(3)
-									prop_completion_alias = get_property_completion_alias(prop, is_inherited)
-									prop_completion_insertion = get_property_completion_insertion(prop)
-									prop_completion = (prop_completion_alias, prop_completion_insertion)
-									if prop_completion not in property_completions:
-										property_completions.append(prop_completion)
+									if show_private or not is_member_excluded(prop, member_exclusion_regexes):
+										prop_completion_alias = get_property_completion_alias(prop, is_inherited)
+										prop_completion_insertion = get_property_completion_insertion(prop)
+										prop_completion = (prop_completion_alias, prop_completion_insertion)
+										if prop_completion not in property_completions:
+											property_completions.append(prop_completion)
 					else:
 						# Indentation limit hit. We're not in the class anymore.
 						break
@@ -1060,3 +1065,10 @@ def is_autocomplete_trigger(text):
 	trigger = trigger or text == THIS_SUGAR_SYMBOL
 	trigger = trigger or text == PERIOD_OPERATOR
 	return trigger
+
+def is_member_excluded(member, exclusion_regexes):
+	excluded = False
+	for next_exclusion_regex in exclusion_regexes:
+		if re.search(next_exclusion_regex, member):
+			excluded = True
+	return excluded

@@ -82,9 +82,9 @@ class CoffeeAutocomplete(sublime_plugin.EventListener):
 			if not this_aliases:
 				this_aliases = []
 
-			property_exclusion_regexes = settings.get(coffee_utils.PREFERENCES_MEMBER_EXCLUSION_REGEXES)
-			if not property_exclusion_regexes:
-				property_exclusion_regexes = []
+			member_exclusion_regexes = settings.get(coffee_utils.PREFERENCES_MEMBER_EXCLUSION_REGEXES)
+			if not member_exclusion_regexes:
+				member_exclusion_regexes = []
 
 			# Lines for the current file in view
 			current_file_lines = coffee_utils.get_view_content_lines(view)
@@ -104,7 +104,7 @@ class CoffeeAutocomplete(sublime_plugin.EventListener):
 			if (preceding_function_call or token or coffee_utils.THIS_SUGAR_SYMBOL == preceding_symbol) and coffee_utils.is_autocomplete_trigger(immediately_preceding_symbol):
 				self.window.active_view().run_command('hide_auto_complete')
 
-				thread = CoffeeAutocompleteThread(project_folder_list, excluded_dirs, this_aliases, current_file_lines, preceding_symbol, prefix, preceding_function_call, function_return_types, token, symbol_region, built_in_types, property_exclusion_regexes)
+				thread = CoffeeAutocompleteThread(project_folder_list, excluded_dirs, this_aliases, current_file_lines, preceding_symbol, prefix, preceding_function_call, function_return_types, token, symbol_region, built_in_types, member_exclusion_regexes)
 				thread.start()
 				self.check_operation(thread, final_completions, current_location, token, status)
 			else: 
@@ -147,7 +147,7 @@ class CoffeeAutocomplete(sublime_plugin.EventListener):
 
 class CoffeeAutocompleteThread(threading.Thread):
 
-	def __init__(self, project_folder_list, excluded_dirs, this_aliases, current_file_lines, preceding_symbol, prefix, preceding_function_call, function_return_types, token, symbol_region, built_in_types, property_exclusion_regexes):
+	def __init__(self, project_folder_list, excluded_dirs, this_aliases, current_file_lines, preceding_symbol, prefix, preceding_function_call, function_return_types, token, symbol_region, built_in_types, member_exclusion_regexes):
 		
 		self.project_folder_list = project_folder_list
 		self.excluded_dirs = excluded_dirs
@@ -160,7 +160,7 @@ class CoffeeAutocompleteThread(threading.Thread):
 		self.token = token
 		self.symbol_region = symbol_region
 		self.built_in_types = built_in_types
-		self.property_exclusion_regexes = property_exclusion_regexes
+		self.member_exclusion_regexes = member_exclusion_regexes
 
 		# None if no completions found, or an array of the completion tuples
 		self.completions = None
@@ -179,7 +179,7 @@ class CoffeeAutocompleteThread(threading.Thread):
 		token = self.token
 		symbol_region = self.symbol_region
 		built_in_types = self.built_in_types
-		property_exclusion_regexes = self.property_exclusion_regexes
+		member_exclusion_regexes = self.member_exclusion_regexes
 
 		selected_word = token[token.rfind(".") + 1:]
 
@@ -191,7 +191,7 @@ class CoffeeAutocompleteThread(threading.Thread):
 				function_names = next_return_type[coffee_utils.FUNCTION_RETURN_TYPE_FUNCTION_NAMES_KEY]
 				if preceding_function_call in function_names:
 					return_type = next_return_type[coffee_utils.FUNCTION_RETURN_TYPE_TYPE_NAME_KEY]
-					completions = coffee_utils.get_completions_for_class(return_type, False, None, prefix, None, built_in_types, property_exclusion_regexes)
+					completions = coffee_utils.get_completions_for_class(return_type, False, None, prefix, None, built_in_types, member_exclusion_regexes, False)
 
 		if not completions:
 			# Prepare to search globally if we need to...
@@ -205,7 +205,7 @@ class CoffeeAutocompleteThread(threading.Thread):
 				# Process as "this."
 				this_type = coffee_utils.get_this_type(current_file_lines, symbol_region)
 				if this_type:
-					completions = coffee_utils.get_completions_for_class(this_type, False, current_file_lines, prefix, all_coffee_file_paths, built_in_types, property_exclusion_regexes)
+					completions = coffee_utils.get_completions_for_class(this_type, False, current_file_lines, prefix, all_coffee_file_paths, built_in_types, member_exclusion_regexes, True)
 				pass
 			elif preceding_symbol == coffee_utils.PERIOD_OPERATOR:
 				# If "this" or a substitute for it, process as "this."
@@ -213,17 +213,17 @@ class CoffeeAutocompleteThread(threading.Thread):
 					# Process as "this."
 					this_type = coffee_utils.get_this_type(current_file_lines, symbol_region)
 					if this_type:
-						completions = coffee_utils.get_completions_for_class(this_type, False, current_file_lines, prefix, all_coffee_file_paths, built_in_types, property_exclusion_regexes)
+						completions = coffee_utils.get_completions_for_class(this_type, False, current_file_lines, prefix, all_coffee_file_paths, built_in_types, member_exclusion_regexes, True)
 				else:
 					# If TitleCase, assume a class, and that we want static properties and functions.
 					if coffee_utils.is_capitalized(selected_word):
 						# Assume it is either in the current view or in a file called selected_word.coffee
 						exact_file_name_regex = "^" + re.escape(selected_word + coffee_utils.COFFEE_EXTENSION_WITH_DOT) + "$"
 						exact_name_file_paths = coffee_utils.get_files_in(project_folder_list, exact_file_name_regex, excluded_dirs)
-						completions = coffee_utils.get_completions_for_class(selected_word, True, current_file_lines, prefix, exact_name_file_paths, built_in_types, property_exclusion_regexes)
+						completions = coffee_utils.get_completions_for_class(selected_word, True, current_file_lines, prefix, exact_name_file_paths, built_in_types, member_exclusion_regexes, False)
 						if not completions:
 							# Now we search globally...
-							completions = coffee_utils.get_completions_for_class(selected_word, True, None, prefix, all_coffee_file_paths, built_in_types, property_exclusion_regexes)
+							completions = coffee_utils.get_completions_for_class(selected_word, True, None, prefix, all_coffee_file_paths, built_in_types, member_exclusion_regexes, False)
 
 					# If nothing yet, assume a variable.
 					if not completions:
@@ -232,9 +232,9 @@ class CoffeeAutocompleteThread(threading.Thread):
 							# Assume it is either in the current view or in a file called variable_type.coffee
 							exact_file_name_regex = "^" + re.escape(variable_type + coffee_utils.COFFEE_EXTENSION_WITH_DOT) + "$"
 							exact_name_file_paths = coffee_utils.get_files_in(project_folder_list, exact_file_name_regex, excluded_dirs)
-							completions = coffee_utils.get_completions_for_class(variable_type, False, current_file_lines, prefix, exact_name_file_paths, built_in_types, property_exclusion_regexes)
+							completions = coffee_utils.get_completions_for_class(variable_type, False, current_file_lines, prefix, exact_name_file_paths, built_in_types, member_exclusion_regexes, False)
 					if not completions:
 						# Now we search globally for a class... Maybe they're making a static call on something lowercase? Bad design, but check anyways.
-						completions = coffee_utils.get_completions_for_class(selected_word, True, None, prefix, all_coffee_file_paths, built_in_types, property_exclusion_regexes)
+						completions = coffee_utils.get_completions_for_class(selected_word, True, None, prefix, all_coffee_file_paths, built_in_types, member_exclusion_regexes, False)
 		if completions:
 			self.completions = completions
