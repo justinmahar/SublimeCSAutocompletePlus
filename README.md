@@ -225,7 +225,7 @@ So, it's left up to you.
 
 Using an underscore is all well and fine until your autocomplete list is all cluttered up with things you're not supposed to see.
 
-CA+ to the rescue. You can define regular expressions to exclude any members of your choosing. By default, members starting with an underscore are not shown when working outside of a class (i.e., not using `this.`). Excluded members are not shown when using `this.` in subclasses, either. The goal is to simulate `private`. See the configuration section for how to add/remove exclusions.
+CA+ to the rescue. You can define regular expressions to exclude any members of your choosing. By default, members starting with an underscore are not shown when working outside of a class (i.e., not using `this.`). See the configuration section for how to add/remove exclusions.
 
 ### Goto Definition
 
