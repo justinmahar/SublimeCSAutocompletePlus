@@ -82,6 +82,7 @@ BUILT_IN_TYPES_INSTANCE_PROPERTY_NAME_KEY = "name"
 BUILT_IN_TYPES_INSTANCE_METHODS_KEY = "instance_methods"
 BUILT_IN_TYPES_INSTANCE_METHOD_NAME_KEY = "name"
 BUILT_IN_TYPES_METHOD_NAME_KEY = "name"
+BUILT_IN_TYPES_METHOD_INSERTION_KEY = "insertion"
 BUILT_IN_TYPES_METHOD_ARGS_KEY = "args"
 BUILT_IN_TYPES_METHOD_ARG_NAME_KEY = "name"
 BUILT_IN_TYPES_INHERITS_FROM_OBJECT_KEY = "inherits_from_object"
@@ -561,12 +562,22 @@ def get_type_from_assignment_value(assignment_value_string):
 	assignment_value_string = assignment_value_string.strip()
 
 	# Check for built in types
-	string_regex = r"(^\".*\"$)|(^.*?\+\s*\".*?\"$)|(^\".*?\"\s*\+.*?$)|(^.*?\s*\+\s*\".*?\"\s*\+\s*.*?$)"
+	object_regex = r"^\{.*\}$"
 	if not determined_type:
-		match = re.search(string_regex, assignment_value_string)
+		match = re.search(object_regex, assignment_value_string)
+		if match:
+			determined_type = "Object"
+	double_quote_string_regex = r"(^\".*\"$)|(^.*?\+\s*\".*?\"$)|(^\".*?\"\s*\+.*?$)|(^.*?\s*\+\s*\".*?\"\s*\+\s*.*?$)"
+	if not determined_type:
+		match = re.search(double_quote_string_regex, assignment_value_string)
 		if match:
 			determined_type = "String"
-	array_regex = r"^\[.*\]$"
+	single_quote_string_regex = r"(^['].*[']$)|(^.*?\+\s*['].*?[']$)|(^['].*?[']\s*\+.*?$)|(^.*?\s*\+\s*['].*?[']\s*\+\s*.*?$)"
+	if not determined_type:
+		match = re.search(single_quote_string_regex, assignment_value_string)
+		if match:
+			determined_type = "String"
+	array_regex = r"^\[.*\]\s*$"
 	if not determined_type:
 		match = re.search(array_regex, assignment_value_string)
 		if match:
@@ -762,10 +773,18 @@ def get_completions_for_built_in_type(built_in_type, is_static, is_inherited, me
 			method_name = next_static_method[BUILT_IN_TYPES_METHOD_NAME_KEY]
 			if not is_member_excluded(method_name, member_exclusion_regexes):
 				method_args = []
+				method_insertions = []
 				method_args_objs = next_static_method[BUILT_IN_TYPES_METHOD_ARGS_KEY]
 				for next_method_arg_obj in method_args_objs:
-					method_args.append(next_method_arg_obj[BUILT_IN_TYPES_METHOD_ARG_NAME_KEY])
-				next_completion = get_method_completion_tuple(method_name, method_args, is_inherited)
+					method_arg = next_method_arg_obj[BUILT_IN_TYPES_METHOD_ARG_NAME_KEY]
+					method_args.append(method_arg)
+					method_insertion = method_arg
+					try:
+						method_insertion = next_method_arg_obj[BUILT_IN_TYPES_METHOD_INSERTION_KEY]
+					except: 
+						pass
+					method_insertions.append(method_insertion)
+				next_completion = get_method_completion_tuple(method_name, method_args, method_insertions, is_inherited)
 				completions.append(next_completion)		
 	else:
 		instance_properties = []
@@ -783,10 +802,18 @@ def get_completions_for_built_in_type(built_in_type, is_static, is_inherited, me
 			method_name = next_instance_method[BUILT_IN_TYPES_METHOD_NAME_KEY]
 			if not is_member_excluded(method_name, member_exclusion_regexes):
 				method_args = []
+				method_insertions = []
 				method_args_objs = next_instance_method[BUILT_IN_TYPES_METHOD_ARGS_KEY]
 				for next_method_arg_obj in method_args_objs:
-					method_args.append(next_method_arg_obj[BUILT_IN_TYPES_METHOD_ARG_NAME_KEY])
-				next_completion = get_method_completion_tuple(method_name, method_args, is_inherited)
+					method_arg = next_method_arg_obj[BUILT_IN_TYPES_METHOD_ARG_NAME_KEY]
+					method_args.append(method_arg)
+					method_insertion = method_arg
+					try:
+						method_insertion = next_method_arg_obj[BUILT_IN_TYPES_METHOD_INSERTION_KEY]
+					except: 
+						pass
+					method_insertions.append(method_insertion)
+				next_completion = get_method_completion_tuple(method_name, method_args, method_insertions, is_inherited)
 				completions.append(next_completion)
 	return completions
 
@@ -1026,17 +1053,35 @@ def get_method_completion_alias(method_name, args, is_inherited=False):
 	return completion_string
 
 def get_method_completion_insertion(method_name, args):
-	completion_string = method_name + "("
+
+	no_parens = False
+
+	completion_string = method_name
+
+	if len(args) == 1:
+		function_match = re.search(r".*?\->.*", args[0])
+		if function_match:
+			no_parens = True
+
+	if no_parens:
+		completion_string =  completion_string + " "
+	else:
+		completion_string =  completion_string + "("
+		
+
 	for i in range(len(args)):
 		escaped_arg = re.sub("[$]", "\$", args[i])
 		completion_string = completion_string + "${" + str(i + 1) + ":" + escaped_arg + "}"
 		if i < len(args) - 1:
 			completion_string = completion_string + ", "
-	completion_string = completion_string + ")"
+
+	if not no_parens:
+		completion_string = completion_string + ")"
+
 	return completion_string
 
-def get_method_completion_tuple(method_name, args, is_inherited=False):
-	completion_tuple = (get_method_completion_alias(method_name, args, is_inherited), get_method_completion_insertion(method_name, args))
+def get_method_completion_tuple(method_name, arg_names, arg_insertions, is_inherited=False):
+	completion_tuple = (get_method_completion_alias(method_name, arg_names, is_inherited), get_method_completion_insertion(method_name, arg_insertions))
 	return completion_tuple
 
 def get_view_contents(view):
