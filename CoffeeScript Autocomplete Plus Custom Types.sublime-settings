@@ -112,7 +112,7 @@
 				{"name":"ajaxError", "args": [{"name": "handler(event, jqXHR, ajaxSettings, thrownError)"}]},
 				{"name":"ajaxSend", "args": [{"name": "handler(event, jqXHR, ajaxOptions)"}]},
 				{"name":"ajaxStart", "args": [{"name": "handler()"}]},
-				{"name":"ajaxStop", "args": [{"name": "handler()"}]},
+				{"name":"ajaxStop", "args": [{"name": "handler()", "insertion": "->"}]},
 				{"name":"ajaxSuccess", "args": [{"name": "handler(event, XMLHttpRequest, ajaxOptions)"}]},
 				{"name":"andSelf", "args": []},
 				{"name":"animate", "args": [{"name": "properties"}, {"name": "[duration_default_400]"}, {"name": "[easing_default_swing]"}, {"name": "[complete()]"}]},

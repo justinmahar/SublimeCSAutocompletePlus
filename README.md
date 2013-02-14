@@ -323,6 +323,7 @@ In `CoffeeScript Autocomplete Plus Custom Types.sublime-settings`:
 
 * `coffee_autocomplete_plus_custom_types` -- Custom types, allowing libraries like jQuery.
   - If you would like to define custom types, put them here. Autocomplete will then make the defined suggestions for you. By default, a type for jQuery is defined.
+  - Method arguments have a `name` property, and an option `insertion`, which will be the text that is actually inserted. For example, this is useful for inserting `->` syntax for callbacks.
   - Use the `enabled` property to enable or disable a custom type.
   - Use the following example as a starting point:
 
@@ -340,7 +341,7 @@ In `CoffeeScript Autocomplete Plus Custom Types.sublime-settings`:
 			"instance_properties": [{"name": "thingOne"}, {"name": "thingTwo"}, {"name": "thingThree"}],
 			"instance_methods":
 			[
-				{"name":"doStuff", "args": [{"name": "numTimes"}]},
+				{"name":"doStuffWithCallback", "args": [{"name": "numTimes"}, {"name": "callback()", "insertion": "->"}]},
 				{"name":"doMoreStuff", "args": [{"name": "numTimes"}, {"name": "extraAmount"}]}
 			]
 		}
