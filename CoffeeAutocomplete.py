@@ -217,10 +217,8 @@ class CoffeeAutocompleteThread(threading.Thread):
 				else:
 					# If TitleCase, assume a class, and that we want static properties and functions.
 					if coffee_utils.is_capitalized(selected_word):
-						# Assume it is either in the current view or in a file called selected_word.coffee
-						exact_file_name_regex = "^" + re.escape(selected_word + coffee_utils.COFFEE_EXTENSION_WITH_DOT) + "$"
-						exact_name_file_paths = coffee_utils.get_files_in(project_folder_list, exact_file_name_regex, excluded_dirs)
-						completions = coffee_utils.get_completions_for_class(selected_word, True, current_file_lines, prefix, exact_name_file_paths, built_in_types, member_exclusion_regexes, False)
+						# Assume it is either in the current view or in a coffee file somewhere
+						completions = coffee_utils.get_completions_for_class(selected_word, True, current_file_lines, prefix, all_coffee_file_paths, built_in_types, member_exclusion_regexes, False)
 						if not completions:
 							# Now we search globally...
 							completions = coffee_utils.get_completions_for_class(selected_word, True, None, prefix, all_coffee_file_paths, built_in_types, member_exclusion_regexes, False)
@@ -229,10 +227,8 @@ class CoffeeAutocompleteThread(threading.Thread):
 					if not completions:
 						variable_type = coffee_utils.get_variable_type(current_file_lines, token, symbol_region, all_coffee_file_paths, built_in_types, [])
 						if variable_type:
-							# Assume it is either in the current view or in a file called variable_type.coffee
-							exact_file_name_regex = "^" + re.escape(variable_type + coffee_utils.COFFEE_EXTENSION_WITH_DOT) + "$"
-							exact_name_file_paths = coffee_utils.get_files_in(project_folder_list, exact_file_name_regex, excluded_dirs)
-							completions = coffee_utils.get_completions_for_class(variable_type, False, current_file_lines, prefix, exact_name_file_paths, built_in_types, member_exclusion_regexes, False)
+							# Assume it is either in the current view or in a coffee file somewhere
+							completions = coffee_utils.get_completions_for_class(variable_type, False, current_file_lines, prefix, all_coffee_file_paths, built_in_types, member_exclusion_regexes, False)
 					if not completions:
 						# Now we search globally for a class... Maybe they're making a static call on something lowercase? Bad design, but check anyways.
 						completions = coffee_utils.get_completions_for_class(selected_word, True, None, prefix, all_coffee_file_paths, built_in_types, member_exclusion_regexes, False)
