@@ -363,13 +363,14 @@ Autocomplete is smart, but not Mensa smart. Under the hood, we're using regular 
 
 For now, here is the list of TBDs:
 
-* Clean up code. Make modular/reusable. Right now the code's a mess because I made this in .2 seconds.
+* Clean up code. Make modular/reusable. First priority.
 * Constructor support
 	- Add constructors to built-in types
 * Additional built-in types (Error, etc)
 * Optional parameter detection
 	- Square brackets indicate optional params.
 	- Example: `methodName(var1, optionalVar2="hey, I'm optional")` will autocomplete to `classInstance.methodName(var1, [optionalVar2])`
+* Fix issues
 * Goto Definition knows types of objects methods are called on. Right now, it makes a guess.
 * Support for built-in types when getting the return type for a method.
 
