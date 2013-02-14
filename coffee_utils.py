@@ -562,12 +562,22 @@ def get_type_from_assignment_value(assignment_value_string):
 	assignment_value_string = assignment_value_string.strip()
 
 	# Check for built in types
-	string_regex = r"(^\".*\"$)|(^.*?\+\s*\".*?\"$)|(^\".*?\"\s*\+.*?$)|(^.*?\s*\+\s*\".*?\"\s*\+\s*.*?$)"
+	object_regex = r"^\{.*\}$"
 	if not determined_type:
-		match = re.search(string_regex, assignment_value_string)
+		match = re.search(object_regex, assignment_value_string)
+		if match:
+			determined_type = "Object"
+	double_quote_string_regex = r"(^\".*\"$)|(^.*?\+\s*\".*?\"$)|(^\".*?\"\s*\+.*?$)|(^.*?\s*\+\s*\".*?\"\s*\+\s*.*?$)"
+	if not determined_type:
+		match = re.search(double_quote_string_regex, assignment_value_string)
 		if match:
 			determined_type = "String"
-	array_regex = r"^\[.*\]$"
+	single_quote_string_regex = r"(^['].*[']$)|(^.*?\+\s*['].*?[']$)|(^['].*?[']\s*\+.*?$)|(^.*?\s*\+\s*['].*?[']\s*\+\s*.*?$)"
+	if not determined_type:
+		match = re.search(single_quote_string_regex, assignment_value_string)
+		if match:
+			determined_type = "String"
+	array_regex = r"^\[.*\]\s*$"
 	if not determined_type:
 		match = re.search(array_regex, assignment_value_string)
 		if match:
