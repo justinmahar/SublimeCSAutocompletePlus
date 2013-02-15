@@ -177,13 +177,13 @@
 			"instance_methods":
 			[
 				{"name":"toExponential", "args": []},
-				{"name":"toExponential", "args": [{"name": "digitsAfterDecimal"}]},
+				{"name":"toExponential", "args": [{"name": "digits"}]},
 				{"name":"toFixed", "args": []},
-				{"name":"toFixed", "args": [{"name": "digitsAfterDecimal"}]},
+				{"name":"toFixed", "args": [{"name": "digits"}]},
 				{"name":"toPrecision", "args": []},
 				{"name":"toPrecision", "args": [{"name": "precision"}]},
 				{"name":"toString", "args": []},
-				{"name":"toString", "args": [{"name": "radix2to36"}]}
+				{"name":"toString", "args": [{"name": "radix"}]}
 			]
 		},
 		{
@@ -258,8 +258,10 @@
 				{"name":"lastIndexOf", "args": [{"name": "substr"}, {"name": "start"}]},
 				{"name":"localeCompare", "args": [{"name": "target"}]},
 				{"name":"match", "args": [{"name": "regexp"}]},
-				{"name":"replace", "args": [{"name": "substr|regexp"}, {"name": "repl"}]},
-				{"name":"replace", "args": [{"name": "substr|regexp"}, {"name": "repl()", "insertion": "(match, submatches…, pos, str) ->"}]},
+				{"name":"replace", "args": [{"name": "substr"}, {"name": "repl"}]},
+				{"name":"replace", "args": [{"name": "substr"}, {"name": "repl()", "insertion": "(match, submatches…, pos, str) ->"}]},
+				{"name":"replace", "args": [{"name": "regexp"}, {"name": "repl"}]},
+				{"name":"replace", "args": [{"name": "regexp"}, {"name": "repl()", "insertion": "(match, submatches…, pos, str) ->"}]},
 				{"name":"search", "args": [{"name": "regexp"}]},
 				{"name":"slice", "args": [{"name": "start"}]},
 				{"name":"slice", "args": [{"name": "start"}, {"name": "end"}]},
