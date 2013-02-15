@@ -157,6 +157,7 @@ CA+ now supports autocompletion for the following built-in types:
 * Object
 * RegExp
 * String
+* JSON
 
 This makes life that much easier.
 
@@ -193,7 +194,7 @@ CA+ can detect types using hints you provide it in comments. You can even add me
 	# [Animal] critter
 	# [Boolean] animalEscapes
 	feedAlligator: (critter, animalEscapes) ->
-		if animalEscapes:
+		if animalEscapes
 			# CA+ knows that it's an Animal. Will he escape? Autocomplete and choose his destiny!
 			critter.[autocomplete]
 ```
