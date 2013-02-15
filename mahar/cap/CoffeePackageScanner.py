@@ -6,7 +6,7 @@ class CoffeePackageScanner:
 	def __init__(self, view_id_to_file_contents_dict, current_view_id, package_directories, excluded_directories, restricted_to_directories):
 		pass
 
-	def get_type_for_operation(operation_string, selection_region):
+	def get_type_for_operation(self, operation_string, selection_region):
 		pass
 		
 		# Util function:
