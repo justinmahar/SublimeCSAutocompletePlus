@@ -274,6 +274,43 @@
 				{"name":"toUpperCase", "args": []},
 				{"name":"trim", "args": []}
 			]
-		}
+		},
+		{
+			"name": "JSON",
+			"enabled": true,
+			"constructors": [],
+			"static_properties": [],
+			"static_methods":
+			[
+				{"name":"parse", "args": [{"name": "text"}]},
+				{"name":"parse", "args": [{"name": "text"}, {"name": "reviver"}]},
+				{"name":"stringify", "args": [{"name": "value"}]},
+				{"name":"stringify", "args": [{"name": "value"}, {"name": "replacer"}]},
+				{"name":"stringify", "args": [{"name": "value"}, {"name": "replacer"}, {"name": "space"}]}
+			],
+			"instance_properties": [],
+			"instance_methods": []
+		}//,
+		// {
+		// 	"name": "Math",
+		// 	"enabled": true,
+		// 	"constructors": [],
+		// 	"static_properties": [
+		// 		{"name": "E"},
+		// 		{"name": "LN10"},
+		// 		{"name": "LN2"},
+		// 		{"name": "LOG10E"}
+		// 		// etc...
+		// 	],
+		// 	"static_methods":
+		// 	[
+		// 		{"name":"abs", "args": [{"name": "blahblahblah"}]},
+		// 		{"name":"acos", "args": [{"name": "blahblahblah"}]},
+		// 		{"name":"asin", "args": [{"name": "blahblahblah"}]}
+		// 		// etc...
+		// 	],
+		// 	"instance_properties": [],
+		// 	"instance_methods": []
+		// }
 	]
 }
