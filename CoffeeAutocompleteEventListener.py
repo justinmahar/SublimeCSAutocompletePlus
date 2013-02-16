@@ -52,26 +52,19 @@ class CoffeeAutocompleteEventListener(sublime_plugin.EventListener):
 			if not built_in_types:
 				built_in_types = []
 
-			all_type_infos = InfoCollector.get_type_infos_from(built_in_types)
-
-			# for next_type_info in all_type_infos:
-			# 	if next_type_info.get_name() == "String":
-			# 		completions = Completions.get_completions_for(next_type_info, all_type_infos, False)
-			# 		# print str(completions)
-			# 		return completions
-			# 		break
-
-
 			custom_types_settings = sublime.load_settings(coffee_utils.CUSTOM_TYPES_SETTINGS_FILE_NAME)
 			custom_types = custom_types_settings.get(coffee_utils.CUSTOM_TYPES_SETTINGS_KEY)
 			if not custom_types:
 				custom_types = []
 
-			custom_type_infos = InfoCollector.get_type_infos_from(custom_types)
-			# print "Custom type infos: "
-			# print([str(info) for info in custom_type_infos])
-
 			built_in_types.extend(custom_types)
+
+			# Info collection:
+			# built_in_type_infos = InfoCollector.get_type_infos_from(built_in_types)
+			# custom_type_infos = InfoCollector.get_type_infos_from(custom_types)
+			# defined_type_infos = []
+			# defined_type_infos.extend(built_in_type_infos)
+			# defined_type_infos.extend(custom_type_infos)
 
 			# Pull the excluded dirs from preferences
 			excluded_dirs = settings.get(coffee_utils.PREFERENCES_COFFEE_EXCLUDED_DIRS)

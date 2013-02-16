@@ -146,7 +146,7 @@ class Completions:
 						completions.extend(super_super_completions)
 						super_type_info_found = True
 						break
-			# Otherwise, everything inherits from Object, so get those completions.
+			# Otherwise, everything inherits instance members from Object, so get those completions.
 			# If we didn't find the super type info, at least return Object's.
 			if not super_type_info_found or super_is_object: # BASE CASE
 				for next_type_info in all_type_infos:
@@ -154,11 +154,19 @@ class Completions:
 					if next_type_info.get_name() == Completions.OBJECT_TYPE_NAME:
 						object_type_info = next_type_info
 						if is_properties:
-							object_completions = Completions.get_property_completions(object_type_info, is_static, True) # Inherited
+							object_completions = Completions.get_property_completions(object_type_info, False, True) # Inherited
 						else:
-							object_completions = Completions.get_method_completions(object_type_info, is_static, True) # Inherited
+							object_completions = Completions.get_method_completions(object_type_info, False, True) # Inherited
 						completions.extend(object_completions)
 						break
+		elif is_static: # If accessing Object statically, it still inherits instance members of Object. Special case.
+			object_type_info = type_info
+			if is_properties:
+				object_completions = Completions.get_property_completions(object_type_info, False, True) # Inherited
+			else:
+				object_completions = Completions.get_method_completions(object_type_info, False, True) # Inherited
+			completions.extend(object_completions)
+
 
 		# Sort them alphabetically before returning them
 		completions.sort()

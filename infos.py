@@ -1,112 +1,3 @@
-
-class PropertyInfo:
-	def __init__(self, name):
-		self.name = name
-		self.display_name = name
-		self.insertion = name
-		self.type_name = None
-
-	def get_name(self):
-		return self.name
-
-	def set_name(self, name):
-		self.name = name
-
-	def get_display_name(self):
-		return self.display_name
-
-	def set_display_name(self, display_name):
-		self.display_name = display_name
-
-	def get_insertion(self):
-		return self.insertion
-
-	def set_insertion(self, insertion):
-		self.insertion = insertion
-
-	def get_type_name(self):
-		return self.type_name
-
-	def set_type_name(self, type_name):
-		self.type_name = type_name
-
-class ArgumentInfo:
-
-	def __init__(self, name):
-		self.name = name
-		self.display_name = name
-		self.insertion = name
-		self.type_name = None
-
-	def get_name(self):
-		return self.name
-
-	def set_name(self, name):
-		self.name = name
-
-	def get_display_name(self):
-		return self.display_name
-
-	def set_display_name(self, display_name):
-		self.display_name = display_name
-
-	def get_insertion(self):
-		return self.insertion
-
-	def set_insertion(self, insertion):
-		self.insertion = insertion
-
-	def get_type_name(self):
-		return self.type_name
-
-	def set_type_name(self, name):
-		self.type_name = name
-
-class MethodInfo:
-
-	def __init__(self, name):
-		self.name = name
-		self.display_name = name
-		self.insertion = name
-		self.argument_infos = []
-		self.return_type_name = None
-
-	def get_name(self):
-		return self.name
-
-	def set_name(self, name):
-		self.name = name
-
-	def get_display_name(self):
-		return self.display_name
-
-	def set_display_name(self, display_name):
-		self.display_name = display_name
-
-	def get_insertion(self):
-		return self.insertion
-
-	def set_insertion(self, insertion):
-		self.insertion = insertion
-
-	def get_return_type_name(self):
-		return self.return_type_name
-
-	def set_return_type_name(self, name):
-		self.return_type_name = return_type_name
-
-	def get_argument_infos(self):
-		return self.argument_infos
-
-	def add_argument_info(self, arg_info):
-		self.argument_infos.append(arg_info)
-
-	def has_arguments(self):
-		return (self.get_argument_count() > 0)
-
-	def get_argument_count(self):
-		return len(self.argument_infos)
-
 class TypeInfo:
 
 	def __init__(self, name):
@@ -179,3 +70,111 @@ class TypeInfo:
 
 	def add_instance_method_info(self, method_info):
 		self.instance_method_infos.append(method_info)
+
+class PropertyInfo:
+	def __init__(self, name):
+		self.name = name
+		self.display_name = name
+		self.insertion = name
+		self.type_name = None
+
+	def get_name(self):
+		return self.name
+
+	def set_name(self, name):
+		self.name = name
+
+	def get_display_name(self):
+		return self.display_name
+
+	def set_display_name(self, display_name):
+		self.display_name = display_name
+
+	def get_insertion(self):
+		return self.insertion
+
+	def set_insertion(self, insertion):
+		self.insertion = insertion
+
+	def get_type_name(self):
+		return self.type_name
+
+	def set_type_name(self, type_name):
+		self.type_name = type_name
+
+class MethodInfo:
+
+	def __init__(self, name):
+		self.name = name
+		self.display_name = name
+		self.insertion = name
+		self.argument_infos = []
+		self.return_type_name = None
+
+	def get_name(self):
+		return self.name
+
+	def set_name(self, name):
+		self.name = name
+
+	def get_display_name(self):
+		return self.display_name
+
+	def set_display_name(self, display_name):
+		self.display_name = display_name
+
+	def get_insertion(self):
+		return self.insertion
+
+	def set_insertion(self, insertion):
+		self.insertion = insertion
+
+	def get_return_type_name(self):
+		return self.return_type_name
+
+	def set_return_type_name(self, name):
+		self.return_type_name = return_type_name
+
+	def get_argument_infos(self):
+		return self.argument_infos
+
+	def add_argument_info(self, arg_info):
+		self.argument_infos.append(arg_info)
+
+	def has_arguments(self):
+		return (self.get_argument_count() > 0)
+
+	def get_argument_count(self):
+		return len(self.argument_infos)
+
+class ArgumentInfo:
+
+	def __init__(self, name):
+		self.name = name
+		self.display_name = name
+		self.insertion = name
+		self.type_name = None
+
+	def get_name(self):
+		return self.name
+
+	def set_name(self, name):
+		self.name = name
+
+	def get_display_name(self):
+		return self.display_name
+
+	def set_display_name(self, display_name):
+		self.display_name = display_name
+
+	def get_insertion(self):
+		return self.insertion
+
+	def set_insertion(self, insertion):
+		self.insertion = insertion
+
+	def get_type_name(self):
+		return self.type_name
+
+	def set_type_name(self, name):
+		self.type_name = name

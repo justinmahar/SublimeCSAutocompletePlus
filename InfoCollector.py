@@ -3,6 +3,9 @@ from infos import ArgumentInfo, MethodInfo, PropertyInfo, TypeInfo
 # Type keys
 TYPE_ENABLED_KEY = "enabled"
 TYPE_NAME_KEY = "name"
+TYPE_DISPLAY_NAME_KEY = "display_name"
+TYPE_INSERTION_KEY = "insertion"
+TYPE_SUPER_TYPE_NAME_KEY = "super_type_name"
 TYPE_CONSTRUCTORS_KEY = "constructors"
 TYPE_STATIC_PROPERTIES_KEY = "static_properties"
 TYPE_STATIC_METHODS_KEY = "static_methods"
@@ -16,8 +19,9 @@ PROPERTY_INSERTION_KEY = "insertion"
 # Method keys
 METHOD_NAME_KEY = "name"
 METHOD_DISPLAY_NAME_KEY = "display_name"
-METHOD_RETURN_TYPE_NAME_KEY = "return_type_name"
+METHOD_INSERTION_KEY = "insertion"
 METHOD_ARGS_KEY = "args"
+METHOD_RETURN_TYPE_NAME_KEY = "return_type_name"
 # Argument keys
 ARGUMENT_NAME_KEY = "name"
 ARGUMENT_DISPLAY_NAME_KEY = "display_name"
@@ -40,10 +44,33 @@ class InfoCollector:
 	def get_type_info_from(type_dictionary):
 		type_info = None
 		try:
+			# Enabled
 			enabled = type_dictionary[TYPE_ENABLED_KEY]
 			if enabled:
+				# Name
 				name = type_dictionary[TYPE_NAME_KEY]
 				type_info = TypeInfo(name)
+
+				try:
+					# Display name
+					display_name = type_dictionary[TYPE_DISPLAY_NAME_KEY]
+					type_info.set_display_name(display_name)
+				except KeyError, e:
+					pass
+
+				try:
+					# Insertion
+					insertion = type_dictionary[TYPE_INSERTION_KEY]
+					type_info.set_insertion(insertion)
+				except KeyError, e:
+					pass
+
+				try:
+					# Super type name
+					super_type_name = type_dictionary[TYPE_SUPER_TYPE_NAME_KEY]
+					type_info.set_super_type_name(super_type_name)
+				except KeyError, e:
+					pass
 
 				try:
 					# Constructors
@@ -105,24 +132,28 @@ class InfoCollector:
 	def get_property_info_from(property_dictionary):
 		property_info = None
 		try:
+			# Name
 			name = property_dictionary[PROPERTY_NAME_KEY]
 			property_info = PropertyInfo(name)
 			
 			try:
+				# Display name
 				display_name = property_dictionary[PROPERTY_DISPLAY_NAME_KEY]
 				property_info.set_display_name(display_name)
 			except KeyError, e:
 				pass
 
 			try:
-				type_name = property_dictionary[PROPERTY_TYPE_NAME_KEY]
-				property_info.set_type_name(type_name)
+				# Insertion
+				insertion = property_dictionary[PROPERTY_INSERTION_KEY]
+				property_info.set_insertion(insertion)
 			except KeyError, e:
 				pass
 
 			try:
-				insertion = property_dictionary[PROPERTY_INSERTION_KEY]
-				property_info.set_insertion(insertion)
+				# Type name
+				type_name = property_dictionary[PROPERTY_TYPE_NAME_KEY]
+				property_info.set_type_name(type_name)
 			except KeyError, e:
 				pass
 
@@ -136,27 +167,38 @@ class InfoCollector:
 	def get_method_info_from(method_dictionary):
 		method_info = None
 		try:
+			# Name
 			name = method_dictionary[METHOD_NAME_KEY]
 			method_info = MethodInfo(name)
 			
 			try:
+				# Display name
 				display_name = method_dictionary[METHOD_DISPLAY_NAME_KEY]
 				method_info.set_display_name(display_name)
 			except KeyError, e:
 				pass
 
 			try:
-				return_type_name = method_dictionary[METHOD_RETURN_TYPE_NAME_KEY]
-				method_info.set_return_type_name(return_type_name)
+				# Insertion
+				insertion = method_dictionary[METHOD_INSERTION_KEY]
+				type_info.set_insertion(insertion)
 			except KeyError, e:
 				pass
 
 			try:
+				# Argument infos
 				arg_dictionaries = method_dictionary[METHOD_ARGS_KEY]
 				for next_arg_dictionary in arg_dictionaries:
 					next_arg_info = InfoCollector.get_argument_info_from(next_arg_dictionary)
 					if next_arg_info:
 						method_info.add_argument_info(next_arg_info)
+			except KeyError, e:
+				pass
+
+			try:
+				# Return type name
+				return_type_name = method_dictionary[METHOD_RETURN_TYPE_NAME_KEY]
+				method_info.set_return_type_name(return_type_name)
 			except KeyError, e:
 				pass
 
@@ -170,24 +212,28 @@ class InfoCollector:
 	def get_argument_info_from(argument_dictionary):
 		argument_info = None
 		try:
+			# Name
 			name = argument_dictionary[ARGUMENT_NAME_KEY]
 			argument_info = ArgumentInfo(name)
 			
 			try:
+				# Display name
 				display_name = argument_dictionary[ARGUMENT_DISPLAY_NAME_KEY]
 				argument_info.set_display_name(display_name)
 			except KeyError, e:
 				pass
 
 			try:
-				type_name = argument_dictionary[ARGUMENT_TYPE_NAME_KEY]
-				argument_info.set_type_name(type_name)
+				# Insertion
+				insertion = argument_dictionary[ARGUMENT_INSERTION_KEY]
+				argument_info.set_insertion(insertion)
 			except KeyError, e:
 				pass
 
 			try:
-				insertion = argument_dictionary[ARGUMENT_INSERTION_KEY]
-				argument_info.set_insertion(insertion)
+				# Type
+				type_name = argument_dictionary[ARGUMENT_TYPE_NAME_KEY]
+				argument_info.set_type_name(type_name)
 			except KeyError, e:
 				pass
 
