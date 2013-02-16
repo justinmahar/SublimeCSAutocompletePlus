@@ -67,6 +67,7 @@ class MethodInfo:
 	def __init__(self, name):
 		self.name = name
 		self.display_name = name
+		self.insertion = name
 		self.argument_infos = []
 		self.return_type_name = None
 
@@ -82,17 +83,11 @@ class MethodInfo:
 	def set_display_name(self, display_name):
 		self.display_name = display_name
 
-	def get_argument_infos(self):
-		return self.argument_infos
+	def get_insertion(self):
+		return self.insertion
 
-	def has_arguments(self):
-		return (self.get_argument_count() > 0)
-
-	def get_argument_count(self):
-		return len(self.argument_infos)
-
-	def add_argument_info(self, arg_info):
-		self.argument_infos.append(arg_info)
+	def set_insertion(self, insertion):
+		self.insertion = insertion
 
 	def get_return_type_name(self):
 		return self.return_type_name
@@ -100,12 +95,25 @@ class MethodInfo:
 	def set_return_type_name(self, name):
 		self.return_type_name = return_type_name
 
+	def get_argument_infos(self):
+		return self.argument_infos
+
+	def add_argument_info(self, arg_info):
+		self.argument_infos.append(arg_info)
+
+	def has_arguments(self):
+		return (self.get_argument_count() > 0)
+
+	def get_argument_count(self):
+		return len(self.argument_infos)
+
 class TypeInfo:
 
 	def __init__(self, name):
 		self.name = name
 		self.display_name = name
-		self.super_name = None
+		self.insertion = name
+		self.super_type_name = None
 		self.constructor_infos = []
 		self.static_property_infos = []
 		self.static_method_infos = []
@@ -130,11 +138,17 @@ class TypeInfo:
 	def set_display_name(self, display_name):
 		self.display_name = display_name
 
-	def get_super_name(self):
-		return self.super_name
+	def get_insertion(self):
+		return self.insertion
 
-	def set_super_name(self, name):
-		self.super_name = name
+	def set_insertion(self, insertion):
+		self.insertion = insertion
+
+	def get_super_type_name(self):
+		return self.super_type_name
+
+	def set_super_type_name(self, name):
+		self.super_type_name = name
 
 	def get_constructor_infos(self):
 		return self.constructor_infos

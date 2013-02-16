@@ -3,7 +3,7 @@
 	[
 		// {
 		// 	"name": "MyType",
-		// 	"constructors": [{"args": []}],
+		// 	"constructors": [],
 		// 	"static_properties": [{"name": "CONSTANT_ONE"}, {"name": "CONSTANT_TWO"}],
 		// 	"static_methods": 
 		// 	[
@@ -20,7 +20,7 @@
 		{
 			"name": "$",
 			"enabled": true,
-			"constructors": [{"args": []}],
+			"constructors": [],
 			"static_properties": 
 			[
 				{"name":"boxModel"},

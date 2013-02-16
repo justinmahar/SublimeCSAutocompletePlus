@@ -9,6 +9,7 @@ from CoffeeAutocompleter import CoffeeAutocompleter
 from CoffeePackageScanner import CoffeePackageScanner
 from CoffeeDefinitionLocator import CoffeeDefinitionLocator
 from InfoCollector import InfoCollector
+from completions import Completions
 
 COFFEESCRIPT_AUTOCOMPLETE_STATUS_KEY = "coffee_autocomplete"
 COFFEESCRIPT_AUTOCOMPLETE_STATUS_MESSAGE = "Coffee: Autocompleting \"%s\"..."
@@ -51,15 +52,24 @@ class CoffeeAutocompleteEventListener(sublime_plugin.EventListener):
 			if not built_in_types:
 				built_in_types = []
 
-			type_infos = InfoCollector.get_type_infos_from(built_in_types)
-			print "Type infos: "
-			print([str(info) for info in type_infos])
+			all_type_infos = InfoCollector.get_type_infos_from(built_in_types)
+
+			# for next_type_info in all_type_infos:
+			# 	if next_type_info.get_name() == "String":
+			# 		completions = Completions.get_completions_for(next_type_info, all_type_infos, False)
+			# 		# print str(completions)
+			# 		return completions
+			# 		break
 
 
 			custom_types_settings = sublime.load_settings(coffee_utils.CUSTOM_TYPES_SETTINGS_FILE_NAME)
 			custom_types = custom_types_settings.get(coffee_utils.CUSTOM_TYPES_SETTINGS_KEY)
 			if not custom_types:
 				custom_types = []
+
+			custom_type_infos = InfoCollector.get_type_infos_from(custom_types)
+			# print "Custom type infos: "
+			# print([str(info) for info in custom_type_infos])
 
 			built_in_types.extend(custom_types)
 
