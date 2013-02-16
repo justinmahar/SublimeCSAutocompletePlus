@@ -177,13 +177,13 @@
 			"instance_methods":
 			[
 				{"name":"toExponential", "args": []},
-				{"name":"toExponential", "args": [{"name": "digitsAfterDecimal"}]},
+				{"name":"toExponential", "args": [{"name": "digits"}]},
 				{"name":"toFixed", "args": []},
-				{"name":"toFixed", "args": [{"name": "digitsAfterDecimal"}]},
+				{"name":"toFixed", "args": [{"name": "digits"}]},
 				{"name":"toPrecision", "args": []},
 				{"name":"toPrecision", "args": [{"name": "precision"}]},
 				{"name":"toString", "args": []},
-				{"name":"toString", "args": [{"name": "radix2to36"}]}
+				{"name":"toString", "args": [{"name": "radix"}]}
 			]
 		},
 		{
@@ -233,8 +233,8 @@
 				{"name": "source"}
 			],
 			"instance_methods": [
-				{"name":"exec", "args": [{"name": "string"}]},
-				{"name":"test", "args": [{"name": "string"}]}
+				{"name":"exec", "args": [{"name": "str"}]},
+				{"name":"test", "args": [{"name": "str"}]}
 			]
 		},
 		{
@@ -251,15 +251,17 @@
 			[
 				{"name":"charAt", "args": [{"name": "index"}]},
 				{"name":"charCodeAt", "args": [{"name": "index"}]},
-				{"name":"concat", "args": [{"name": "strings…"}]},
+				{"name":"concat", "args": [{"name": "strs…"}]},
 				{"name":"indexOf", "args": [{"name": "substr"}]},
 				{"name":"indexOf", "args": [{"name": "substr"}, {"name": "start"}]},
 				{"name":"lastIndexOf", "args": [{"name": "substr"}]},
 				{"name":"lastIndexOf", "args": [{"name": "substr"}, {"name": "start"}]},
 				{"name":"localeCompare", "args": [{"name": "target"}]},
 				{"name":"match", "args": [{"name": "regexp"}]},
-				{"name":"replace", "args": [{"name": "substr|regexp"}, {"name": "repl"}]},
-				{"name":"replace", "args": [{"name": "substr|regexp"}, {"name": "repl()", "insertion": "(match, submatches…, pos, str) ->"}]},
+				{"name":"replace", "args": [{"name": "substr"}, {"name": "repl"}]},
+				{"name":"replace", "args": [{"name": "substr"}, {"name": "repl()", "insertion": "(match, submatches…, pos, str) ->"}]},
+				{"name":"replace", "args": [{"name": "regexp"}, {"name": "repl"}]},
+				{"name":"replace", "args": [{"name": "regexp"}, {"name": "repl()", "insertion": "(match, submatches…, pos, str) ->"}]},
 				{"name":"search", "args": [{"name": "regexp"}]},
 				{"name":"slice", "args": [{"name": "start"}]},
 				{"name":"slice", "args": [{"name": "start"}, {"name": "end"}]},
@@ -282,35 +284,54 @@
 			"static_properties": [],
 			"static_methods":
 			[
-				{"name":"parse", "args": [{"name": "text"}]},
-				{"name":"parse", "args": [{"name": "text"}, {"name": "reviver"}]},
-				{"name":"stringify", "args": [{"name": "value"}]},
-				{"name":"stringify", "args": [{"name": "value"}, {"name": "replacer"}]},
-				{"name":"stringify", "args": [{"name": "value"}, {"name": "replacer"}, {"name": "space"}]}
+				{"name":"parse", "args": [{"name": "str"}]},
+				{"name":"parse", "args": [{"name": "str"}, {"name": "reviver()", "insertion": "(prop, val) ->"}]},
+				{"name":"stringify", "args": [{"name": "val"}]},
+				{"name":"stringify", "args": [{"name": "val"}, {"name": "filterArr"}]},
+				{"name":"stringify", "args": [{"name": "val"}, {"name": "filterArr"}, {"name": "indent"}]},
+				{"name":"stringify", "args": [{"name": "val"}, {"name": "filter()", "insertion": "(prop, val) ->"}]},
+				{"name":"stringify", "args": [{"name": "val"}, {"name": "filter()", "insertion": "(prop, val) ->"}, {"name": "indent"}]}
 			],
 			"instance_properties": [],
 			"instance_methods": []
-		}//,
-		// {
-		// 	"name": "Math",
-		// 	"enabled": true,
-		// 	"constructors": [],
-		// 	"static_properties": [
-		// 		{"name": "E"},
-		// 		{"name": "LN10"},
-		// 		{"name": "LN2"},
-		// 		{"name": "LOG10E"}
-		// 		// etc...
-		// 	],
-		// 	"static_methods":
-		// 	[
-		// 		{"name":"abs", "args": [{"name": "blahblahblah"}]},
-		// 		{"name":"acos", "args": [{"name": "blahblahblah"}]},
-		// 		{"name":"asin", "args": [{"name": "blahblahblah"}]}
-		// 		// etc...
-		// 	],
-		// 	"instance_properties": [],
-		// 	"instance_methods": []
-		// }
+		},
+		{
+			"name": "Math",
+			"enabled": true,
+			"constructors": [],
+			"static_properties": [
+				{"name": "E"},
+				{"name": "LN10"},
+				{"name": "LN2"},
+				{"name": "LOG10E"},
+				{"name": "LOG2E"},
+				{"name": "PI"},
+				{"name": "SQRT1_2"},
+				{"name": "SQRT2"}
+			],
+			"static_methods":
+			[
+				{"name":"abs", "args": [{"name": "x"}]},
+				{"name":"acos", "args": [{"name": "x"}]},
+				{"name":"asin", "args": [{"name": "x"}]},
+				{"name":"atan", "args": [{"name": "x"}]},
+				{"name":"atan2", "args": [{"name": "y"}, {"name": "x"}]},
+				{"name":"ceil", "args": [{"name": "x"}]},
+				{"name":"cos", "args": [{"name": "x"}]},
+				{"name":"exp", "args": [{"name": "x"}]},
+				{"name":"floor", "args": [{"name": "x"}]},
+				{"name":"log", "args": [{"name": "x"}]},
+				{"name":"max", "args": [{"name": "vals…"}]},
+				{"name":"min", "args": [{"name": "vals…"}]},
+				{"name":"pow", "args": [{"name": "x"}, {"name": "y"}]},
+				{"name":"random()", "args": []},
+				{"name":"round", "args": [{"name": "x"}]},
+				{"name":"sin", "args": [{"name": "x"}]},
+				{"name":"sqrt", "args": [{"name": "x"}]},
+				{"name":"tan", "args": [{"name": "x"}]}
+			],
+			"instance_properties": [],
+			"instance_methods": []
+		}
 	]
 }
