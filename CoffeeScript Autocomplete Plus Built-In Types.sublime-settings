@@ -4,7 +4,7 @@
 		{
 			"name": "Array",
 			"enabled": true,
-			"constructors": [{"args": []}],
+			"constructors": [],
 			"static_properties": [],
 			"static_methods":
 			[
@@ -53,7 +53,7 @@
 		{
 			"name": "Boolean",
 			"enabled": true,
-			"constructors": [{"args": []}],
+			"constructors": [],
 			"static_properties": [],
 			"static_methods": [],
 			"instance_properties": [],
@@ -62,7 +62,7 @@
 		{
 			"name": "Date",
 			"enabled": true,
-			"constructors": [{"args": []}],
+			"constructors": [],
 			"static_properties": [],
 			"static_methods":
 			[
@@ -142,7 +142,7 @@
 		{
 			"name": "Function",
 			"enabled": true,
-			"constructors": [{"args": []}],
+			"constructors": [],
 			"static_properties": [],
 			"static_methods": [],
 			"instance_properties":
@@ -163,7 +163,7 @@
 		{
 			"name": "Number",
 			"enabled": true,
-			"constructors": [{"args": []}],
+			"constructors": [],
 			"static_properties":
 			[
 				{"name": "MAX_VALUE"},
@@ -189,7 +189,7 @@
 		{
 			"name": "Object",
 			"enabled": true,
-			"constructors": [{"args": []}],
+			"constructors": [],
 			"static_properties": [],
 			"static_methods":
 			[
@@ -222,7 +222,7 @@
 		{
 			"name": "RegExp",
 			"enabled": true,
-			"constructors": [{"args": []}],
+			"constructors": [],
 			"static_properties": [],
 			"static_methods": [],
 			"instance_properties": [
@@ -240,7 +240,7 @@
 		{
 			"name": "String",
 			"enabled": true,
-			"constructors": [{"args": []}],
+			"constructors": [],
 			"static_properties": [],
 			"static_methods":
 			[
