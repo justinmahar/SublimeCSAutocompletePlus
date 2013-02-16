@@ -5,9 +5,10 @@ import threading
 import coffee_utils
 from coffee_utils import debug
 from copy import copy
-from mahar.cap.CoffeeAutocompleter import CoffeeAutocompleter
-from mahar.cap.CoffeePackageScanner import CoffeePackageScanner
-from mahar.cap.CoffeeDefinitionLocator import CoffeeDefinitionLocator
+from CoffeeAutocompleter import CoffeeAutocompleter
+from CoffeePackageScanner import CoffeePackageScanner
+from CoffeeDefinitionLocator import CoffeeDefinitionLocator
+from InfoCollector import InfoCollector
 
 COFFEESCRIPT_AUTOCOMPLETE_STATUS_KEY = "coffee_autocomplete"
 COFFEESCRIPT_AUTOCOMPLETE_STATUS_MESSAGE = "Coffee: Autocompleting \"%s\"..."
@@ -25,7 +26,7 @@ status = {"working": False}
 # - Check contents of currently open views
 # - Built in types
 
-class CoffeeAutocomplete(sublime_plugin.EventListener):
+class CoffeeAutocompleteEventListener(sublime_plugin.EventListener):
 
 	def on_query_completions(self, view, prefix, locations):
 
@@ -49,6 +50,11 @@ class CoffeeAutocomplete(sublime_plugin.EventListener):
 			built_in_types = built_in_types_settings.get(coffee_utils.BUILT_IN_TYPES_SETTINGS_KEY)
 			if not built_in_types:
 				built_in_types = []
+
+			type_infos = InfoCollector.get_type_infos_from(built_in_types)
+			print "Type infos: "
+			print([str(info) for info in type_infos])
+
 
 			custom_types_settings = sublime.load_settings(coffee_utils.CUSTOM_TYPES_SETTINGS_FILE_NAME)
 			custom_types = custom_types_settings.get(coffee_utils.CUSTOM_TYPES_SETTINGS_KEY)
