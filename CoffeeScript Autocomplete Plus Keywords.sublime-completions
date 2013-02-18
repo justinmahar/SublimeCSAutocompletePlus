@@ -36,16 +36,16 @@
 		{"trigger": "NaN"},
 		{"trigger": "undefined"},
 
-		{"trigger": "decodeURI(encURI)", "contents": "decodeURI(${1:encURI})"},
-		{"trigger": "decodeURIComponent(encURI)", "contents": "decodeURIComponent(${1:encURI})"},
-		{"trigger": "encodeURI(URI)", "contents": "encodeURI(${1:URI})"},
-		{"trigger": "encodeURIComponent(str)", "contents": "encodeURIComponent(${1:str})"},
-		{"trigger": "eval(str)", "contents": "eval(${1:str})"},
-		{"trigger": "isFinite(x)", "contents": "isFinite(${1:x})"},
-		{"trigger": "isNaN(val)", "contents": "isNaN(${1:val})"},
-		{"trigger": "parseFloat(str)", "contents": "parseFloat(${1:str})"},
-		{"trigger": "parseInt(str)", "contents": "parseInt(${1:str})"},
-		{"trigger": "parseInt(str, radix)", "contents": "parseInt(${1:str}, ${2:radix})"}
+		{"trigger": "● decodeURI(encURI)", "contents": "decodeURI(${1:encURI})"},
+		{"trigger": "● decodeURIComponent(encURI)", "contents": "decodeURIComponent(${1:encURI})"},
+		{"trigger": "● encodeURI(URI)", "contents": "encodeURI(${1:URI})"},
+		{"trigger": "● encodeURIComponent(str)", "contents": "encodeURIComponent(${1:str})"},
+		{"trigger": "● eval(str)", "contents": "eval(${1:str})"},
+		{"trigger": "● isFinite(x)", "contents": "isFinite(${1:x})"},
+		{"trigger": "● isNaN(val)", "contents": "isNaN(${1:val})"},
+		{"trigger": "● parseFloat(str)", "contents": "parseFloat(${1:str})"},
+		{"trigger": "● parseInt(str)", "contents": "parseInt(${1:str})"},
+		{"trigger": "● parseInt(str, radix)", "contents": "parseInt(${1:str}, ${2:radix})"}
 
 /*
 
