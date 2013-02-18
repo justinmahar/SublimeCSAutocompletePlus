@@ -14,7 +14,6 @@ class CoffeePackageScanner:
 		return expression_type
 
 	def get_definition_location(expression_string):
-
 		pass
 
 	def tokenize_expression(expression_string):
