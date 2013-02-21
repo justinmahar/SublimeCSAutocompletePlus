@@ -13,14 +13,14 @@ import os
 # Set to true to enable debug output
 DEBUG = False
 
-SETTINGS_FILE_NAME = "CoffeeScript Autocomplete Plus.sublime-settings"
+SETTINGS_FILE_NAME = "CoffeeComplete Plus.sublime-settings"
 PREFERENCES_COFFEE_EXCLUDED_DIRS = "coffee_autocomplete_plus_excluded_dirs"
 PREFERENCES_COFFEE_RESTRICTED_TO_PATHS = "coffee_autocomplete_plus_restricted_to_paths"
 PREFERENCES_THIS_ALIASES = "coffee_autocomplete_plus_this_aliases"
 PREFERENCES_MEMBER_EXCLUSION_REGEXES = "coffee_autocomplete_plus_member_exclusion_regexes"
-BUILT_IN_TYPES_SETTINGS_FILE_NAME = "CoffeeScript Autocomplete Plus Built-In Types.sublime-settings"
+BUILT_IN_TYPES_SETTINGS_FILE_NAME = "CoffeeComplete Plus Built-In Types.sublime-settings"
 BUILT_IN_TYPES_SETTINGS_KEY = "coffee_autocomplete_plus_built_in_types"
-CUSTOM_TYPES_SETTINGS_FILE_NAME = "CoffeeScript Autocomplete Plus Custom Types.sublime-settings"
+CUSTOM_TYPES_SETTINGS_FILE_NAME = "CoffeeComplete Plus Custom Types.sublime-settings"
 CUSTOM_TYPES_SETTINGS_KEY = "coffee_autocomplete_plus_custom_types"
 FUNCTION_RETURN_TYPES_SETTINGS_KEY = "coffee_autocomplete_plus_function_return_types"
 FUNCTION_RETURN_TYPE_TYPE_NAME_KEY = "type_name"
