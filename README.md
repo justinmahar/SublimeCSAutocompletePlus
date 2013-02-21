@@ -20,7 +20,7 @@ It is recommended that you use [Sublime Package Control](http://wbond.net/sublim
 
 ### Manual Installation
 
-In order to manually install CoffeeComplete Plus, clone the repository into your Sublime Text 2 `Packages` directory, which can be located by navigating to Preferences -> Browse Packages. Name the directory `CoffeeComplete Plus`.
+In order to manually install CoffeeComplete Plus, clone the repository into your Sublime Text 2 `Packages` directory, which can be located by navigating to Preferences -> Browse Packages. Name the directory `CoffeeComplete Plus (Autocompletion)`.
 
 For your convenience:
 
