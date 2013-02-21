@@ -1,0 +1,44 @@
+{
+	// These dirs will not be searched when looking for .coffee files.
+	// These should be dir names only. No relative paths.
+	"coffee_autocomplete_plus_excluded_dirs": 
+	[
+		".svn", 
+		".git", 
+		"CVS", 
+		"lib", 
+		"node_modules", 
+		"pub", 
+		"public", 
+		"vendor", 
+		"doc", 
+		"docs", 
+		"build", 
+		"builds", 
+		"bin"
+	],
+
+	// List of strings. These paths will be appended to your project's root and searched.
+	// Leave empty to search all directories in your project's root directory.
+	"coffee_autocomplete_plus_restricted_to_paths": [],
+
+	// Map function names to types.
+	"coffee_autocomplete_plus_function_return_types": 
+	[
+		{
+			"function_names": ["$", "jQuery"],
+			"type_name": "$"
+		}
+	],
+	// Regular expression of members to exclude from autocomplete.
+	// This is useful for properties/methods that are regarded "private" and start
+	// with an underscore. E.g.  _privateVariable
+	"coffee_autocomplete_plus_member_exclusion_regexes": 
+	[
+		"^_" // Starts with underscore
+	],
+	// OBSOLETE
+	// Aliases for "this", like "that" and "self".
+	// CA+ assignment detection is now able to detect that = this assignments.
+	"coffee_autocomplete_plus_this_aliases": ["that", "self"]
+}

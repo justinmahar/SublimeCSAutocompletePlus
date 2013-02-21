@@ -1,0 +1,107 @@
+{"scope": "source.coffee -comment",
+		"completions": [
+
+		// keywords
+
+		{"trigger": "break"},
+		{"trigger": "continue"},
+		{"trigger": "delete"},
+		{"trigger": "extends"},
+		{"trigger": "finally"},
+		{"trigger": "instanceof"},
+		{"trigger": "return"},
+		{"trigger": "super"},
+		{"trigger": "throw"},
+		{"trigger": "typeof"},
+		{"trigger": "until"},
+		{"trigger": "while"},
+
+		// classes
+
+		{"trigger": "Array"},
+		{"trigger": "Boolean"},
+		{"trigger": "Date"},
+		{"trigger": "Error"},
+		{"trigger": "Function"},
+		{"trigger": "JSON"},
+		{"trigger": "Math"},
+		{"trigger": "Number"},
+		{"trigger": "Object"},
+		{"trigger": "RegExp"},
+		{"trigger": "String"},
+
+		// globals
+
+		{"trigger": "Infinity"},
+		{"trigger": "NaN"},
+		{"trigger": "undefined"},
+
+		{"trigger": "● decodeURI(encURI)", "contents": "decodeURI(${1:encURI})"},
+		{"trigger": "● decodeURIComponent(encURI)", "contents": "decodeURIComponent(${1:encURI})"},
+		{"trigger": "● encodeURI(URI)", "contents": "encodeURI(${1:URI})"},
+		{"trigger": "● encodeURIComponent(str)", "contents": "encodeURIComponent(${1:str})"},
+		{"trigger": "● eval(str)", "contents": "eval(${1:str})"},
+		{"trigger": "● isFinite(x)", "contents": "isFinite(${1:x})"},
+		{"trigger": "● isNaN(val)", "contents": "isNaN(${1:val})"},
+		{"trigger": "● parseFloat(str)", "contents": "parseFloat(${1:str})"},
+		{"trigger": "● parseInt(str)", "contents": "parseInt(${1:str})"},
+		{"trigger": "● parseInt(str, radix)", "contents": "parseInt(${1:str}, ${2:radix})"}
+
+/*
+
+		// too short
+
+		{"trigger": "and"},
+		{"trigger": "by"},
+		{"trigger": "do"},
+		{"trigger": "else"},
+		{"trigger": "false"},
+		{"trigger": "for"},
+		{"trigger": "if"},
+		{"trigger": "in"},
+		{"trigger": "is"},
+		{"trigger": "isnt"},
+		{"trigger": "loop"},
+		{"trigger": "new"},
+		{"trigger": "no"},
+		{"trigger": "not"},
+		{"trigger": "null"},
+		{"trigger": "of"},
+		{"trigger": "off"},
+		{"trigger": "on"},
+		{"trigger": "or"},
+		{"trigger": "then"},
+		{"trigger": "this"},
+		{"trigger": "true"},
+		{"trigger": "try"},
+		{"trigger": "when"},
+		{"trigger": "yes"},
+
+		// snippets
+
+		{"trigger": "catch"},
+		{"trigger": "class"},
+		{"trigger": "switch"},
+		{"trigger": "unless"},
+
+		// rare
+
+		{"trigger": "debugger"},
+		{"trigger": "EvalError"},
+		{"trigger": "RangeError"},
+		{"trigger": "ReferenceError"},
+		{"trigger": "SyntaxError"},
+		{"trigger": "TypeError"},
+		{"trigger": "URIError"},
+
+		{"trigger": "configurable: "},
+		{"trigger": "enumerable: "},
+		{"trigger": "value: "},
+		{"trigger": "writable: "},
+		{"trigger": "get: ()", "contents": "get: ->"},
+		{"trigger": "set: (val)", "contents": "set: (val) ->"}
+
+*/
+
+	]
+}
