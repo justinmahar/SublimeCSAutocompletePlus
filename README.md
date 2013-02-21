@@ -61,7 +61,7 @@ For example:
 	○ someOtherProperty
 	● methodOne()
 	● methodTwo(arg1, arg2)
-	● lastMethod(arg1, arg2, arg3)
+	● theLastMethod(arg1, arg2, arg3)
 	Ⱶ○ inheritedProperty1
 	Ⱶ○ inheritedPropertyTwo
 	Ⱶ● inheritedMethod1()
