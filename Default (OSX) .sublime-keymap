@@ -1,5 +1,0 @@
-[
-	{
-		"keys": ["ctrl+alt+d"], "command": "coffee_goto_definition"
-	}
-]
