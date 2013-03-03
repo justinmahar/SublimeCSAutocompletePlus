@@ -324,7 +324,7 @@
 				{"name":"max", "args": [{"name": "vals…"}]},
 				{"name":"min", "args": [{"name": "vals…"}]},
 				{"name":"pow", "args": [{"name": "x"}, {"name": "y"}]},
-				{"name":"random()", "args": []},
+				{"name":"random", "args": []},
 				{"name":"round", "args": [{"name": "x"}]},
 				{"name":"sin", "args": [{"name": "x"}]},
 				{"name":"sqrt", "args": [{"name": "x"}]},
