@@ -1,7 +1,7 @@
-CoffeeScript Autocomplete Plus
-==============================
+CoffeeComplete Plus
+===================
 
-CoffeeScript Autocomplete Plus (CA+) is a [Sublime Text 2](http://www.sublimetext.com/2) plugin that scans your CoffeeScript files on demand and makes autocomplete suggestions for you.
+CoffeeComplete Plus (CC+) is a [Sublime Text 2](http://www.sublimetext.com/2) plugin that scans your CoffeeScript files on demand and makes autocomplete suggestions for you.
 
 In addition, this plugin adds the "Coffee: Goto Definition" command, which will look up the class, function or variable definition of the selected token. 
 
@@ -16,16 +16,16 @@ Installation
 
 ### Package Control
 
-It is recommended that you use [Sublime Package Control](http://wbond.net/sublime_packages/package_control) to install CoffeeScript Autocomplete Plus. If you have Package Control installed, use the Package Control: Install Package command and search for CoffeeScript Autocomplete Plus. Ouila. Start coding easier.
+It is recommended that you use [Sublime Package Control](http://wbond.net/sublime_packages/package_control) to install CoffeeComplete Plus. If you have Package Control installed, use the Package Control: Install Package command and search for CoffeeComplete Plus. Ouila. Start coding easier.
 
 ### Manual Installation
 
-In order to manually install CoffeeScript Autocomplete Plus, clone the repository into your Sublime Text 2 `Packages` directory, which can be located by navigating to Preferences -> Browse Packages. Name the directory `CoffeeScript Autocomplete Plus`.
+In order to manually install CoffeeComplete Plus, clone the repository into your Sublime Text 2 `Packages` directory, which can be located by navigating to Preferences -> Browse Packages. Name the directory `CoffeeComplete Plus (Autocompletion)`.
 
 For your convenience:
 
 ```
-git clone https://github.com/justinmahar/SublimeCSAutocompletePlus.git "CoffeeScript Autocomplete Plus"
+git clone https://github.com/justinmahar/SublimeCSAutocompletePlus.git "CoffeeComplete Plus (Autocompletion)"
 ```
 
 Usage
@@ -33,9 +33,9 @@ Usage
 
 ### Autocomplete
 
-Autocomplete can be triggered in coffee files after the dot operator. With the cursor after a dot operator `.`, press `ctrl+space`. This will trigger autocomplete, which will then try to figure out what you're doing and propose a list of suggestions.
+Autocomplete can be triggered in coffee files by typing the dot `.` operator or the `@` symbol (which is shorthand for `this`). You can also press `ctrl+space` to trigger autocompletions manually. The plugin will then try to figure out what you're doing and propose a list of suggestions.
 
-Example usage: Inside a class, you type `this.` and would like a list of the available methods and properties. Press `ctrl+space` to trigger autocomplete, and view the available suggestions.
+Example usage: Inside a class, you type `this.`. A list of the available methods and properties is presented.
 
 ### Goto Definition
 
@@ -50,7 +50,7 @@ Features
 
 ### Autocomplete
 
-Autocomplete will make suggestions when you trigger autocomplete after a dot operator. It starts with the current view, then branches out to other coffee files. Because of this, most lookups are blazingly fast. You can configure CA+ to exclude certain directories and to only look in others. This will further increase speed as less searching will be needed.
+Autocomplete will make suggestions when you trigger autocomplete after a dot operator. It starts with the current view, then branches out to other coffee files. Because of this, most lookups are blazingly fast. You can configure CC+ to exclude certain directories and to only look in others. This will further increase speed as less searching will be needed.
 
 Autocomplete suggestions alphabetically show properties first, as indicated by a &#x25CB; symbol before each property name, followed by alphabetically sorted methods, as indicated by a &#x25CF; symbol before each method name. Inherited properties and methods will be preceded by a &#x2C75; symbol. This creates a nice visual breakdown of what you can do at any given time, and where things are coming from. Badass.
 
@@ -61,7 +61,7 @@ For example:
 	○ someOtherProperty
 	● methodOne()
 	● methodTwo(arg1, arg2)
-	● lastMethod(arg1, arg2, arg3)
+	● theLastMethod(arg1, arg2, arg3)
 	Ⱶ○ inheritedProperty1
 	Ⱶ○ inheritedPropertyTwo
 	Ⱶ● inheritedMethod1()
@@ -104,7 +104,7 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 
 		# In the following example, we have a LavaLamp that extends Appliance.
 		# Each class has static and non-static properties and methods.
-		# Given the context, CA+ will suggest either static or non-static,
+		# Given the context, CC+ will suggest either static or non-static,
 		# and will walk up the class hierarchy.
 
 		class Appliance
@@ -147,7 +147,7 @@ Here are the main features. In the examples, `[autocomplete]` represents the use
 
 ### Support For Built-in Types
 
-CA+ now supports autocompletion for the following built-in types:
+CC+ now supports autocompletion for the following built-in types:
 
 * Array
 * Boolean
@@ -165,22 +165,22 @@ In addition, autocomplete suggests inherited properties and methods from Object.
 
 ### Custom Types
 
-If you find yourself using a third-party library often and would like to have autocompletions for that library, you can create custom type. This is essentially a collection of autocomplete suggestions. CA+ supports jQuery out of the box, but you can always add others. If you do add a custom type and would like to share it, please issue a pull request and I will add it to the plugin. If your library is used as function, like jQuery, you can map that function's return value to a type. See the configuration section for how to do this.
+If you find yourself using a third-party library often and would like to have autocompletions for that library, you can create custom type. This is essentially a collection of autocomplete suggestions. CC+ supports jQuery out of the box, but you can always add others. If you do add a custom type and would like to share it, please issue a pull request and I will add it to the plugin. If your library is used as function, like jQuery, you can map that function's return value to a type. See the configuration section for how to do this.
 
 ### Type Hinting
 
 Document your code and you shall be rewarded in many ways. One of these way is autocompletion. Another of these ways is a warm, fuzzy feeling all over.
 
-CA+ can detect types using hints you provide it in comments. You can even add method headers with hints for parameters.
+CC+ can detect types using hints you provide it in comments. You can even add method headers with hints for parameters.
 
 * Variable assignment type hints
-  - When you assign a variable, you can add a type hint that CA+ will use to look up the class autocompletions for you. This type must be in square brackets, and in a single-line `#` comment on either the same line or the previous line, in the form `[TYPENAME]`. Other text can surround the type hint.
+  - When you assign a variable, you can add a type hint that CC+ will use to look up the class autocompletions for you. This type must be in square brackets, and in a single-line `#` comment on either the same line or the previous line, in the form `[TYPENAME]`. Other text can surround the type hint.
 
 ```
 	# The [String] to add type hinting for
 	myString = someObject.getSomething()
 
-	# Now, CA+ knows that it's a String
+	# Now, CC+ knows that it's a String
 	myString.[autocomplete]
 
 	# Alternate way to add type hinting
@@ -195,7 +195,7 @@ CA+ can detect types using hints you provide it in comments. You can even add me
 	# [Boolean] animalEscapes
 	feedAlligator: (critter, animalEscapes) ->
 		if animalEscapes
-			# CA+ knows that it's an Animal. Will he escape? Autocomplete and choose his destiny!
+			# CC+ knows that it's an Animal. Will he escape? Autocomplete and choose his destiny!
 			critter.[autocomplete]
 ```
 
@@ -211,7 +211,7 @@ CA+ can detect types using hints you provide it in comments. You can even add me
 
 		rememberGoodTimes: ->
 			critter = this.getLastMeal()
-			# CA+ will detect your return type hint and display suggestions for type Animal
+			# CC+ will detect your return type hint and display suggestions for type Animal
 			console.log "I remember the time I ate a critter named " + critter.[autocomplete]
 
 ```
@@ -226,7 +226,7 @@ So, it's left up to you.
 
 Using an underscore is all well and fine until your autocomplete list is all cluttered up with things you're not supposed to see.
 
-CA+ to the rescue. You can define regular expressions to exclude any members of your choosing. By default, members starting with an underscore are not shown when working outside of a class (i.e., not using `this.`). See the configuration section for how to add/remove exclusions.
+CC+ to the rescue. You can define regular expressions to exclude any members of your choosing. By default, members starting with an underscore are not shown when working outside of a class (i.e., not using `this.`). See the configuration section for how to add/remove exclusions.
 
 ### Goto Definition
 
@@ -260,16 +260,20 @@ Autocomplete: `ctrl+space` (after a dot operator)
 
 Goto Definition: `ctrl+alt+d` or `ctrl+alt`+`left click`
 
-Key bindings can be changed by navigating to Preferences -> Package Settings -> CoffeeScript Autocomplete Plus -> Key Bindings. It is not recommended that you change the Default settings as they will be overwritten by plugin updates. Instead, make your changes in User settings, which will override the Default settings.
+Key bindings can be changed by navigating to Preferences -> Package Settings -> CoffeeComplete Plus -> Key Bindings. It is not recommended that you change the Default settings as they will be overwritten by plugin updates. Instead, make your changes in User settings, which will override the Default settings.
 
 Configuration
 -------------
 
-CoffeeScript Autocomplete Plus has the following configurable settings:
+CoffeeComplete Plus has the following configurable settings:
 
-In `CoffeeScript Autocomplete Plus.sublime-settings`:
+### General Settings
 
-* `coffee_autocomplete_plus_excluded_dirs` -- Excluded directories.
+In `CoffeeComplete Plus.sublime-settings`:
+
+#### Excluded Directories 
+
+* `coffee_autocomplete_plus_excluded_dirs` &mdash; Excluded directories.
   - Directories to exclude from searching for CoffeeScript classes, functions and variables. All directories in your project are searched except for the ones that match the names listed in this setting. **This is recommended.** Some excluded directories have already been specified in settings.
   - Expected value: Array of directory names. 
   - Example: 
@@ -278,16 +282,9 @@ In `CoffeeScript Autocomplete Plus.sublime-settings`:
 		"coffee_autocomplete_plus_excluded_dirs" : [".git", "SVN", "pub", "docs"]
 ```
 
-* `coffee_autocomplete_plus_member_exclusion_regexes` -- Regular expressions for members excluded from autocomplete suggestions.
-  - CoffeeScript doesn't provide a mechanism for making members `private` in the traditional sense. Conventionally, private members are prefixed with an underscore `_`. This configuration setting allows you to define regular expressions for members you would like to exclude. By default, members beginning with an underscore are excluded.
-  - Expected value: Array of Python regular expression strings.
-  - Example:
+#### Path Restrictions
 
-```
-		"coffee_autocomplete_plus_member_exclusion_regexes": ["^_"] // Excludes members prefixed with underscore
-```
-
-* `coffee_autocomplete_plus_restricted_to_paths` -- Restrict searching to these directories.
+* `coffee_autocomplete_plus_restricted_to_paths` &mdash; Restrict searching to these directories.
   - Paths to restrict the search to. If one or more path is specified, searching will be restricted to `PATH_TO_PROJECT/your/defined/path`. For example, you specify `src/coffee`. Now, only `PROJECT_PATH/src/coffee` will be scanned. **This is recommended.** If `[]`, no restrictions are applied.
   - Expected value: Array of paths relative to your project directory.
   - Example:
@@ -296,16 +293,44 @@ In `CoffeeScript Autocomplete Plus.sublime-settings`:
   		"coffee_autocomplete_plus_restricted_to_paths" : ["src/coffee", "lib/src/coffee"]
 ```
 
-* `coffee_autocomplete_plus_this_aliases` -- Aliases for `this` keyword
-  - Due to lexical scoping you sometimes need to assign an alias for `this`, such as `that` or `self`. This config setting allows you to add or remove aliases that cause autocomplete to behave just like using `this` would. No futher searching--`this` will be assumed.
+#### Member Exclusion Patterns For Data Hiding
+
+* `coffee_autocomplete_plus_member_exclusion_regexes` &mdash; Regular expressions for members excluded from autocomplete suggestions.
+  - CoffeeScript doesn't provide a mechanism for making members `private` in the traditional sense. Conventionally, private members are prefixed with an underscore `_`. This configuration setting allows you to define regular expressions for members you would like to exclude. By default, members beginning with an underscore are excluded.
+  - Expected value: Array of Python regular expression strings.
+  - Example:
+
+```
+		"coffee_autocomplete_plus_member_exclusion_regexes": ["^_"] // Excludes members prefixed with underscore
+```
+
+#### Customizing Autocomplete Trigger
+
+* `auto_complete_triggers` &mdash; Characters that trigger the autocomplete menu.
+
+  - Sublime allows for context-specific triggers for the autocompletion menus. This allows the menu to show as soon as `.` or `@` are pressed, which are enabled by default. To customize these, use the following in settings and make the desired changes:
+
+```
+		"auto_complete_triggers":
+		   [
+		      {"characters": ".@", "selector": "source.coffee"}
+		   ]
+```
+
+#### Aliases For `this`
+
+* `coffee_autocomplete_plus_this_aliases` &mdash; Aliases for `this` keyword
+  - Due to lexical scoping you sometimes need to assign an alias for `this`, such as `that` or `self`. Keep in mind, you can use a fat arrow `=>` to have CoffeeScript do this for you under the hood. Regardless, this config setting allows you to add or remove aliases that cause autocomplete to behave just like using `this` would. No futher searching&mdash;`this` will be assumed.
   - Expected value: Array of alias strings.
   - Example:
 
 ```
   		"coffee_autocomplete_plus_this_aliases" : ["that", "self"]
 ```
- 
-* `coffee_autocomplete_plus_function_return_types` -- Mappings for the return types of special functions, like jQuery.
+
+#### Mapped Function Return Types
+
+* `coffee_autocomplete_plus_function_return_types` &mdash; Mappings for the return types of special functions, like jQuery.
   - You may want to make calls directly off of the returned values of special functions. For example, when using jQuery, you might type `$(selector).` and want some autocomplete suggestions. If you have a custom type defined, you can map the returns of function names, like `$` and `jQuery`, to that custom type. See the next config section for defining custom types.
   - Expected value: Array of objects. Each object has a `function_names` property that maps to an array of string names, and a `type_name` property that maps to the string name of the type the functions return.
   - Example:
@@ -320,7 +345,9 @@ In `CoffeeScript Autocomplete Plus.sublime-settings`:
 		]
 ```
 
-In `CoffeeScript Autocomplete Plus Custom Types.sublime-settings`:
+### Custom Types
+
+In `CoffeeComplete Plus Custom Types.sublime-settings`:
 
 * `coffee_autocomplete_plus_custom_types` -- Custom types, allowing libraries like jQuery.
   - If you would like to define custom types, put them here. Autocomplete will then make the defined suggestions for you. By default, a type for jQuery is defined.
@@ -348,13 +375,15 @@ In `CoffeeScript Autocomplete Plus Custom Types.sublime-settings`:
 		}
 ```
 
-In `CoffeeScript Autocomplete Plus Built-In Types.sublime-settings`:
+### Built-In Types
+
+In `CoffeeComplete Plus Built-In Types.sublime-settings`:
 
 * `coffee_autocomplete_plus_built_in_types` -- Built-in types, like Object, Array, and String.
   - These are JavaScript's build-in types. These specs were gleaned from the [Mozilla MDN](https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects).
   - Any of the built-in types can be disabled, if you'd like. Change the `enabled` property to `false`.
 
-To configure these settings, open Preferences -> Package Settings -> CoffeeScript Autocomplete Plus.  It is not recommended that you change the Default settings as they will be overwritten by plugin updates. Instead, make your changes in User settings, which will override the Default settings.
+To configure these settings, open Preferences -> Package Settings -> CoffeeComplete Plus.  It is not recommended that you change the Default settings as they will be overwritten by plugin updates. Instead, make your changes in User settings, which will override the Default settings.
 
 Limitations and Plans
 ---------------------
@@ -384,7 +413,7 @@ Happy coding!
 
 License
 -------
-CoffeeScript Autocomplete Plus is licensed under the MIT license.
+CoffeeComplete Plus is licensed under the MIT license.
 
 Copyright (c) 2013 Justin Mahar <justin.m.mahar@gmail.com>
 

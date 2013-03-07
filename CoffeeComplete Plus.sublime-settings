@@ -40,5 +40,11 @@
 	// OBSOLETE
 	// Aliases for "this", like "that" and "self".
 	// CA+ assignment detection is now able to detect that = this assignments.
-	"coffee_autocomplete_plus_this_aliases": ["that", "self"]
+	"coffee_autocomplete_plus_this_aliases": ["that", "self"],
+
+	// The triggers for autocompletion
+	"auto_complete_triggers":
+	[
+		{"characters": ".@", "selector": "source.coffee"}
+	]
 }
