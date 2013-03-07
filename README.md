@@ -308,7 +308,7 @@ In `CoffeeComplete Plus.sublime-settings`:
 
 * `auto_complete_triggers`
 
-  - Sublime allows for context-specific triggers for the autocompletion menus. This allows the menu to show as soon as `.` or `@` are pressed. To customize these, use the following in settings and make the desired changes:
+  - Sublime allows for context-specific triggers for the autocompletion menus. This allows the menu to show as soon as `.` or `@` are pressed, which are enabled by default. To customize these, use the following in settings and make the desired changes:
 
 ```
 		"auto_complete_triggers":
