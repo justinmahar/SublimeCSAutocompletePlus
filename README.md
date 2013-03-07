@@ -37,6 +37,18 @@ Autocomplete can be triggered in coffee files after the dot operator. With the c
 
 Example usage: Inside a class, you type `this.` and would like a list of the available methods and properties. Press `ctrl+space` to trigger autocomplete, and view the available suggestions.
 
+#### Customizing Autocomplete Trigger
+
+Sublime allows for context-specific triggers for the autocompletion menus.  To allow the menu to show as soon as the `.` is pressed,
+then add the following to `Preferences.sublime-settings`
+
+```json
+"auto_complete_triggers":
+   [
+      {"characters": ".@", "selector": "source.coffee"}
+   ]
+```
+
 ### Goto Definition
 
 Looking for where a class, function or variable was defined? Look no further.
