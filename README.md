@@ -320,7 +320,7 @@ In `CoffeeComplete Plus.sublime-settings`:
 #### Aliases For `this`
 
 * `coffee_autocomplete_plus_this_aliases` -- Aliases for `this` keyword
-  - Due to lexical scoping you sometimes need to assign an alias for `this`, such as `that` or `self`. This config setting allows you to add or remove aliases that cause autocomplete to behave just like using `this` would. No futher searching--`this` will be assumed.
+  - Due to lexical scoping you sometimes need to assign an alias for `this`, such as `that` or `self`. Keep in mind, you can use a fat arrow `=>` to have CoffeeScript do this for you under the hood. Regardless, this config setting allows you to add or remove aliases that cause autocomplete to behave just like using `this` would. No futher searching--`this` will be assumed.
   - Expected value: Array of alias strings.
   - Example:
 
