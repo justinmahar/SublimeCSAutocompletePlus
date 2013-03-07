@@ -33,9 +33,9 @@ Usage
 
 ### Autocomplete
 
-Autocomplete can be triggered in coffee files after the dot operator. With the cursor after a dot operator `.`, press `ctrl+space`. This will trigger autocomplete, which will then try to figure out what you're doing and propose a list of suggestions.
+Autocomplete can be triggered in coffee files by typing the dot `.` operator or the `@` symbol (which is shorthand for `this`). You can also press `ctrl+space` to trigger autocompletions manually. The plugin will then try to figure out what you're doing and propose a list of suggestions.
 
-Example usage: Inside a class, you type `this.` and would like a list of the available methods and properties. Press `ctrl+space` to trigger autocomplete, and view the available suggestions.
+Example usage: Inside a class, you type `this.`. A list of the available methods and properties is presented.
 
 ### Goto Definition
 
@@ -273,7 +273,7 @@ In `CoffeeComplete Plus.sublime-settings`:
 
 #### Excluded Directories 
 
-* `coffee_autocomplete_plus_excluded_dirs` -- Excluded directories.
+* `coffee_autocomplete_plus_excluded_dirs` &mdash; Excluded directories.
   - Directories to exclude from searching for CoffeeScript classes, functions and variables. All directories in your project are searched except for the ones that match the names listed in this setting. **This is recommended.** Some excluded directories have already been specified in settings.
   - Expected value: Array of directory names. 
   - Example: 
@@ -284,7 +284,7 @@ In `CoffeeComplete Plus.sublime-settings`:
 
 #### Path Restrictions
 
-* `coffee_autocomplete_plus_restricted_to_paths` -- Restrict searching to these directories.
+* `coffee_autocomplete_plus_restricted_to_paths` &mdash; Restrict searching to these directories.
   - Paths to restrict the search to. If one or more path is specified, searching will be restricted to `PATH_TO_PROJECT/your/defined/path`. For example, you specify `src/coffee`. Now, only `PROJECT_PATH/src/coffee` will be scanned. **This is recommended.** If `[]`, no restrictions are applied.
   - Expected value: Array of paths relative to your project directory.
   - Example:
@@ -295,7 +295,7 @@ In `CoffeeComplete Plus.sublime-settings`:
 
 #### Member Exclusion Patterns For Data Hiding
 
-* `coffee_autocomplete_plus_member_exclusion_regexes` -- Regular expressions for members excluded from autocomplete suggestions.
+* `coffee_autocomplete_plus_member_exclusion_regexes` &mdash; Regular expressions for members excluded from autocomplete suggestions.
   - CoffeeScript doesn't provide a mechanism for making members `private` in the traditional sense. Conventionally, private members are prefixed with an underscore `_`. This configuration setting allows you to define regular expressions for members you would like to exclude. By default, members beginning with an underscore are excluded.
   - Expected value: Array of Python regular expression strings.
   - Example:
@@ -306,7 +306,7 @@ In `CoffeeComplete Plus.sublime-settings`:
 
 #### Customizing Autocomplete Trigger
 
-* `auto_complete_triggers`
+* `auto_complete_triggers` &mdash; Characters that trigger the autocomplete menu.
 
   - Sublime allows for context-specific triggers for the autocompletion menus. This allows the menu to show as soon as `.` or `@` are pressed, which are enabled by default. To customize these, use the following in settings and make the desired changes:
 
@@ -319,8 +319,8 @@ In `CoffeeComplete Plus.sublime-settings`:
 
 #### Aliases For `this`
 
-* `coffee_autocomplete_plus_this_aliases` -- Aliases for `this` keyword
-  - Due to lexical scoping you sometimes need to assign an alias for `this`, such as `that` or `self`. Keep in mind, you can use a fat arrow `=>` to have CoffeeScript do this for you under the hood. Regardless, this config setting allows you to add or remove aliases that cause autocomplete to behave just like using `this` would. No futher searching--`this` will be assumed.
+* `coffee_autocomplete_plus_this_aliases` &mdash; Aliases for `this` keyword
+  - Due to lexical scoping you sometimes need to assign an alias for `this`, such as `that` or `self`. Keep in mind, you can use a fat arrow `=>` to have CoffeeScript do this for you under the hood. Regardless, this config setting allows you to add or remove aliases that cause autocomplete to behave just like using `this` would. No futher searching&mdash;`this` will be assumed.
   - Expected value: Array of alias strings.
   - Example:
 
@@ -330,7 +330,7 @@ In `CoffeeComplete Plus.sublime-settings`:
 
 #### Mapped Function Return Types
 
-* `coffee_autocomplete_plus_function_return_types` -- Mappings for the return types of special functions, like jQuery.
+* `coffee_autocomplete_plus_function_return_types` &mdash; Mappings for the return types of special functions, like jQuery.
   - You may want to make calls directly off of the returned values of special functions. For example, when using jQuery, you might type `$(selector).` and want some autocomplete suggestions. If you have a custom type defined, you can map the returns of function names, like `$` and `jQuery`, to that custom type. See the next config section for defining custom types.
   - Expected value: Array of objects. Each object has a `function_names` property that maps to an array of string names, and a `type_name` property that maps to the string name of the type the functions return.
   - Example:
