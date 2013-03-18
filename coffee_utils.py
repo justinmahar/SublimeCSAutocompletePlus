@@ -26,8 +26,8 @@ FUNCTION_RETURN_TYPES_SETTINGS_KEY = "coffee_autocomplete_plus_function_return_t
 FUNCTION_RETURN_TYPE_TYPE_NAME_KEY = "type_name"
 FUNCTION_RETURN_TYPE_FUNCTION_NAMES_KEY = "function_names"
 
-COFFEESCRIPT_SYNTAX = "CoffeeScript"
-COFFEE_EXTENSION_WITH_DOT = ".coffee"
+COFFEESCRIPT_SYNTAX = r"CoffeeScript"
+COFFEE_EXTENSION_WITH_DOT = "\.coffee|\.litcoffee|\.coffee\.md"
 CONSTRUCTOR_KEYWORD = "constructor"
 THIS_SUGAR_SYMBOL = "@"
 THIS_KEYWORD = "this"
@@ -335,7 +335,7 @@ def get_syntax_name(view):
 
 
 def is_coffee_syntax(view):
-    return get_syntax_name(view) == COFFEESCRIPT_SYNTAX
+    return bool(re.match(COFFEESCRIPT_SYNTAX, get_syntax_name(view)))
 
 
 def get_this_type(file_lines, start_region):

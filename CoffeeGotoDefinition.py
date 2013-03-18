@@ -179,7 +179,7 @@ class CoffeeGotoDefinitionThread(threading.Thread):
 
 			debug("Checking globally for class %s..." % selected_word)
 			# Assume it is a file called selected_word.coffee
-			exact_file_name_regex = "^" + re.escape(selected_word + coffee_utils.COFFEE_EXTENSION_WITH_DOT) + "$"
+			exact_file_name_regex = "^" + re.escape(selected_word) + coffee_utils.COFFEE_EXTENSION_WITH_DOT + "$"
 			exact_name_file_paths = coffee_utils.get_files_in(project_folder_list, exact_file_name_regex, excluded_dirs)
 			exact_location_search_tuple = coffee_utils.find_location_of_regex_in_files(class_regex, None, exact_name_file_paths)
 			if exact_location_search_tuple:
