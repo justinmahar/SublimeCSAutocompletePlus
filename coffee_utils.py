@@ -28,7 +28,7 @@ FUNCTION_RETURN_TYPE_FUNCTION_NAMES_KEY = "function_names"
 
 COFFEESCRIPT_SYNTAX = r"CoffeeScript"
 COFFEE_EXTENSION_WITH_DOT = "\.coffee|\.litcoffee|\.coffee\.md"
-CONSTRUCTOR_KEYWORD = "constructor"
+CONSTRUCTOR_KEYWORDS = ["constructor", "initialize", "init"]
 THIS_SUGAR_SYMBOL = "@"
 THIS_KEYWORD = "this"
 PERIOD_OPERATOR = "."
@@ -55,7 +55,7 @@ PARAM_REGEX = r"\(\s*(({name})|({name}\s*=?.*?[,].*?)|(.*?[,]\s*{name}\s*=?.*?[,
 # Regex for finding a variable declared in a for loop.
 FOR_LOOP_REGEX = r"for\s*.*?[^a-zA-Z0-9_$]%s[^a-zA-Z0-9_$]"
 # Regex for constructor @ params, used for type hinting.
-CONSTRUCTOR_SELF_ASSIGNMENT_PARAM_REGEX = r"constructor\s*[:]\s*\(\s*((@{name})|(@{name}\s*[,].*?)|(.*?[,]\s*@{name}\s*[,].*?)|(.*?[,]\s*@{name}))\s*\)\s*[=\-]>\s*$"
+CONSTRUCTOR_SELF_ASSIGNMENT_PARAM_REGEX = r"(?:(?:constructor)|(?:initialize)|(?:init))\s*[:]\s*\(\s*((@{name})|(@{name}\s*[,].*?)|(.*?[,]\s*@{name}\s*[,].*?)|(.*?[,]\s*@{name}))\s*\)\s*[=\-]>\s*$"
 
 # Assignment with the value it's being assigned to. Matches:
 # blah = new Dinosaur()
@@ -901,7 +901,7 @@ def collect_instance_completions_from_file(file_lines, class_name, is_inherited,
                                 function_name = match.group(2)
                                 function_args_string = match.group(5)
                                 if show_private or not is_member_excluded(function_name, member_exclusion_regexes):
-                                    if function_name != CONSTRUCTOR_KEYWORD:
+                                    if not function_name in CONSTRUCTOR_KEYWORDS:
                                         function_args_list = []
                                         if function_args_string:
                                             function_args_list = function_args_string.split(",")
