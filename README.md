@@ -286,7 +286,7 @@ These settings are accessible via `Preferences -> Settings — User`.
 		   ]
 ```
 
-  - Note that other autocomplete triggers may be present. If this is the case, simply add a comma and paste the curly brace section only.
+  - Note that other `auto_complete_triggers` settings may be present in `Preferences -> Settings — Default`. If this is the case, simply copy the `auto_complete_triggers` from the default file into your user settings, add a comma, and paste the curly brace section above.
 
 ### General CoffeeComplete Settings
 
