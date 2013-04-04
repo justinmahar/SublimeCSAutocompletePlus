@@ -277,7 +277,7 @@ These settings are accessible via `Preferences -> Settings — User`.
 
 * `auto_complete_triggers` &mdash; Characters that trigger the autocomplete menu.
 
-  - Sublime allows for context-specific triggers for the autocompletion menus. This allows the menu to show as soon as `.` or `@` are pressed, which are enabled by default. To customize these, open `Preferences -> Settings — User` and use the following to make the desired changes:
+  - Sublime allows for context-specific triggers for the autocompletion menus. This allows the menu to show as soon as `.` or `@` are pressed. To add triggers for CoffeeScript autocompletions, open `Preferences -> Settings — User` and use the following to make the desired changes:
 
 ```
 		"auto_complete_triggers":
