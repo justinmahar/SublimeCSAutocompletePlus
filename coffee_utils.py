@@ -1087,7 +1087,7 @@ def get_method_completion_insertion(method_name, args):
 
     no_parens = False
 
-    completion_string = method_name
+    completion_string = re.sub("[$]", "\$", method_name)
 
     if len(args) == 1:
         function_match = re.search(r".*?[=\-]>.*", args[0])
