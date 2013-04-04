@@ -271,13 +271,13 @@ CoffeeComplete Plus has the following configurable settings:
 
 ### User Settings 
 
-These settings are accessible via `Preferences -> Settings &mdash; User`.
+These settings are accessible via `Preferences -> Settings — User`.
 
 #### Customizing Autocomplete Trigger
 
 * `auto_complete_triggers` &mdash; Characters that trigger the autocomplete menu.
 
-  - Sublime allows for context-specific triggers for the autocompletion menus. This allows the menu to show as soon as `.` or `@` are pressed, which are enabled by default. To customize these, open `Preferences -> Settings &mdash; User` and use the following to make the desired changes:
+  - Sublime allows for context-specific triggers for the autocompletion menus. This allows the menu to show as soon as `.` or `@` are pressed, which are enabled by default. To customize these, open `Preferences -> Settings — User` and use the following to make the desired changes:
 
 ```
 		"auto_complete_triggers":
