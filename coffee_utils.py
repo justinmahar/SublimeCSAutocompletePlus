@@ -788,15 +788,25 @@ def get_completions_for_built_in_type(built_in_type, is_static, is_inherited, me
         static_property_objs = built_in_type[BUILT_IN_TYPES_STATIC_PROPERTIES_KEY]
         for next_static_property_obj in static_property_objs:
             next_static_property = next_static_property_obj[BUILT_IN_TYPES_STATIC_PROPERTY_NAME_KEY]
+            next_static_property_insertion = next_static_property
+            try:
+                next_static_property_insertion = next_static_property_obj[BUILT_IN_TYPES_METHOD_INSERTION_KEY]
+            except:
+                pass
             if not is_member_excluded(next_static_property, member_exclusion_regexes):
                 static_properties.append(next_static_property)
         for next_static_property in static_properties:
-            next_completion = get_property_completion_tuple(next_static_property, is_inherited)
+            next_completion = get_property_completion_tuple(next_static_property, next_static_property_insertion, is_inherited)
             completions.append(next_completion)
 
         static_methods = built_in_type[BUILT_IN_TYPES_STATIC_METHODS_KEY]
         for next_static_method in static_methods:
             method_name = next_static_method[BUILT_IN_TYPES_METHOD_NAME_KEY]
+            method_name_insertion = method_name
+            try:
+                method_name_insertion = next_static_method[BUILT_IN_TYPES_METHOD_INSERTION_KEY]
+            except:
+                pass
             if not is_member_excluded(method_name, member_exclusion_regexes):
                 method_args = []
                 method_insertions = []
@@ -810,22 +820,32 @@ def get_completions_for_built_in_type(built_in_type, is_static, is_inherited, me
                     except:
                         pass
                     method_insertions.append(method_insertion)
-                next_completion = get_method_completion_tuple(method_name, method_args, method_insertions, is_inherited)
+                next_completion = get_method_completion_tuple(method_name, method_name_insertion, method_args, method_insertions, is_inherited)
                 completions.append(next_completion)
     else:
         instance_properties = []
         instance_property_objs = built_in_type[BUILT_IN_TYPES_INSTANCE_PROPERTIES_KEY]
         for next_instance_property_obj in instance_property_objs:
             next_instance_property = next_instance_property_obj[BUILT_IN_TYPES_INSTANCE_PROPERTY_NAME_KEY]
+            next_instance_property_insertion = next_instance_property
+            try:
+                next_instance_property_insertion = next_instance_property_obj[BUILT_IN_TYPES_METHOD_INSERTION_KEY]
+            except:
+                pass
             if not is_member_excluded(next_instance_property, member_exclusion_regexes):
                 instance_properties.append(next_instance_property_obj[BUILT_IN_TYPES_INSTANCE_PROPERTY_NAME_KEY])
         for next_instance_property in instance_properties:
-            next_completion = get_property_completion_tuple(next_instance_property, is_inherited)
+            next_completion = get_property_completion_tuple(next_instance_property, next_instance_property_insertion, is_inherited)
             completions.append(next_completion)
 
         instance_methods = built_in_type[BUILT_IN_TYPES_INSTANCE_METHODS_KEY]
         for next_instance_method in instance_methods:
             method_name = next_instance_method[BUILT_IN_TYPES_METHOD_NAME_KEY]
+            method_name_insertion = method_name
+            try:
+                method_name_insertion = next_instance_method[BUILT_IN_TYPES_METHOD_INSERTION_KEY]
+            except:
+                pass
             if not is_member_excluded(method_name, member_exclusion_regexes):
                 method_args = []
                 method_insertions = []
@@ -839,7 +859,7 @@ def get_completions_for_built_in_type(built_in_type, is_static, is_inherited, me
                     except:
                         pass
                     method_insertions.append(method_insertion)
-                next_completion = get_method_completion_tuple(method_name, method_args, method_insertions, is_inherited)
+                next_completion = get_method_completion_tuple(method_name_insertion, method_args, method_insertions, is_inherited)
                 completions.append(next_completion)
     return completions
 
@@ -1065,8 +1085,8 @@ def get_property_completion_insertion(property_name):
     return completion_string
 
 
-def get_property_completion_tuple(property_name, is_inherited=False):
-    completion_tuple = (get_property_completion_alias(property_name, is_inherited), get_property_completion_insertion(property_name))
+def get_property_completion_tuple(property_name, property_name_insertion, is_inherited=False):
+    completion_tuple = (get_property_completion_alias(property_name, is_inherited), get_property_completion_insertion(property_name_insertion))
     return completion_tuple
 
 
@@ -1111,8 +1131,8 @@ def get_method_completion_insertion(method_name, args):
     return completion_string
 
 
-def get_method_completion_tuple(method_name, arg_names, arg_insertions, is_inherited=False):
-    completion_tuple = (get_method_completion_alias(method_name, arg_names, is_inherited), get_method_completion_insertion(method_name, arg_insertions))
+def get_method_completion_tuple(method_name, method_name_insertion, arg_names, arg_insertions, is_inherited=False):
+    completion_tuple = (get_method_completion_alias(method_name, arg_names, is_inherited), get_method_completion_insertion(method_name_insertion, arg_insertions))
     return completion_tuple
 
 
