@@ -27,12 +27,13 @@ FUNCTION_RETURN_TYPE_TYPE_NAME_KEY = "type_name"
 FUNCTION_RETURN_TYPE_FUNCTION_NAMES_KEY = "function_names"
 
 COFFEESCRIPT_SYNTAX = r"CoffeeScript"
-COFFEE_EXTENSION_WITH_DOT = "\.coffee|\.litcoffee|\.coffee\.md"
+COFFEE_EXTENSIONS_LIST = [".coffee", ".litcoffee", ".coffee.md"]
+COFFEE_EXTENSIONS_WITH_PIPES = "|".join([re.escape(e) for e in COFFEE_EXTENSIONS_LIST])
 CONSTRUCTOR_KEYWORDS = ["constructor", "initialize", "init"]
 THIS_SUGAR_SYMBOL = "@"
 THIS_KEYWORD = "this"
 PERIOD_OPERATOR = "."
-COFFEE_FILENAME_REGEX = r".+?" + re.escape(COFFEE_EXTENSION_WITH_DOT)
+COFFEE_FILENAME_REGEX = r"(?:" + COFFEE_EXTENSIONS_WITH_PIPES + ")$"
 CLASS_REGEX = r"class\s+%s((\s*$)|[^a-zA-Z0-9_$])"
 CLASS_REGEX_ANY = r"class\s+([a-zA-Z0-9_$]+)((\s*$)|[^a-zA-Z0-9_$])"
 CLASS_REGEX_WITH_EXTENDS = r"class\s+%s\s*($|(\s+extends\s+([a-zA-Z0-9_$.]+)))"
