@@ -31,6 +31,8 @@ class CoffeeAutocomplete(sublime_plugin.EventListener):
 
 		# If there is a word selection and we're looking at a coffee file...
 		if not completions and coffee_utils.is_coffee_syntax(view) and not working:
+			if not view.match_selector(locations[0], "source.coffee -comment"):
+				return []
 
 			status["working"] = True
 
