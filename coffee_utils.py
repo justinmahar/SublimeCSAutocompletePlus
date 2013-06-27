@@ -860,7 +860,7 @@ def get_completions_for_built_in_type(built_in_type, is_static, is_inherited, me
                     except:
                         pass
                     method_insertions.append(method_insertion)
-                next_completion = get_method_completion_tuple(method_name_insertion, method_args, method_insertions, is_inherited)
+                next_completion = get_method_completion_tuple(method_name, method_name_insertion, method_args, method_insertions, is_inherited)
                 completions.append(next_completion)
     return completions
 
