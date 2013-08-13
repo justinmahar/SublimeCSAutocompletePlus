@@ -3,6 +3,7 @@
 	[
 		// {
 		// 	"name": "MyType",
+		//	"enabled": true,
 		// 	"constructors": [{"args": []}],
 		// 	"static_properties": [{"name": "CONSTANT_ONE"}, {"name": "CONSTANT_TWO"}],
 		// 	"static_methods": 
