@@ -785,7 +785,6 @@ def case_insensitive_startswith(original_string, prefix):
 def get_completions_for_built_in_type(built_in_type, is_static, is_inherited, member_exclusion_regexes):
     completions = []
     if is_static:
-        static_properties = []
         static_property_objs = built_in_type[BUILT_IN_TYPES_STATIC_PROPERTIES_KEY]
         for next_static_property_obj in static_property_objs:
             next_static_property = next_static_property_obj[BUILT_IN_TYPES_STATIC_PROPERTY_NAME_KEY]
@@ -795,10 +794,8 @@ def get_completions_for_built_in_type(built_in_type, is_static, is_inherited, me
             except:
                 pass
             if not is_member_excluded(next_static_property, member_exclusion_regexes):
-                static_properties.append(next_static_property)
-        for next_static_property in static_properties:
-            next_completion = get_property_completion_tuple(next_static_property, next_static_property_insertion, is_inherited)
-            completions.append(next_completion)
+                next_completion = get_property_completion_tuple(next_static_property, next_static_property_insertion, is_inherited)
+                completions.append(next_completion)
 
         static_methods = built_in_type[BUILT_IN_TYPES_STATIC_METHODS_KEY]
         for next_static_method in static_methods:
