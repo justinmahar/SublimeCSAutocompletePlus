@@ -92,7 +92,7 @@ BUILT_IN_TYPES_INHERITS_FROM_OBJECT_KEY = "inherits_from_object"
 # Utility functions
 def debug(message):
     if DEBUG:
-        print message
+        print(message)
 
 
 def select_current_word(view):
@@ -724,8 +724,8 @@ def get_completions_for_class(class_name, search_statically, local_file_lines, p
                     function_completions = get_completions_for_built_in_type(next_built_in_type, False, True, member_exclusion_regexes)
                 elif next_class_name == "Object" and not object_completions:
                     object_completions = get_completions_for_built_in_type(next_built_in_type, False, True, member_exclusion_regexes)
-        except Exception, e:
-            print repr(e)
+        except Exception as e:
+            print(repr(e))
 
     # If we didn't find completions for a built-in type, look further...
     if not completions:

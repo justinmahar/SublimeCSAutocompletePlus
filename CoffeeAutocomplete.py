@@ -2,9 +2,16 @@ import sublime, sublime_plugin
 import re
 import os
 import threading
-import coffee_utils
-from coffee_utils import debug
 from copy import copy
+
+try:
+	# Python 3
+	from . import coffee_utils
+	from .coffee_utils import debug
+except (ValueError):
+	# Python 2
+	import coffee_utils
+	from coffee_utils import debug
 
 COFFEESCRIPT_AUTOCOMPLETE_STATUS_KEY = "coffee_autocomplete"
 COFFEESCRIPT_AUTOCOMPLETE_STATUS_MESSAGE = "Coffee: Autocompleting \"%s\"..."
