@@ -26,8 +26,8 @@ FUNCTION_RETURN_TYPES_SETTINGS_KEY = "coffee_autocomplete_plus_function_return_t
 FUNCTION_RETURN_TYPE_TYPE_NAME_KEY = "type_name"
 FUNCTION_RETURN_TYPE_FUNCTION_NAMES_KEY = "function_names"
 
-COFFEESCRIPT_SYNTAX = r"CoffeeScript"
-COFFEE_EXTENSIONS_LIST = [".coffee", ".litcoffee", ".coffee.md"]
+COFFEESCRIPT_SYNTAX = r"CoffeeScript|IcedCoffeeScript"
+COFFEE_EXTENSIONS_LIST = [".coffee", ".litcoffee", ".coffee.md", ".iced", ".liticed", ".iced.md"]
 COFFEE_EXTENSIONS_WITH_PIPES = "|".join([re.escape(e) for e in COFFEE_EXTENSIONS_LIST])
 CONSTRUCTOR_KEYWORDS = ["constructor", "initialize", "init"]
 THIS_SUGAR_SYMBOL = "@"
